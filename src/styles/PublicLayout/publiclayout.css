@@ -1,0 +1,77 @@
+/* ==============================
+   GLOBAL RESET & BASE STYLES
+================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ==============================
+   MAIN PUBLIC LAYOUT
+================================ */
+.public-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* ==============================
+   MAIN CONTENT AREA
+================================ */
+.main-content {
+    flex: 1 0 auto;
+    width: 100%;
+    padding-top: 120px; /* Space for fixed header */
+    padding-bottom: 60px;
+}
+
+/* ==============================
+   PAGE CONTENT CONTAINER
+================================ */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    width: 100%;
+}
+
+/* ==============================
+   HEADER & FOOTER
+================================ */
+.header,
+.footer {
+    width: 100%;
+    flex-shrink: 0;
+}
+
+/* ==============================
+   RESPONSIVE ADJUSTMENTS
+================================ */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 16px;
+    }
+
+    .main-content {
+        padding-top: 100px;
+    }
+}
