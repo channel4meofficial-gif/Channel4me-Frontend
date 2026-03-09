@@ -1,7 +1,7 @@
 import React from 'react';
-import Header from '../ui/header';
-import Footer from '../layout/footer/footer.txs';
-import '../../styles/layout.css'; // Make sure this is imported
+import Header from '../../ui/header/header';
+import Footer from '../../ui/footer/footer';
+import '../../../styles/PublicLayout/publiclayout.css';
 
 interface PublicLayoutProps {
     children: React.ReactNode;
@@ -9,20 +9,17 @@ interface PublicLayoutProps {
     hideFooter?: boolean;
 }
 
-const PublicLayout: React.FC<PublicLayoutProps> = ({ 
-    children, 
-    hideHeader = false, 
-    hideFooter = false 
+const PublicLayout: React.FC<PublicLayoutProps> = ({
+    children,
+    hideHeader = false,
+    hideFooter = false
 }) => {
     return (
         <div className="public-layout">
             {!hideHeader && <Header />}
-            
             <main className="main-content">
-                {/* REMOVE the extra div and let children handle their own containers */}
                 {children}
             </main>
-            
             {!hideFooter && <Footer />}
         </div>
     );

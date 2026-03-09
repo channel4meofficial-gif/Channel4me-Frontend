@@ -1,7 +1,10 @@
 // components/Layout/Footer.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../../styles/footer.css';
+import '../../../styles/footer.css';
+import logo from '../../../assets/logo.png';
+
+
 
 const Footer = () => {
     const platformLinks = [
@@ -41,8 +44,10 @@ const Footer = () => {
                 <div className="footer-content">
                     <div className="footer-section">
                         <div className="footer-logo">
-                            <img src="/logo.png" alt="Channel4Me" />
+                            <img src={logo} alt="Channel4Me-logo" />
                         </div>
+
+                       
                         <p className="footer-description">
                             AI-powered doctor finding and smart health management platform for modern healthcare.
                         </p>
