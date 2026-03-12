@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import '../../../styles/doctor/dashboard/DcotorInformation.css';
+import React, { useState } from 'react';
 
 function DoctorInformation() {
   const navigate = useNavigate();
