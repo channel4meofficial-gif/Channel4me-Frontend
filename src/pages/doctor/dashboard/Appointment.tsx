@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
 import '../../../styles/doctor/dashboard/Appointments.css';
-
-
-
-
-
 // ── Sample data ────────────────────────────────────────────
 const APPOINTMENTS = [
   {
