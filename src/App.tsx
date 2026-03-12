@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage';
 import DoctorInformation from './pages/doctor/dashboard/DoctorInformation';
 import Appointment from './pages/doctor/dashboard/Appointment';
 import PatientList from './pages/doctor/dashboard/PatientList';
+import PatientDetails from './pages/doctor/dashboard/PatientDetails';
 // import other pages if they exist
 
 function ScrollToHash() {
@@ -37,6 +38,8 @@ function App() {
                 <Route path="/doctor/dashboard" element={<DoctorInformation />} />
                 <Route path="/doctor/dashboard/appointments" element={<Appointment />} />
                 <Route path="/doctor/dashboard/patients" element={<PatientList />} />
+                                {/* dynamic segment for patient id */}
+                <Route path="/doctor/dashboard/patients/:id" element={<PatientDetails />} />
             </Routes>
         </BrowserRouter>
     );
