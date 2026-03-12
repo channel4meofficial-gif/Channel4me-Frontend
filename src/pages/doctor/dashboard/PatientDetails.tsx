@@ -78,7 +78,7 @@ const PATIENTS: Patient[] = [
   nextAppt: '-',
   bloodType: '-',
   emergency: {
-    guardian: 'Thisara Perera',
+    guardian: 'Upali',
     contact1: '0766 579 841',
     contact2: '0785 238 219',
   },
