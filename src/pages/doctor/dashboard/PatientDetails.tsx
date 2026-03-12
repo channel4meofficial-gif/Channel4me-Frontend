@@ -138,8 +138,8 @@ const PATIENTS: Patient[] = [
 },
 {
   id: 5,
-  initials: '--',
-  name: 'Unknown',
+  initials: 'MI',
+  name: 'Michael',
   age: '-',
   gender: 'Male',
   address: 'N/A',
@@ -147,7 +147,7 @@ const PATIENTS: Patient[] = [
   nextAppt: '-',
   bloodType: '-',
   emergency: {
-    guardian: 'Thisara Perera',
+    guardian: 'Smith',
     contact1: '0766 579 841',
     contact2: '0785 238 219',
   },
