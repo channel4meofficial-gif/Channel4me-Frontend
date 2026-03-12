@@ -2,9 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../../styles/doctor/dashboard/PatientList.css';
 
-
-
-
 // ── Patient data ────────────────────────────────────────────
 const PATIENTS = [
   {
