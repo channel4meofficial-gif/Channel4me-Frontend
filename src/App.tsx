@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import HomePage from './pages/HomePage';
+import DoctorInformation from './pages/doctor/dashboard/DoctorInformation';
 // import other pages if they exist
 
 function ScrollToHash() {
@@ -29,6 +30,10 @@ function App() {
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 {/* Add other routes like /about, /contact if they exist */}
+
+                 {/* Doctor Dashboard Flow */}
+                <Route path="/doctor/dashboard" element={<DoctorInformation />} />
+
             </Routes>
         </BrowserRouter>
     );
