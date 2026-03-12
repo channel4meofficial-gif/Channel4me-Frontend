@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import '../../../styles/doctor/dashboard/DcotorInformation.css';
 
-
 function DoctorInformation() {
   const navigate = useNavigate();
 
