@@ -69,7 +69,7 @@ const PATIENTS: Patient[] = [
 },
 {
   id: 2,
-  initials: '--',
+  initials: 'AS',
   name: 'Unknown',
   age: '-',
   gender: 'Male',
