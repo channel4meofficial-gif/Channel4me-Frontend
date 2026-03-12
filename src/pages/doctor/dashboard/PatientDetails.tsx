@@ -70,7 +70,7 @@ const PATIENTS: Patient[] = [
 {
   id: 2,
   initials: 'AS',
-  name: 'Unknown',
+  name: 'Ashani',
   age: '-',
   gender: 'Male',
   address: 'N/A',
@@ -97,8 +97,8 @@ const PATIENTS: Patient[] = [
 },
 {
   id: 3,
-  initials: '--',
-  name: 'Unknown',
+  initials: 'Du',
+  name: 'Dulhara',
   age: '-',
   gender: 'Male',
   address: 'N/A',
@@ -106,7 +106,7 @@ const PATIENTS: Patient[] = [
   nextAppt: '-',
   bloodType: '-',
   emergency: {
-    guardian: 'Thisara Perera',
+    guardian: 'Hulawa',
     contact1: '0766 579 841',
     contact2: '0785 238 219',
   },
@@ -118,8 +118,8 @@ const PATIENTS: Patient[] = [
 },
 {
   id: 4,
-  initials: '--',
-  name: 'Unknown',
+  initials: 'JA',
+  name: 'James',
   age: '-',
   gender: 'Male',
   address: 'N/A',
@@ -127,7 +127,7 @@ const PATIENTS: Patient[] = [
   nextAppt: '-',
   bloodType: '-',
   emergency: {
-    guardian: 'Thisara Perera',
+    guardian: 'Wiliams',
     contact1: '0766 579 841',
     contact2: '0785 238 219',
   },
