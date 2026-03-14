@@ -1,0 +1,394 @@
+/* ===== PAYMENT PAGE STYLES ===== */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background: linear-gradient(135deg, #f0f4ff 0%, #f8fafc 100%);
+}
+
+/* ===== HEADER ===== */
+.header {
+  background: white;
+  box-shadow: 0 2px 20px rgba(0,0,0,.08);
+  padding: 10px 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #667eea;
+}
+.logo-icon { font-size: 1.3rem; }
+.logo-text { font-weight: 800; color: #1e293b; }
+.logo-text span { color: #667eea; }
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  gap: 32px;
+  align-items: center;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #475569;
+  font-weight: 500;
+  padding: 6px 0;
+  position: relative;
+  transition: color 0.3s ease;
+  font-size: .9rem;
+}
+.nav-link:hover,
+.nav-link.active { color: #667eea; }
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%; height: 2px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 2px;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: .85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.btn-login {
+  background: transparent;
+  color: #667eea;
+  border: 2px solid #e2e8f0;
+}
+.btn-login:hover { border-color: #667eea; }
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102,126,234,.35);
+}
+
+.btn-lg {
+  padding: 11px 32px;
+  font-size: .95rem;
+}
+
+/* ===== MAIN WRAPPER ===== */
+.payment-page-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 18px;
+  padding: 40px 20px 80px;
+  min-height: calc(100vh - 62px);
+}
+
+/* ===== PAGE CARD ===== */
+.page-card {
+  width: 100%;
+  max-width: 860px;
+  background: white;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,.06);
+  animation: fadeUp .45s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card-band {
+  height: 48px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+}
+.card-band::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  height: 16px;
+  background: white;
+  border-radius: 16px 16px 0 0;
+}
+
+.card-body {
+  display: flex;
+}
+
+/* ===== ILLUSTRATION PANEL ===== */
+.illus-panel {
+  width: 240px;
+  min-width: 240px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 16px 28px;
+  background: linear-gradient(160deg, #f0f4ff 0%, #f8fafc 100%);
+  border-right: 1px solid #f1f5f9;
+  overflow: hidden;
+}
+
+.illus-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px dashed rgba(102,126,234,.2);
+}
+.illus-ring.lg { width: 190px; height: 190px; }
+.illus-ring.md { width: 120px; height: 120px; }
+
+.illus-img {
+  width: 190px;
+  height: auto;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 6px 16px rgba(102,126,234,.18));
+}
+
+/* ===== FORM PANEL ===== */
+.form-panel {
+  flex: 1;
+  padding: 20px 26px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-row { display: grid; gap: 14px; }
+.two-col  { grid-template-columns: 1fr 1fr; }
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field-label {
+  font-size: .7rem;
+  font-weight: 600;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+}
+
+/* ===== INPUTS ===== */
+input[type="text"],
+input[type="tel"] {
+  width: 100%;
+  padding: 8px 14px;
+  font-family: 'Poppins', sans-serif;
+  font-size: .85rem;
+  color: #1e293b;
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s, background .2s;
+}
+input[readonly] {
+  background: #f1f5f9;
+  color: #64748b;
+  cursor: not-allowed;
+}
+input::placeholder { color: #b0b9c8; }
+input:focus {
+  background: white;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102,126,234,.15);
+}
+input:hover:not(:focus):not([readonly]) {
+  border-color: #cbd5e1;
+}
+
+/* ===== PAYMENT METHOD RADIO ===== */
+.pay-method-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.pay-method-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.pay-method-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.pm-radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e1;
+  background: white;
+  position: relative;
+  flex-shrink: 0;
+  transition: border-color .2s, box-shadow .2s;
+}
+.pm-radio::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%) scale(0);
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  transition: transform .2s cubic-bezier(.34,1.56,.64,1);
+}
+.pay-method-option input:checked + .pm-radio {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102,126,234,.15);
+}
+.pay-method-option input:checked + .pm-radio::after {
+  transform: translate(-50%,-50%) scale(1);
+}
+.pay-method-option:hover .pm-radio { border-color: #667eea; }
+
+.pm-label {
+  font-size: .88rem;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+/* ===== BTN ROW ===== */
+.payment-page-wrapper .btn-row {
+  width: 100%;
+  max-width: 860px;
+  display: flex;
+  justify-content: center;
+  animation: fadeUp .45s .1s ease both;
+}
+
+/* ===== AMOUNT INPUT ===== */
+.amount-input {
+  font-weight: 700 !important;
+  color: #667eea !important;
+  background: #f0f4ff !important;
+  border-color: #c7d2fe !important;
+  font-size: .92rem !important;
+}
+
+/* ===== CHARGES SUMMARY ===== */
+.charges-summary {
+  background: linear-gradient(135deg, #f0f4ff 0%, #f8fafc 100%);
+  border: 2px solid #e8ecff;
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.charges-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: .78rem;
+  color: #475569;
+}
+
+.charges-summary-row span:first-child {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 500;
+}
+
+.charges-summary-row i {
+  color: #667eea;
+  font-size: .75rem;
+  width: 14px;
+}
+
+.charges-summary-row span:last-child {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .payment-page-wrapper {
+    height: auto;
+    overflow: auto;
+    padding: 20px 16px 40px;
+    justify-content: flex-start;
+  }
+  .illus-panel { width: 180px; min-width: 180px; }
+  .illus-img { width: 150px; }
+  .illus-ring.lg { width: 150px; height: 150px; }
+  .illus-ring.md { width: 100px; height: 100px; }
+  .form-panel { padding: 16px 20px 20px; gap: 12px; }
+}
+
+@media (max-width: 700px) {
+  .payment-page-wrapper {
+    height: auto;
+    overflow: auto;
+    padding: 16px 12px 40px;
+    justify-content: flex-start;
+  }
+  .card-body { flex-direction: column; }
+  .illus-panel {
+    width: 100%;
+    min-width: unset;
+    border-right: none;
+    border-bottom: 1px solid #f1f5f9;
+    padding: 20px;
+  }
+  .illus-img { width: 120px; }
+  .form-row.two-col,
+  .two-col { grid-template-columns: 1fr; }
+  .navbar { flex-wrap: wrap; gap: 10px; }
+  .nav-menu { display: none; }
+  .card-band { height: 32px; }
+  .btn-lg { padding: 10px 28px; font-size: .88rem; }
+}
