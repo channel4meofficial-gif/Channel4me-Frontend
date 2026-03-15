@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import '../styles/DoctorSessionsPage.css';
+import '../../styles/doctor-booking/DoctorSessionsPage.css';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface Session {
@@ -42,14 +42,12 @@ const getUpcomingDates = (count: number): { date: string; day: string }[] => {
   const results: { date: string; day: string }[] = [];
   const today = new Date();
 
-  // First entry = today (will be marked CANCELED)
   const d0 = new Date(today);
   results.push({
     date: `${months[d0.getMonth()]} ${String(d0.getDate()).padStart(2, '0')}, ${d0.getFullYear()}`,
     day:  days[d0.getDay()],
   });
 
-  // Remaining entries spaced ~2 days apart
   for (let i = 1; i < count; i++) {
     const d = new Date(today);
     d.setDate(today.getDate() + i * 2);
@@ -67,63 +65,63 @@ const generateSessions = (doctorId: number): Session[] => {
   const dates = getUpcomingDates(5);
 
   const sessionTemplates: SessionTemplates = {
-    1: [
+    1:  [
       { ...dates[0], time: '12:00 PM', appointments: 0,  status: 'CANCELED'  },
       { ...dates[1], time: '04:00 PM', appointments: 14, status: 'AVAILABLE' },
       { ...dates[2], time: '05:00 PM', appointments: 4,  status: 'AVAILABLE' },
       { ...dates[3], time: '10:00 AM', appointments: 9,  status: 'AVAILABLE' },
       { ...dates[4], time: '09:00 AM', appointments: 5,  status: 'AVAILABLE' },
     ],
-    2: [
+    2:  [
       { ...dates[0], time: '12:00 PM', appointments: 0,  status: 'CANCELED'  },
       { ...dates[1], time: '10:00 AM', appointments: 6,  status: 'AVAILABLE' },
       { ...dates[2], time: '04:00 PM', appointments: 14, status: 'AVAILABLE' },
       { ...dates[3], time: '11:00 AM', appointments: 3,  status: 'AVAILABLE' },
       { ...dates[4], time: '02:00 PM', appointments: 9,  status: 'AVAILABLE' },
     ],
-    3: [
+    3:  [
       { ...dates[0], time: '12:00 PM', appointments: 0,  status: 'CANCELED'  },
       { ...dates[1], time: '09:00 AM', appointments: 18, status: 'AVAILABLE' },
       { ...dates[2], time: '01:00 PM', appointments: 7,  status: 'AVAILABLE' },
       { ...dates[3], time: '10:00 AM', appointments: 11, status: 'AVAILABLE' },
       { ...dates[4], time: '03:00 PM', appointments: 4,  status: 'AVAILABLE' },
     ],
-    4: [
+    4:  [
       { ...dates[0], time: '12:00 PM', appointments: 0,  status: 'CANCELED'  },
       { ...dates[1], time: '08:00 AM', appointments: 22, status: 'AVAILABLE' },
       { ...dates[2], time: '05:00 PM', appointments: 16, status: 'AVAILABLE' },
       { ...dates[3], time: '09:00 AM', appointments: 10, status: 'AVAILABLE' },
       { ...dates[4], time: '11:00 AM', appointments: 8,  status: 'AVAILABLE' },
     ],
-    5: [
+    5:  [
       { ...dates[0], time: '12:00 PM', appointments: 0,  status: 'CANCELED'  },
       { ...dates[1], time: '10:00 AM', appointments: 5,  status: 'AVAILABLE' },
       { ...dates[2], time: '03:00 PM', appointments: 13, status: 'AVAILABLE' },
       { ...dates[3], time: '09:00 AM', appointments: 7,  status: 'AVAILABLE' },
       { ...dates[4], time: '02:00 PM', appointments: 2,  status: 'AVAILABLE' },
     ],
-    6: [
+    6:  [
       { ...dates[0], time: '12:00 PM', appointments: 0,  status: 'CANCELED'  },
       { ...dates[1], time: '11:00 AM', appointments: 8,  status: 'AVAILABLE' },
       { ...dates[2], time: '02:00 PM', appointments: 6,  status: 'AVAILABLE' },
       { ...dates[3], time: '10:00 AM', appointments: 15, status: 'AVAILABLE' },
       { ...dates[4], time: '01:00 PM', appointments: 4,  status: 'AVAILABLE' },
     ],
-    7: [
+    7:  [
       { ...dates[0], time: '12:00 PM', appointments: 0,  status: 'CANCELED'  },
       { ...dates[1], time: '10:00 AM', appointments: 10, status: 'AVAILABLE' },
       { ...dates[2], time: '04:00 PM', appointments: 9,  status: 'AVAILABLE' },
       { ...dates[3], time: '09:00 AM', appointments: 18, status: 'AVAILABLE' },
       { ...dates[4], time: '02:00 PM', appointments: 6,  status: 'AVAILABLE' },
     ],
-    8: [
+    8:  [
       { ...dates[0], time: '12:00 PM', appointments: 0,  status: 'CANCELED'  },
       { ...dates[1], time: '09:00 AM', appointments: 11, status: 'AVAILABLE' },
       { ...dates[2], time: '03:00 PM', appointments: 7,  status: 'AVAILABLE' },
       { ...dates[3], time: '10:00 AM', appointments: 14, status: 'AVAILABLE' },
       { ...dates[4], time: '04:00 PM', appointments: 3,  status: 'AVAILABLE' },
     ],
-    9: [
+    9:  [
       { ...dates[0], time: '12:00 PM', appointments: 0,  status: 'CANCELED'  },
       { ...dates[1], time: '11:00 AM', appointments: 4,  status: 'AVAILABLE' },
       { ...dates[2], time: '05:00 PM', appointments: 8,  status: 'AVAILABLE' },
@@ -192,12 +190,9 @@ const DoctorSessionsPage: React.FC = () => {
 
   return (
     <div className="sp-page">
-
-      {/* MAIN */}
       <main className="sp-main">
         <div className="sp-container">
 
-          {/* ── DOCTOR INFO CARD ── */}
           <div className="sp-doc-card">
             <div className="sp-doc-hosp-bar">{hospital.toUpperCase()}</div>
             <div className="sp-doc-body">
@@ -221,16 +216,12 @@ const DoctorSessionsPage: React.FC = () => {
             </div>
           </div>
 
-          {/* ── SESSIONS LABEL BAR ── */}
           <div className="sp-sess-bar">
             <i className="far fa-clock"></i>
             <span>{hospital.toUpperCase()} SESSIONS</span>
           </div>
 
-          {/* ── SESSIONS GROUP ── */}
           <div className="sp-group">
-
-            {/* Group title */}
             <div className="sp-group-title" onClick={() => setExpanded((v: boolean) => !v)}>
               <div className="sp-group-title-left">
                 <span className="sp-group-redbar"></span>
@@ -243,27 +234,23 @@ const DoctorSessionsPage: React.FC = () => {
               <i className={`fas fa-chevron-${expanded ? 'up' : 'down'} sp-group-chev`}></i>
             </div>
 
-            {/* Session rows */}
             {expanded && sessions.map((s: Session, i: number) => {
               const canceled: boolean = s.status === 'CANCELED';
               return (
                 <div className={`sp-row ${canceled ? 'sp-row-canceled' : ''}`} key={i}>
                   <div className={`sp-row-accent ${canceled ? 'sp-accent-gray' : 'sp-accent-red'}`}></div>
-
                   <div className="sp-col-date">
                     <span className="sp-date-sm">{s.date}</span>
                     <span className={`sp-daytime ${canceled ? 'sp-daytime-gray' : 'sp-daytime-red'}`}>
                       {s.day} {s.time}
                     </span>
                   </div>
-
                   <div className="sp-col-appt">
                     <span className="sp-appt-lbl">ACTIVE APPOINTMENTS</span>
                     <span className={`sp-appt-num ${canceled ? 'sp-num-gray' : 'sp-num-red'}`}>
                       {String(s.appointments).padStart(2, '0')}
                     </span>
                   </div>
-
                   <button
                     className={`sp-book-btn ${canceled ? 'sp-book-disabled' : 'sp-book-active'}`}
                     onClick={() => !canceled && handleBook(s)}
@@ -272,15 +259,14 @@ const DoctorSessionsPage: React.FC = () => {
                   >
                     <i className="fas fa-bookmark"></i> Book
                   </button>
-
                   <span className={`sp-status-txt ${canceled ? 'sp-txt-gray' : 'sp-txt-green'}`}>
                     {s.status}
                   </span>
                 </div>
               );
             })}
-
           </div>
+
         </div>
       </main>
     </div>
