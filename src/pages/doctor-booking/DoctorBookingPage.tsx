@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import '../styles/DoctorBookingPage.css';
+import '../../styles/doctor-booking/DoctorBookingPage.css';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface Doctor {
@@ -39,7 +39,6 @@ const DoctorBookingPage: React.FC = () => {
   const { state } = useLocation() as { state: LocationState | null };
   const navigate = useNavigate();
 
-  // If coming from DoctorProfile, use that doctor's data; otherwise use defaults
   const doctor: Doctor = state?.doctor || defaultDoctor;
 
   const [form, setForm] = useState<BookingForm>({
@@ -63,13 +62,11 @@ const DoctorBookingPage: React.FC = () => {
 
   return (
     <>
-      {/* MAIN */}
       <div className="main-wrapper">
         <div className="page-card">
           <div className="card-band"></div>
           <div className="card-body">
 
-            {/* Doctor Panel */}
             <div className="doctor-panel">
               <span className="available-badge">
                 <i className="fas fa-circle" style={{ fontSize: '.5rem' }}></i> Available
@@ -93,7 +90,6 @@ const DoctorBookingPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Form Panel */}
             <div className="form-panel">
 
               <div className="form-row two-col">
@@ -193,7 +189,6 @@ const DoctorBookingPage: React.FC = () => {
           </div>
         </div>
 
-        {/* CTA Button */}
         <div className="btn-row">
           <button className="btn btn-primary btn-lg" onClick={handleMakePayment}>
             <i className="fas fa-credit-card"></i> Make Payment
