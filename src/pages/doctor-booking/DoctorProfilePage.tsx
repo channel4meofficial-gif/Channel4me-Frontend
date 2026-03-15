@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import '../styles/DoctorProfilePage.css';
+import '../../styles/doctor-booking/DoctorProfilePage.css';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface Review {
@@ -41,7 +41,7 @@ const doctorsData: DoctorsDataMap = {
     specializedIn: 'Cardiology',
     education: 'MBBS – Harvard Medical School',
     experience: '8 Years of experience in diagnosing and treating heart conditions.',
-    image: require('../images/Doctorimage1.jpeg'),
+    image: require('../../assets/doctor-booking images/Doctorimage1.jpeg'),
     hospitals: ['Asiri Hospital, Colombo', 'Nawaloka Hospital, Colombo'],
     reviews: [
       { stars: 5,   text: 'Dr. Sonali is amazing! My heart condition was diagnosed quickly and accurately.' },
@@ -60,7 +60,7 @@ const doctorsData: DoctorsDataMap = {
     specializedIn: 'Neurology',
     education: 'MBBS – Johns Hopkins University',
     experience: '10 Years of experience in diagnosing and treating neurological disorders.',
-    image: require('../images/Doctorimage2.jpeg'),
+    image: require('../../assets/doctor-booking images/Doctorimage2.jpeg'),
     hospitals: ['Asiri Hospital, Colombo', 'Lanka Hospital, Colombo'],
     reviews: [
       { stars: 5,   text: 'Dr. Amal diagnosed my migraine condition perfectly. Very knowledgeable.' },
@@ -79,7 +79,7 @@ const doctorsData: DoctorsDataMap = {
     specializedIn: 'Pediatrics',
     education: 'MBBS – University of Delhi',
     experience: '6 Years of experience in child healthcare and development.',
-    image: require('../images/Doctorimage3.jpeg'),
+    image: require('../../assets/doctor-booking images/Doctorimage3.jpeg'),
     hospitals: ['Nawaloka Hospital, Colombo', 'Durdans Hospital, Colombo'],
     reviews: [
       { stars: 5,   text: 'Dr. Isuri is wonderful with children. My son loves visiting her!' },
@@ -98,7 +98,7 @@ const doctorsData: DoctorsDataMap = {
     specializedIn: 'General Medicine',
     education: 'MBBS – University of Oxford',
     experience: '12 Years of experience in general medicine and patient care.',
-    image: require('../images/Doctorimage4.jpeg'),
+    image: require('../../assets/doctor-booking images/Doctorimage4.jpeg'),
     hospitals: ['Asiri Hospital, Colombo', 'Durdans Hospital, Colombo'],
     reviews: [
       { stars: 5,   text: 'Dr. Kasun is an exceptional physician. Very thorough in his examination.' },
@@ -117,7 +117,7 @@ const doctorsData: DoctorsDataMap = {
     specializedIn: 'Cardiology',
     education: 'MBBS – University of Texas',
     experience: '4 Years of experience in diagnosing and treating patients.',
-    image: require('../images/Doctorimage5.jpeg'),
+    image: require('../../assets/doctor-booking images/Doctorimage5.jpeg'),
     hospitals: ['Asiri Hospital, Colombo', 'Nawaloka Hospital, Colombo'],
     reviews: [
       { stars: 4.5, text: 'Dr. Mihiri is very dedicated and thorough. Great experience overall.' },
@@ -136,7 +136,7 @@ const doctorsData: DoctorsDataMap = {
     specializedIn: 'Ophthalmology',
     education: 'MBBS – Stanford University',
     experience: '7 Years of experience in eye surgery and vision correction.',
-    image: require('../images/Doctorimage6.jpeg'),
+    image: require('../../assets/doctor-booking images/Doctorimage6.jpeg'),
     hospitals: ['Lanka Hospital, Colombo', 'Asiri Hospital, Colombo'],
     reviews: [
       { stars: 5,   text: 'Dr. Ann performed my eye surgery flawlessly. Vision is perfect now!' },
@@ -155,7 +155,7 @@ const doctorsData: DoctorsDataMap = {
     specializedIn: 'Neurology',
     education: 'MBBS – University of Melbourne',
     experience: '9 Years of experience in neurology and brain disorders.',
-    image: require('../images/Doctorimage7.jpeg'),
+    image: require('../../assets/doctor-booking images/Doctorimage7.jpeg'),
     hospitals: ['Nawaloka Hospital, Colombo', 'Durdans Hospital, Colombo'],
     reviews: [
       { stars: 4.5, text: 'Dr. Chinthaka is very knowledgeable and precise in his diagnosis.' },
@@ -174,7 +174,7 @@ const doctorsData: DoctorsDataMap = {
     specializedIn: 'Cardiology',
     education: 'MBBS – University of Sydney',
     experience: '5 Years of experience in cardiac care and treatment.',
-    image: require('../images/Doctorimage8.jpeg'),
+    image: require('../../assets/doctor-booking images/Doctorimage8.jpeg'),
     hospitals: ['Asiri Hospital, Colombo', 'Lanka Hospital, Colombo'],
     reviews: [
       { stars: 5,   text: 'Dr. Malith is an excellent cardiologist. Very calm and reassuring.' },
@@ -193,7 +193,7 @@ const doctorsData: DoctorsDataMap = {
     specializedIn: 'Psychiatry',
     education: 'MBBS – University of Mumbai',
     experience: '6 Years of experience in mental health and psychiatric care.',
-    image: require('../images/Doctorimage9.jpeg'),
+    image: require('../../assets/doctor-booking images/Doctorimage9.jpeg'),
     hospitals: ['Durdans Hospital, Colombo', 'Nawaloka Hospital, Colombo'],
     reviews: [
       { stars: 5,   text: 'Dr. Monali is incredibly empathetic and supportive. Life changing!' },
@@ -212,7 +212,7 @@ const doctorsData: DoctorsDataMap = {
     specializedIn: 'Dermatology',
     education: 'MBBS – University of Madrid',
     experience: '3 Years of experience in skin care and dermatology.',
-    image: require('../images/Doctorimage10.jpeg'),
+    image: require('../../assets/doctor-booking images/Doctorimage10.jpeg'),
     hospitals: ['Asiri Hospital, Colombo', 'Durdans Hospital, Colombo'],
     reviews: [
       { stars: 4.5, text: 'Dr. Sehansa treated my skin condition very effectively. Great results!' },
@@ -231,7 +231,7 @@ const doctorsData: DoctorsDataMap = {
     specializedIn: 'General Medicine',
     education: 'MBBS – University of Edinburgh',
     experience: '11 Years of experience in general medicine and patient care.',
-    image: require('../images/Doctorimage11.jpeg'),
+    image: require('../../assets/doctor-booking images/Doctorimage11.jpeg'),
     hospitals: ['Lanka Hospital, Colombo', 'Nawaloka Hospital, Colombo'],
     reviews: [
       { stars: 5,   text: 'Dr. Nuwan is very experienced and thorough. Always feel better after.' },
@@ -250,7 +250,7 @@ const doctorsData: DoctorsDataMap = {
     specializedIn: 'Dental Care',
     education: 'MBBS – University of Toronto',
     experience: '15 Years of experience in dental care and oral health.',
-    image: require('../images/Doctorimage12.jpeg'),
+    image: require('../../assets/doctor-booking images/Doctorimage12.jpeg'),
     hospitals: ['Asiri Hospital, Colombo', 'Durdans Hospital, Colombo'],
     reviews: [
       { stars: 5,   text: 'Dr. Vinu is the best dentist I have visited. Pain-free experience!' },
@@ -280,20 +280,15 @@ const DoctorProfilePage: React.FC = () => {
 
   return (
     <>
-      {/* MAIN */}
       <main className="profile-wrapper">
         <div className="container">
           <div className="profile-grid">
 
-            {/* LEFT COLUMN */}
             <div className="left-col">
-
-              {/* Photo Card */}
               <div className="photo-card">
                 <img src={doctor.image} alt={doctor.name} className="doctor-photo" />
               </div>
 
-              {/* Reviews */}
               <div className="reviews-card">
                 <h3 className="reviews-title">
                   <i className="fas fa-comment-alt"></i> Reviews
@@ -315,13 +310,9 @@ const DoctorProfilePage: React.FC = () => {
                   ))}
                 </div>
               </div>
-
             </div>
 
-            {/* RIGHT COLUMN */}
             <div className="right-col">
-
-              {/* Doctor Info */}
               <div className="info-card">
                 <div className="info-row">
                   <i className="fas fa-user-md"></i>
@@ -353,12 +344,10 @@ const DoctorProfilePage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Charges Section */}
               <div className="section-card charges-card">
                 <h3 className="section-card-title">
                   <i className="fas fa-receipt"></i> Charges Summary
                 </h3>
-
                 <div className="charge-row">
                   <span className="charge-label">
                     <span className="charge-icon no-show"><i className="fas fa-ban"></i></span>
@@ -366,7 +355,6 @@ const DoctorProfilePage: React.FC = () => {
                   </span>
                   <span className="charge-value">Rs. {doctor.charges.noShow.toLocaleString()}.00</span>
                 </div>
-
                 <div className="charge-row">
                   <span className="charge-label">
                     <span className="charge-icon booking"><i className="fas fa-calendar-check"></i></span>
@@ -374,7 +362,6 @@ const DoctorProfilePage: React.FC = () => {
                   </span>
                   <span className="charge-value">Rs. {doctor.charges.booking.toLocaleString()}.00</span>
                 </div>
-
                 <div className="charge-row">
                   <span className="charge-label">
                     <span className="charge-icon doctor-fee"><i className="fas fa-user-md"></i></span>
@@ -382,7 +369,6 @@ const DoctorProfilePage: React.FC = () => {
                   </span>
                   <span className="charge-value">Rs. {doctor.charges.doctor.toLocaleString()}.00</span>
                 </div>
-
                 <div className="charge-row">
                   <span className="charge-label">
                     <span className="charge-icon hospital-fee"><i className="fas fa-hospital"></i></span>
@@ -390,9 +376,7 @@ const DoctorProfilePage: React.FC = () => {
                   </span>
                   <span className="charge-value">Rs. {doctor.charges.hospital.toLocaleString()}.00</span>
                 </div>
-
                 <div className="charge-divider"></div>
-
                 <div className="charge-row total-row">
                   <span className="charge-label total-label">
                     <span className="charge-icon total-fee"><i className="fas fa-coins"></i></span>
@@ -404,7 +388,6 @@ const DoctorProfilePage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Available Hospitals */}
               <div className="section-card hosp-section-card">
                 <h3 className="section-card-title">
                   <i className="fas fa-hospital"></i> Available Hospitals
@@ -437,7 +420,6 @@ const DoctorProfilePage: React.FC = () => {
                   ))}
                 </div>
               </div>
-
             </div>
           </div>
         </div>
