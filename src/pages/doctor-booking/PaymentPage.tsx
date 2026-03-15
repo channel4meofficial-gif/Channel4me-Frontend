@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import '../styles/PaymentPage.css';
+import '../../styles/doctor-booking/PaymentPage.css';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface Charges {
@@ -47,7 +47,6 @@ const PaymentPage: React.FC = () => {
   const doctor: Doctor       = state?.doctor || defaultDoctor;
   const form: BookingForm    = state?.form   || {};
 
-  // Auto-calculate total from doctor charges passed from DoctorProfile
   const charges: Charges | null = doctor.charges || null;
   const total: number | null    = charges
     ? charges.booking + charges.doctor + charges.hospital
@@ -67,24 +66,21 @@ const PaymentPage: React.FC = () => {
 
   return (
     <>
-      {/* MAIN */}
       <div className="payment-page-wrapper">
         <div className="page-card">
           <div className="card-band"></div>
           <div className="card-body">
 
-            {/* Illustration Panel */}
             <div className="illus-panel">
               <div className="illus-ring lg"></div>
               <div className="illus-ring md"></div>
               <img
-                src={require('../images/Paymentimage.jpeg')}
+                src={require('../../assets/doctor-booking images/Paymentimage.jpeg')}
                 alt="Payment Illustration"
                 className="illus-img"
               />
             </div>
 
-            {/* Form Panel */}
             <div className="form-panel">
 
               <div className="form-row two-col">
@@ -163,7 +159,6 @@ const PaymentPage: React.FC = () => {
           </div>
         </div>
 
-        {/* CTA Button */}
         <div className="btn-row">
           <button className="btn btn-primary btn-lg" onClick={handlePay}>
             <i className="fas fa-arrow-right"></i> PAY
