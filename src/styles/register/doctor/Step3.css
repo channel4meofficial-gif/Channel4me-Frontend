@@ -1,0 +1,442 @@
+/* =========================
+   DOCTOR REGISTRATION - STEP 3
+   Verification & Completion
+========================= */
+
+.verification-page .registration-wrapper {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Steps indicator (shared with step1/step2) – already in global, but ensure consistency */
+.steps {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin: 0 auto 40px;
+  max-width: 420px;
+}
+
+.steps::before {
+  content: '';
+  position: absolute;
+  top: 24px;
+  left: 15%;
+  right: 15%;
+  height: 2px;
+  background: #e0e7ef;
+  z-index: 1;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  flex: 1;
+}
+
+.step-number {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #d0d9e4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 1.2rem;
+  color: #5a6a7a;
+  transition: all 0.2s ease;
+}
+
+.step.completed .step-number {
+  background: #4f7df3;
+  border-color: #4f7df3;
+  color: white;
+}
+
+.step.active .step-number {
+  background: #4f7df3;
+  border-color: #4f7df3;
+  color: white;
+  box-shadow: 0 4px 12px rgba(79, 125, 243, 0.3);
+}
+
+.step-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #8a9aa8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.step.completed .step-label,
+.step.active .step-label {
+  color: #2c3e50;
+}
+
+/* Main verification card */
+.verification-card {
+  background: white;
+  border-radius: 28px;
+  box-shadow: 0 20px 40px rgba(0, 20, 30, 0.06), 0 8px 16px rgba(0, 20, 30, 0.03);
+  padding: 44px 40px;
+  text-align: center;
+}
+
+.verification-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 0 auto 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.verification-icon.in-progress {
+  background: #f59e0b;
+  box-shadow: 0 10px 20px rgba(245, 158, 11, 0.2);
+}
+
+.verification-icon.verified {
+  background: #22c55e;
+  box-shadow: 0 10px 20px rgba(34, 197, 94, 0.2);
+}
+
+.verification-card h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a2634;
+  margin-bottom: 8px;
+}
+
+.verification-card .subtitle {
+  color: #546e7a;
+  font-size: 1rem;
+  margin-bottom: 32px;
+}
+
+/* Doctor Info Card */
+.doctor-info-card {
+  background: #f8fafc;
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 32px;
+  text-align: left;
+  border: 1px solid #e2e8f0;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  color: #64748b;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.info-value {
+  color: #1a2634;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* Verification Progress Bar */
+.verification-progress {
+  margin-bottom: 32px;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4f7df3, #764ba2);
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+
+.progress-text {
+  color: #64748b;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Verification Steps Container */
+.verification-steps-container {
+  background: #f8fafc;
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 32px;
+  text-align: left;
+  border: 1px solid #e2e8f0;
+}
+
+.verification-steps-container h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #1a2634;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.verification-steps-container h3 i {
+  color: #4f7df3;
+}
+
+.step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.step-item:last-child {
+  border-bottom: none;
+}
+
+.step-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.step-icon.pending {
+  background: #e2e8f0;
+  color: #64748b;
+}
+
+.step-icon.in_progress {
+  background: #f59e0b;
+  color: white;
+}
+
+.step-icon.completed {
+  background: #22c55e;
+  color: white;
+}
+
+.step-item strong {
+  display: block;
+  color: #1a2634;
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.step-desc {
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Next steps */
+.next-steps {
+  background: #f0f7ff;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 32px;
+  text-align: left;
+  border-left: 4px solid #4f7df3;
+}
+
+.next-steps h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #1a2634;
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.next-steps h3 i {
+  color: #4f7df3;
+}
+
+.next-steps ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.next-steps li {
+  padding: 8px 0 8px 24px;
+  position: relative;
+  color: #475569;
+}
+
+.next-steps li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #4f7df3;
+  font-weight: 600;
+}
+
+/* Action Buttons */
+.verification-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.verification-actions .btn {
+  min-width: 180px;
+  padding: 14px 24px;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid #4f7df3;
+  color: #4f7df3;
+  font-weight: 600;
+  border-radius: 50px;
+  transition: all 0.2s;
+}
+
+.btn-outline:hover {
+  background: #4f7df3;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(79, 125, 243, 0.2);
+}
+
+.btn-primary {
+  background: #4f7df3;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.2s;
+  box-shadow: 0 6px 14px rgba(79, 125, 243, 0.25);
+}
+
+.btn-primary:hover {
+  background: #3a5fd0;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(79, 125, 243, 0.3);
+}
+
+/* Status info */
+.status-info {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 20px;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.status-info p {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+.status-info i {
+  color: #4f7df3;
+}
+
+.status-info .contact-info {
+  font-size: 0.85rem;
+}
+
+/* Notification (React state version) */
+.verification-notification {
+  position: fixed;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border-radius: 50px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  padding: 12px 24px;
+  z-index: 1100;
+  animation: slideDown 0.3s ease;
+  border-left: 4px solid #22c55e;
+}
+
+.notification-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #1a2634;
+  font-weight: 500;
+}
+
+.notification-content i {
+  color: #22c55e;
+  font-size: 1.4rem;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .verification-card {
+    padding: 30px 20px;
+  }
+
+  .verification-actions {
+    flex-direction: column;
+  }
+
+  .verification-actions .btn {
+    width: 100%;
+  }
+
+  .info-item {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .step-item {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .step-icon {
+    align-self: flex-start;
+  }
+}
