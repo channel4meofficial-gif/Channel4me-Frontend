@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import '../styles/PaymentReceiptPage.css';
+import '../../styles/doctor-booking/PaymentReceiptPage.css';
 
 interface ReceiptData {
   referenceNo: string;
@@ -38,18 +38,15 @@ export default function PaymentReceiptPage(): React.ReactElement {
 
   return (
     <>
-      {/* MAIN */}
       <div className="receipt-wrapper">
         <div className="receipt-card">
 
-          {/* Watermark */}
           <div className="watermark">
             <div className="watermark-text">
               Channel<span>4</span>Me
             </div>
           </div>
 
-          {/* Receipt Header Bar */}
           <div className="receipt-header">
             <span className="receipt-title">RECEIPT</span>
             <button
@@ -62,7 +59,6 @@ export default function PaymentReceiptPage(): React.ReactElement {
             </button>
           </div>
 
-          {/* Receipt Body */}
           <div className="receipt-body">
 
             <div className="receipt-row">
