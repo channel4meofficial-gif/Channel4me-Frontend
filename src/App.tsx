@@ -1,45 +1,80 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { DoctorRegistrationProvider } from './context/doctorRegistrationContext';
-import { PatientRegistrationProvider } from './context/patientRegistrationContext';
-import DoctorStep1 from './pages/register/doctor/Step1';
-import DoctorStep2 from './pages/register/doctor/Step2';
-import DoctorStep3 from './pages/register/doctor/Step3';
-import PatientStep1 from './pages/register/patient/Step1';
-import PatientStep2 from './pages/register/patient/Step2';
-import PatientStep3 from './pages/register/patient/Step3';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import HomePage from './pages/HomePage';
+
+// Auth Pages
+import LoginPage from './pages/LoginPage';
 import RegistrationType from './pages/register/RegistrationType';
+
+// Platform Pages
+import FeaturesPage from './pages/FeaturesPage';
+import DoctorsPage from './pages/DoctorsPage';
+import SpecialtiesPage from './pages/SpecialtiesPage';
+import PricingPage from './pages/PricingPage';
+
+// Company Pages
+import AboutPage from './pages/AboutPage';
+import CareersPage from './pages/CareersPage';
+import PressPage from './pages/PressPage';
+import BlogPage from './pages/BlogPage';
+import ContactPage from './pages/ContactPage';
+
+// Support Pages
+import HelpCenterPage from './pages/HelpCenterPage';
+import FaqPage from './pages/FaqPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import TermsPage from './pages/TermsPage';
+import CookiePolicyPage from './pages/CookiePolicyPage';
+
+function ScrollToHash() {
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.hash) {
+            const id = location.hash.replace('#', '');
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }, [location]);
+
+    return null;
+}
 
 function App() {
     return (
         <BrowserRouter>
+            <ScrollToHash />
             <Routes>
                 <Route path="/" element={<HomePage />} />
+                
+                {/* Auth Routes */}
+                <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegistrationType />} />
-
-                {/* Doctor registration routes with its own provider */}
-                <Route path="/doctor/register/*" element={
-                    <DoctorRegistrationProvider>
-                        <Routes>
-                            <Route path="step1" element={<DoctorStep1 />} />
-                            <Route path="step2" element={<DoctorStep2 />} />
-                            <Route path="step3" element={<DoctorStep3 />} />
-                        </Routes>
-                    </DoctorRegistrationProvider>
-                } />
-
-                {/* Patient registration routes with its own provider */}
-                <Route path="/patient/register/*" element={
-                    <PatientRegistrationProvider>
-                        <Routes>
-                            <Route path="step1" element={<PatientStep1 />} />
-                            <Route path="step2" element={<PatientStep2 />} />
-                            <Route path="step3" element={<PatientStep3 />} />
-                        </Routes>
-                    </PatientRegistrationProvider>
-                } />
-
-                <Route path="*" element={<Navigate to="/" replace />} />
+                
+                {/* Platform Routes */}
+                <Route path="/features" element={<FeaturesPage />} />
+                <Route path="/doctors" element={<DoctorsPage />} />
+                <Route path="/specialties" element={<SpecialtiesPage />} />
+                <Route path="/pricing" element={<PricingPage />} />
+                
+                {/* Company Routes */}
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/careers" element={<CareersPage />} />
+                <Route path="/press" element={<PressPage />} />
+                <Route path="/blog" element={<BlogPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                
+                {/* Support Routes */}
+                <Route path="/help" element={<HelpCenterPage />} />
+                <Route path="/faq" element={<FaqPage />} />
+                <Route path="/privacy" element={<PrivacyPolicyPage />} />
+                <Route path="/terms" element={<TermsPage />} />
+                <Route path="/cookies" element={<CookiePolicyPage />} />
             </Routes>
         </BrowserRouter>
     );
