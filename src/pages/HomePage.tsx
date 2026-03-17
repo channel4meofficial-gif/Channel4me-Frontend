@@ -1,5 +1,5 @@
 // src/pages/HomePage.tsx
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import PublicLayout from '../components/layout/PublicLayout/publiclayout';
 import '../styles/homepage.css';
@@ -8,7 +8,7 @@ import heroImage from '../assets/hero-illustration.png';
 
 const HomePage: React.FC = () => {
     const navigate = useNavigate();
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
 
     // Navigation functions
     const handleLogin = () => navigate('/login');
@@ -65,12 +65,7 @@ const HomePage: React.FC = () => {
         { name: 'Dr. Priya Sharma', specialty: 'Pediatrician', rating: 5.0, reviews: 312, availability: 'Tomorrow' },
     ];
 
-    // Pricing data (add this section)
-    const pricingPlans = [
-        { name: 'Free', price: 'LKR 0', features: ['Symptom checker', 'Doctor search', 'Basic health tips'] },
-        { name: 'Pro', price: 'LKR 500/mo', features: ['Appointment booking', 'Medical records', 'E‑prescriptions', 'Priority support'] },
-        { name: 'Family', price: 'LKR 1200/mo', features: ['Up to 5 members', 'All Pro features', 'Family health dashboard'] },
-    ];
+
 
     const renderStars = (rating: number) => {
         const stars: JSX.Element[] = [];
@@ -269,11 +264,11 @@ const HomePage: React.FC = () => {
                             <h2>Ready to Take Control of Your Health?</h2>
                             <p>Join thousands of satisfied patients who found their perfect doctor through Channel4Me</p>
                             <div className="cta-buttons">
-                                <button className="btn btn-primary btn-lg" onClick={handleGetStarted}>
-                                    <i className="fas fa-play-circle"></i> Get Started Free
-                                </button>
                                 <button className="btn btn-primary btn-lg" onClick={handleSignUp}>
                                     <i className="fas fa-user-plus"></i> Sign Up Free
+                                </button>
+                                <button className="btn btn-white btn-lg" onClick={handleBookDemo}>
+                                    <i className="fas fa-calendar-alt"></i> Book Demo
                                 </button>
                             </div>
                         </div>

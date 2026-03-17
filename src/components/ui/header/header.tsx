@@ -24,6 +24,7 @@ const Header: React.FC = () => {
     { label: 'Features', path: '/#features' },
     { label: 'Doctors', path: '/#doctors' },
     { label: 'Specialties', path: '/#specialties' },
+    { label: 'About', path: '/#about' },
   ];
 
   // Check if a link is active (for highlighting)
