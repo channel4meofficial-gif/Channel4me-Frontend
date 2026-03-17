@@ -42,6 +42,7 @@ function App() {
                 {/* dynamic segment for patient id */}
                 <Route path="/doctor/dashboard/patients/:id" element={<PatientDetails />} />
 
+                {/* chatbot Flow */}
                 <Route path='/chatbot' element={<Chatbot />} />
             </Routes>
         </BrowserRouter>
