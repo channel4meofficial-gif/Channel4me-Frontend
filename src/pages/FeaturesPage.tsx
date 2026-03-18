@@ -7,35 +7,18 @@ const FeaturesPage: React.FC = () => {
         <PublicLayout>
             <div className="page-header">
                 <div className="container">
-                    <h1 className="page-title">Platform Features</h1>
-                    <p className="page-subtitle">Innovative tools designed for modern healthcare</p>
+                    <h1 className="page-title">Features</h1>
+                    <p className="page-subtitle">Coming Soon</p>
                 </div>
             </div>
             
             <div className="page-content">
-                <div className="container">
-                    <div className="features-grid">
-                        <div className="feature-card">
-                            <i className="fas fa-calendar-check"></i>
-                            <h3>Smart Scheduling</h3>
-                            <p>Book and manage appointments with a single click. Real-time availability for all doctors.</p>
-                        </div>
-                        <div className="feature-card">
-                            <i className="fas fa-robot"></i>
-                            <h3>AI Symptom Checker</h3>
-                            <p>Get preliminary health insights using our advanced AI-driven symptom analysis tool.</p>
-                        </div>
-                        <div className="feature-card">
-                            <i className="fas fa-video"></i>
-                            <h3>Telemedicine</h3>
-                            <p>Consult with top specialists from the comfort of your home via high-definition video calls.</p>
-                        </div>
-                        <div className="feature-card">
-                            <i className="fas fa-file-medical"></i>
-                            <h3>Digital Records</h3>
-                            <p>Access your medical history, prescriptions, and lab results securely at any time.</p>
-                        </div>
-                    </div>
+                <div className="container" style={{ textAlign: 'center', padding: '60px 0' }}>
+                    <i className="fas fa-tools" style={{ fontSize: '48px', color: '#3b82f6', marginBottom: '20px' }}></i>
+                    <h2>Under Development</h2>
+                    <p style={{ fontSize: '18px', color: '#64748b', maxWidth: '600px', margin: '0 auto' }}>
+                        We are currently working hard to bring you this page. Please check back later for updates.
+                    </p>
                 </div>
             </div>
         </PublicLayout>

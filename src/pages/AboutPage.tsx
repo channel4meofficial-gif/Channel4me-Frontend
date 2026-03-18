@@ -7,32 +7,18 @@ const AboutPage: React.FC = () => {
         <PublicLayout>
             <div className="page-header">
                 <div className="container">
-                    <h1 className="page-title">About Channel4Me</h1>
-                    <p className="page-subtitle">Bridging the gap between symptoms and solutions</p>
+                    <h1 className="page-title">About Us</h1>
+                    <p className="page-subtitle">Coming Soon</p>
                 </div>
             </div>
             
             <div className="page-content">
-                <div className="container">
-                    <div className="about-section">
-                        <h2>Our Mission</h2>
-                        <p>At Channel4Me, we believe that quality healthcare is a fundamental right. Our platform leverages cutting-edge technology to make medical consultations, symptom analysis, and record management seamless and secure for patients and doctors alike.</p>
-                        
-                        <div className="stats-grid">
-                            <div className="stat-item">
-                                <h3>10k+</h3>
-                                <p>Active Patients</p>
-                            </div>
-                            <div className="stat-item">
-                                <h3>500+</h3>
-                                <p>Specialized Doctors</p>
-                            </div>
-                            <div className="stat-item">
-                                <h3>50+</h3>
-                                <p>Medical Specialties</p>
-                            </div>
-                        </div>
-                    </div>
+                <div className="container" style={{ textAlign: 'center', padding: '60px 0' }}>
+                    <i className="fas fa-tools" style={{ fontSize: '48px', color: '#3b82f6', marginBottom: '20px' }}></i>
+                    <h2>Under Development</h2>
+                    <p style={{ fontSize: '18px', color: '#64748b', maxWidth: '600px', margin: '0 auto' }}>
+                        We are currently working hard to bring you this page. Please check back later for updates.
+                    </p>
                 </div>
             </div>
         </PublicLayout>

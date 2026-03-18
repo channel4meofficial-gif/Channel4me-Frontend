@@ -7,25 +7,18 @@ const BlogPage: React.FC = () => {
         <PublicLayout>
             <div className="page-header">
                 <div className="container">
-                    <h1 className="page-title">Health & Wellness Blog</h1>
-                    <p className="page-subtitle">Expert advice and insights for a healthier life</p>
+                    <h1 className="page-title">Blog</h1>
+                    <p className="page-subtitle">Coming Soon</p>
                 </div>
             </div>
             
             <div className="page-content">
-                <div className="container">
-                    <div className="blog-grid">
-                        <div className="blog-post">
-                            <img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=800" alt="Health" className="blog-img" />
-                            <h3>10 Tips for Better Mental Health</h3>
-                            <p>Small changes in your daily routine can make a big difference...</p>
-                        </div>
-                        <div className="blog-post">
-                            <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=800" alt="Nutrition" className="blog-img" />
-                            <h3>The Power of Balanced Nutrition</h3>
-                            <p>Understanding the basics of macros and micros for optimal energy...</p>
-                        </div>
-                    </div>
+                <div className="container" style={{ textAlign: 'center', padding: '60px 0' }}>
+                    <i className="fas fa-tools" style={{ fontSize: '48px', color: '#3b82f6', marginBottom: '20px' }}></i>
+                    <h2>Under Development</h2>
+                    <p style={{ fontSize: '18px', color: '#64748b', maxWidth: '600px', margin: '0 auto' }}>
+                        We are currently working hard to bring you this page. Please check back later for updates.
+                    </p>
                 </div>
             </div>
         </PublicLayout>

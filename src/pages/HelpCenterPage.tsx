@@ -8,32 +8,17 @@ const HelpCenterPage: React.FC = () => {
             <div className="page-header">
                 <div className="container">
                     <h1 className="page-title">Help Center</h1>
-                    <p className="page-subtitle">Search for articles or browse topics to find answers</p>
+                    <p className="page-subtitle">Coming Soon</p>
                 </div>
             </div>
             
             <div className="page-content">
-                <div className="container">
-                    <div className="search-bar">
-                        <input type="text" placeholder="Search for help..." className="search-input" />
-                    </div>
-                    <div className="help-categories">
-                        <div className="cat-card">
-                            <i className="fas fa-user-circle"></i>
-                            <h3>Account Support</h3>
-                            <p>Login issues, account settings, and profile management.</p>
-                        </div>
-                        <div className="cat-card">
-                            <i className="fas fa-credit-card"></i>
-                            <h3>Billing & Payments</h3>
-                            <p>Subscription plans, invoices, and payment methods.</p>
-                        </div>
-                        <div className="cat-card">
-                            <i className="fas fa-shield-alt"></i>
-                            <h3>Safety & Security</h3>
-                            <p>Data privacy, encryption, and secure communications.</p>
-                        </div>
-                    </div>
+                <div className="container" style={{ textAlign: 'center', padding: '60px 0' }}>
+                    <i className="fas fa-tools" style={{ fontSize: '48px', color: '#3b82f6', marginBottom: '20px' }}></i>
+                    <h2>Under Development</h2>
+                    <p style={{ fontSize: '18px', color: '#64748b', maxWidth: '600px', margin: '0 auto' }}>
+                        We are currently working hard to bring you this page. Please check back later for updates.
+                    </p>
                 </div>
             </div>
         </PublicLayout>

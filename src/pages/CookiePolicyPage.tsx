@@ -8,23 +8,17 @@ const CookiePolicyPage: React.FC = () => {
             <div className="page-header">
                 <div className="container">
                     <h1 className="page-title">Cookie Policy</h1>
-                    <p className="page-subtitle">How we use cookies to improve your experience</p>
+                    <p className="page-subtitle">Coming Soon</p>
                 </div>
             </div>
             
             <div className="page-content">
-                <div className="container">
-                    <div className="policy-content">
-                        <h2>What are cookies?</h2>
-                        <p>Cookies are small text files stored on your device that help us recognize you and remember your preferences.</p>
-                        
-                        <h2>Types of cookies we use</h2>
-                        <ul>
-                            <li><strong>Essential:</strong> Required for the platform to function.</li>
-                            <li><strong>Analytical:</strong> Help us understand how you use the site.</li>
-                            <li><strong>Functional:</strong> Remember your settings and preferences.</li>
-                        </ul>
-                    </div>
+                <div className="container" style={{ textAlign: 'center', padding: '60px 0' }}>
+                    <i className="fas fa-tools" style={{ fontSize: '48px', color: '#3b82f6', marginBottom: '20px' }}></i>
+                    <h2>Under Development</h2>
+                    <p style={{ fontSize: '18px', color: '#64748b', maxWidth: '600px', margin: '0 auto' }}>
+                        We are currently working hard to bring you this page. Please check back later for updates.
+                    </p>
                 </div>
             </div>
         </PublicLayout>

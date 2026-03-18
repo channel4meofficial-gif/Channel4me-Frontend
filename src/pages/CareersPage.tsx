@@ -7,30 +7,18 @@ const CareersPage: React.FC = () => {
         <PublicLayout>
             <div className="page-header">
                 <div className="container">
-                    <h1 className="page-title">Join Our Team</h1>
-                    <p className="page-subtitle">Help us build the future of digital healthcare</p>
+                    <h1 className="page-title">Careers</h1>
+                    <p className="page-subtitle">Coming Soon</p>
                 </div>
             </div>
             
             <div className="page-content">
-                <div className="container">
-                    <div className="careers-section">
-                        <h2>Why Work With Us?</h2>
-                        <p>We're looking for passionate individuals who want to make a real impact in people's lives. Join a diverse team of engineers, doctors, and designers.</p>
-                        
-                        <div className="job-list">
-                            <div className="job-item">
-                                <h3>Senior Full Stack Developer</h3>
-                                <p>Remote • Engineering</p>
-                                <button className="apply-btn">Apply Now</button>
-                            </div>
-                            <div className="job-item">
-                                <h3>UI/UX Designer</h3>
-                                <p>Silicon Valley • Design</p>
-                                <button className="apply-btn">Apply Now</button>
-                            </div>
-                        </div>
-                    </div>
+                <div className="container" style={{ textAlign: 'center', padding: '60px 0' }}>
+                    <i className="fas fa-tools" style={{ fontSize: '48px', color: '#3b82f6', marginBottom: '20px' }}></i>
+                    <h2>Under Development</h2>
+                    <p style={{ fontSize: '18px', color: '#64748b', maxWidth: '600px', margin: '0 auto' }}>
+                        We are currently working hard to bring you this page. Please check back later for updates.
+                    </p>
                 </div>
             </div>
         </PublicLayout>

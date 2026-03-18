@@ -7,27 +7,18 @@ const PressPage: React.FC = () => {
         <PublicLayout>
             <div className="page-header">
                 <div className="container">
-                    <h1 className="page-title">Press & Media</h1>
-                    <p className="page-subtitle">Latest news and media resources from Channel4Me</p>
+                    <h1 className="page-title">Press</h1>
+                    <p className="page-subtitle">Coming Soon</p>
                 </div>
             </div>
             
             <div className="page-content">
-                <div className="container">
-                    <div className="press-grid">
-                        <div className="press-card">
-                            <span className="date">March 15, 2026</span>
-                            <h3>Channel4Me Secures Series B Funding</h3>
-                            <p>We are excited to announce a $50M investment to expand our AI health services.</p>
-                            <button className="read-more">Read Full Story</button>
-                        </div>
-                        <div className="press-card">
-                            <span className="date">February 10, 2026</span>
-                            <h3>New Partnership with Global Health Org</h3>
-                            <p>Collaborating to bring digital healthcare to underserved communities.</p>
-                            <button className="read-more">Read Full Story</button>
-                        </div>
-                    </div>
+                <div className="container" style={{ textAlign: 'center', padding: '60px 0' }}>
+                    <i className="fas fa-tools" style={{ fontSize: '48px', color: '#3b82f6', marginBottom: '20px' }}></i>
+                    <h2>Under Development</h2>
+                    <p style={{ fontSize: '18px', color: '#64748b', maxWidth: '600px', margin: '0 auto' }}>
+                        We are currently working hard to bring you this page. Please check back later for updates.
+                    </p>
                 </div>
             </div>
         </PublicLayout>
