@@ -3,8 +3,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PublicLayout from '../components/layout/PublicLayout/publiclayout';
 import '../styles/homepage.css';
-import heroImage from '../assets/hero-illustration.png'; 
-
+import heroImage from '../assets/hero-illustration.png';
+import doctorImage1 from '../assets/doctor-booking images/Doctorimage1.jpeg';
+import doctorImage2 from '../assets/doctor-booking images/Doctorimage2.jpeg';
+import doctorImage3 from '../assets/doctor-booking images/Doctorimage3.jpeg';
 
 const HomePage: React.FC = () => {
     const navigate = useNavigate();
@@ -60,9 +62,9 @@ const HomePage: React.FC = () => {
 
     // Doctors data
     const doctors = [
-        { name: 'Dr. Sarah Johnson', specialty: 'Cardiologist', rating: 4.8, reviews: 245, availability: 'Today' },
-        { name: 'Dr. Michael Chen', specialty: 'Neurologist', rating: 5.0, reviews: 189, availability: 'Today' },
-        { name: 'Dr. Priya Sharma', specialty: 'Pediatrician', rating: 5.0, reviews: 312, availability: 'Tomorrow' },
+        { name: 'Dr. Sarah Johnson', specialty: 'Cardiologist', rating: 4.8, reviews: 245, availability: 'Today', image: doctorImage1 },
+        { name: 'Dr. Michael Chen', specialty: 'Neurologist', rating: 5.0, reviews: 189, availability: 'Today', image: doctorImage2 },
+        { name: 'Dr. Priya Sharma', specialty: 'Pediatrician', rating: 5.0, reviews: 312, availability: 'Tomorrow', image: doctorImage3 },
     ];
 
     // Pricing data (add this section)
@@ -146,7 +148,7 @@ const HomePage: React.FC = () => {
                             </div>
 
                             <div className="hero-image">
-                            <img src={heroImage} alt="Medical Consultation" />
+                                <img src={heroImage} alt="Medical Consultation" />
                             </div>
                         </div>
                     </div>
@@ -232,7 +234,7 @@ const HomePage: React.FC = () => {
                             {doctors.map((doctor, index) => (
                                 <div key={index} className="doctor-card">
                                     <div className="doctor-image">
-                                        <img src={`/images/doctor${index + 1}.jpg`} alt={doctor.name} />
+                                        <img src={doctor.image} alt={doctor.name} />
                                     </div>
                                     <div className="doctor-info">
                                         <h3>{doctor.name}</h3>
@@ -244,7 +246,7 @@ const HomePage: React.FC = () => {
                                         <p className="availability">
                                             <i className="fas fa-clock"></i> Available {doctor.availability}
                                         </p>
-                                        <button className="btn btn-primary btn-sm">
+                                        <button className="btn btn-primary btn-sm" onClick={handleViewAllDoctors}>
                                             Book Now
                                         </button>
                                     </div>
@@ -259,8 +261,6 @@ const HomePage: React.FC = () => {
                         </div>
                     </div>
                 </section>
-
-               
 
                 {/* CTA SECTION */}
                 <section className="cta-section" id="cta">
