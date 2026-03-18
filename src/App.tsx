@@ -23,6 +23,7 @@ import DoctorInformation from './pages/doctor/dashboard/DoctorInformation';
 import Appointment from './pages/doctor/dashboard/Appointment';
 import PatientList from './pages/doctor/dashboard/PatientList';
 import PatientDetails from './pages/doctor/dashboard/PatientDetails';
+import EPrescription from './pages/doctor/dashboard/EPrescription';
 
 // Chatbot Page
 import Chatbot from './pages/chatbot/Chatbot';
@@ -110,6 +111,12 @@ function App() {
                         <Route path="/doctor/dashboard/patients/:id" element={
                             <PrivateRoute allowedRoles={['doctor']}>
                                 <PatientDetails />
+                            </PrivateRoute>
+                        } />
+
+                        <Route path="/doctor/dashboard/e-prescription" element={
+                            <PrivateRoute allowedRoles={['doctor']}>
+                                <EPrescription />
                             </PrivateRoute>
                         } />
 
