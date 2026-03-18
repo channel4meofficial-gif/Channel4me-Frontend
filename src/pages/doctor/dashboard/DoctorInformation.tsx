@@ -12,6 +12,10 @@ function DoctorInformation() {
     navigate('/doctor/dashboard/appointments');
   };
 
+  const handleNavigateToEPrescription = () => {
+    navigate('/doctor/dashboard/e-prescription');
+  };
+
   return (
   <div className="layout">
 
@@ -32,6 +36,9 @@ function DoctorInformation() {
         </a>
         <a className="nav-item" href="#" onClick={e => { e.preventDefault(); handleNavigateToPatients(); }}>
           <span className="nav-icon">👥</span> My Patients
+        </a>
+        <a className="nav-item" href="#" onClick={e => { e.preventDefault(); handleNavigateToEPrescription(); }}>
+          <span className="nav-icon">📝</span> E-Prescription
         </a>
 
         <div className="sidebar-bottom">
