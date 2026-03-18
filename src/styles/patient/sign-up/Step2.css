@@ -1,0 +1,78 @@
+/* src/styles/patient/sign-up/Step2.css */
+
+.gender-options {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.gender-option {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.gender-option i {
+    font-size: 1.25rem;
+}
+
+.gender-option:hover {
+    border-color: #667eea44;
+}
+
+.gender-option.selected {
+    background: #f0f7ff;
+    border-color: #667eea;
+    color: #667eea;
+}
+
+.blood-type-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.blood-type {
+    padding: 12px;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.blood-type:hover {
+    border-color: #667eea44;
+}
+
+.blood-type.selected {
+    background: #f0f7ff;
+    border-color: #667eea;
+    color: #667eea;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 640px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}

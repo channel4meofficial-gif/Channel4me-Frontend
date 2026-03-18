@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import '../../../styles/header.css';
 import logo from '../../../assets/logo.png';
+import { useAuth } from '../../../context/AuthContext';
 
 const Header: React.FC = () => {
+  const { isAuthenticated, user, logout } = useAuth();
+  const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -59,8 +62,25 @@ const Header: React.FC = () => {
 
           {/* Desktop Action Buttons */}
           <div className="nav-buttons">
-            <Link to="/login" className="btn btn-login">Log In</Link>
-            <Link to="/register" className="btn btn-primary">Sign Up</Link>
+            {isAuthenticated ? (
+              <>
+                <Link to={`/${user?.role}/dashboard`} className="btn btn-outline" style={{ marginRight: '10px' }}>
+                  Dashboard
+                </Link>
+                <button 
+                  onClick={() => { logout(); navigate('/'); }} 
+                  className="btn btn-primary"
+                  style={{ background: '#ef4444' }}
+                >
+                  Log Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="btn btn-login">Log In</Link>
+                <Link to="/register" className="btn btn-primary">Sign Up</Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Toggle Button */}
@@ -84,8 +104,23 @@ const Header: React.FC = () => {
         {/* Mobile Action Buttons (appear when menu is open) */}
         {isMobileMenuOpen && (
           <div className="nav-buttons-mobile">
-            <Link to="/login" className="btn btn-login" onClick={closeMobileMenu}>Log In</Link>
-            <Link to="/register" className="btn btn-primary" onClick={closeMobileMenu}>Sign Up</Link>
+            {isAuthenticated ? (
+              <>
+                <Link to={`/${user?.role}/dashboard`} className="btn btn-outline" onClick={closeMobileMenu}>Dashboard</Link>
+                <button 
+                  className="btn btn-primary" 
+                  style={{ background: '#ef4444' }}
+                  onClick={() => { logout(); closeMobileMenu(); navigate('/'); }}
+                >
+                  Log Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="btn btn-login" onClick={closeMobileMenu}>Log In</Link>
+                <Link to="/register" className="btn btn-primary" onClick={closeMobileMenu}>Sign Up</Link>
+              </>
+            )}
           </div>
         )}
       </div>

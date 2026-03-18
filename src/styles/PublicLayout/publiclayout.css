@@ -1,77 +1,54 @@
-/* ==============================
-   GLOBAL RESET & BASE STYLES
-================================ */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html,
-body {
-    width: 100%;
-    height: 100%;
-    overflow-x: hidden;
-}
-
-body {
-    font-family: 'Poppins', sans-serif;
-    line-height: 1.6;
-    color: #333;
-    background-color: #f8fafc;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-/* ==============================
-   MAIN PUBLIC LAYOUT
-================================ */
+/* src/styles/PublicLayout/publiclayout.css */
 .public-layout {
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
-    width: 100%;
 }
 
-/* ==============================
-   MAIN CONTENT AREA
-================================ */
-.main-content {
-    flex: 1 0 auto;
-    width: 100%;
-    padding-top: 120px; /* Space for fixed header */
-    padding-bottom: 60px;
-}
-
-/* ==============================
-   PAGE CONTENT CONTAINER
-================================ */
 .container {
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 20px;
     width: 100%;
 }
 
-/* ==============================
-   HEADER & FOOTER
-================================ */
-.header,
-.footer {
-    width: 100%;
-    flex-shrink: 0;
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+    font-size: 0.9375rem;
 }
 
-/* ==============================
-   RESPONSIVE ADJUSTMENTS
-================================ */
-@media (max-width: 768px) {
-    .container {
-        padding: 0 16px;
-    }
+.btn-primary {
+    background: #667eea;
+    color: white;
+    box-shadow: 0 4px 14px 0 rgba(102, 126, 234, 0.39);
+}
 
-    .main-content {
-        padding-top: 100px;
-    }
+.btn-primary:hover {
+    background: #5a6fd6;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+}
+
+.btn-outline {
+    background: white;
+    color: #64748b;
+    border: 2px solid #e2e8f0;
+}
+
+.btn-outline:hover {
+    border-color: #667eea;
+    color: #667eea;
+    background: #f0f7ff;
+}
+
+.main-content {
+    flex: 1;
 }
