@@ -116,6 +116,8 @@ const HomePage: React.FC = () => {
                                         <div
                                             key={index}
                                             className={`action-card ${action.primary ? 'primary' : ''}`}
+                                            onClick={action.title === 'Book Doctor' ? handleViewAllDoctors : undefined}
+                                            style={action.title === 'Book Doctor' ? { cursor: 'pointer' } : undefined}
                                         >
                                             <div className="action-icon">
                                                 <i className={action.icon}></i>
@@ -170,7 +172,18 @@ const HomePage: React.FC = () => {
                                     </div>
                                     <h3>{feature.title}</h3>
                                     <p>{feature.description}</p>
-                                    <a href="#features" className="feature-link">Learn More →</a>
+                                    {feature.title === 'Instant Booking' ? (
+                                        <button
+                                            type="button"
+                                            className="feature-link"
+                                            onClick={handleViewAllDoctors}
+                                            style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+                                        >
+                                            Learn More →
+                                        </button>
+                                    ) : (
+                                        <a href="#features" className="feature-link">Learn More →</a>
+                                    )}
                                 </div>
                             ))}
                         </div>
