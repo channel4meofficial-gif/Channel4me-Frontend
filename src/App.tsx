@@ -1,7 +1,5 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 
 // Platform Pages
@@ -22,7 +20,7 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TermsPage from './pages/TermsPage';
 import CookiePolicyPage from './pages/CookiePolicyPage';
 
-// Doctor Dashboard (already exists on this branch)
+// Doctor Dashboard
 import DoctorInformation from './pages/doctor/dashboard/DoctorInformation';
 import Appointment from './pages/doctor/dashboard/Appointment';
 import PatientList from './pages/doctor/dashboard/PatientList';
