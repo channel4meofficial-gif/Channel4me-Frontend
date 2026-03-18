@@ -23,6 +23,13 @@ import DoctorInformation from './pages/doctor/dashboard/DoctorInformation';
 import Appointment from './pages/doctor/dashboard/Appointment';
 import PatientList from './pages/doctor/dashboard/PatientList';
 import PatientDetails from './pages/doctor/dashboard/PatientDetails';
+import DoctorPage from './pages/doctor-booking/DoctorPage';
+import DoctorProfilePage from './pages/doctor-booking/DoctorProfilePage';
+import DoctorSessionsPage from './pages/doctor-booking/DoctorSessionsPage';
+import DoctorBookingPage from './pages/doctor-booking/DoctorBookingPage';
+import PaymentPage from './pages/doctor-booking/PaymentPage';
+import CardPaymentPage from './pages/doctor-booking/CardPaymentPage';
+import PaymentReceiptPage from './pages/doctor-booking/PaymentReceiptPage';
 
 // Chatbot Page
 import Chatbot from './pages/chatbot/Chatbot';
@@ -126,9 +133,18 @@ function App() {
 
                         {/* Platform Routes */}
                         <Route path="/features" element={<PlaceholderPage />} />
-                        <Route path="/doctors" element={<PlaceholderPage />} />
+                        <Route path="/doctors" element={<DoctorPage />} />
                         <Route path="/specialties" element={<PlaceholderPage />} />
                         <Route path="/pricing" element={<PlaceholderPage />} />
+
+                        {/* Doctor Booking Routes */}
+                        <Route path="/doctor-booking" element={<DoctorPage />} />
+                        <Route path="/doctor-booking/book" element={<DoctorBookingPage />} />
+                        <Route path="/doctor-booking/doctor/:id/profile" element={<DoctorProfilePage />} />
+                        <Route path="/doctor-booking/doctor/:id/sessions" element={<DoctorSessionsPage />} />
+                        <Route path="/doctor-booking/payment" element={<PaymentPage />} />
+                        <Route path="/doctor-booking/card-payment" element={<CardPaymentPage />} />
+                        <Route path="/doctor-booking/payment-receipt" element={<PaymentReceiptPage />} />
                         
                         {/* Company Routes */}
                         <Route path="/about" element={<PlaceholderPage />} />
