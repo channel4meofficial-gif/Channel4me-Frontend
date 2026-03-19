@@ -89,7 +89,7 @@ const PatientDashboard: React.FC = () => {
                         <div className="pps-card" style={{ marginBottom: '24px' }}>
                             <div className="pps-card-header">
                                 <h3 className="pps-card-title blue">Health Conditions (Last Time Sync)</h3>
-                                <button className="pps-btn-edit">
+                                <button className="pps-btn-edit" onClick={() => navigate('/patient/blood-report/new')}>
                                     New Blood Report
                                 </button>
                             </div>
