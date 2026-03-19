@@ -45,6 +45,15 @@ import EPrescription from './pages/doctor/dashboard/EPrescription';
 // Chatbot
 import Chatbot from './pages/chatbot/Chatbot';
 
+// Doctor Booking Pages
+import DoctorPage from './pages/doctor-booking/DoctorPage';
+import DoctorProfilePage from './pages/doctor-booking/DoctorProfilePage';
+import DoctorSessionsPage from './pages/doctor-booking/DoctorSessionsPage';
+import DoctorBookingPage from './pages/doctor-booking/DoctorBookingPage';
+import PaymentPage from './pages/doctor-booking/PaymentPage';
+import CardPaymentPage from './pages/doctor-booking/CardPaymentPage';
+import PaymentReceiptPage from './pages/doctor-booking/PaymentReceiptPage';
+
 // Context Providers
 import { PatientRegistrationProvider } from './context/patientRegistrationContext';
 import { DoctorRegistrationProvider } from './context/doctorRegistrationContext';
@@ -150,6 +159,15 @@ function App() {
                             {/* Platform (REAL pages from your branch) */}
                             <Route path="/features" element={<FeaturesPage />} />
                             <Route path="/doctors" element={<DoctorsPage />} />
+
+                            {/* Doctor Booking */}
+                            <Route path="/doctor-booking/doctors" element={<DoctorPage />} />
+                            <Route path="/doctor-booking/doctor/:id/profile" element={<DoctorProfilePage />} />
+                            <Route path="/doctor-booking/doctor/:id/sessions" element={<DoctorSessionsPage />} />
+                            <Route path="/doctor-booking/book" element={<DoctorBookingPage />} />
+                            <Route path="/doctor-booking/payment" element={<PaymentPage />} />
+                            <Route path="/doctor-booking/card-payment" element={<CardPaymentPage />} />
+                            <Route path="/doctor-booking/payment-receipt" element={<PaymentReceiptPage />} />
 
                             {/* Company */}
                             <Route path="/about" element={<AboutPage />} />
