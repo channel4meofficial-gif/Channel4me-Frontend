@@ -109,6 +109,27 @@
     flex-shrink: 0;
 }
 
+/* Buttons */
+.pps-btn-edit {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    transition: background 0.2s;
+}
+
+.pps-btn-edit:hover {
+    background: #2563eb;
+}
+
 /* Card Header (for right side cards) */
 .pps-card-header {
     display: flex;
