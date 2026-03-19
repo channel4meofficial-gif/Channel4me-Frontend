@@ -1,0 +1,352 @@
+/* ===== DOCTOR PROFILE PAGE ===== */
+
+.profile-wrapper {
+    padding: 50px 0 80px;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.35fr;
+    gap: 30px;
+    align-items: start;
+}
+
+/* ===== LEFT COLUMN ===== */
+.left-col {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.photo-card {
+    border-radius: 22px;
+    overflow: hidden;
+    background: linear-gradient(160deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 10px 30px rgba(102,126,234,.25);
+    animation: fadeUp .4s ease both;
+    height: 340px;
+}
+
+.doctor-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+    transition: transform .5s ease;
+}
+
+.photo-card:hover .doctor-photo {
+    transform: scale(1.04);
+}
+
+/* ===== REVIEWS ===== */
+.reviews-card {
+    background: white;
+    border-radius: 20px;
+    padding: 28px 26px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.06);
+    animation: fadeUp .4s .08s ease both;
+}
+
+.reviews-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.reviews-title i { color: #667eea; }
+
+.reviews-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.review-item {
+    background: #f8fafc;
+    border: 2px solid #f1f5f9;
+    border-radius: 14px;
+    padding: 16px;
+    transition: border-color .2s, box-shadow .2s;
+}
+.review-item:hover {
+    border-color: #667eea;
+    box-shadow: 0 6px 18px rgba(102,126,234,.10);
+}
+
+.review-stars {
+    display: flex;
+    gap: 3px;
+    color: #f59e0b;
+    font-size: .78rem;
+    margin-bottom: 10px;
+}
+
+.review-item p {
+    font-size: .8rem;
+    color: #475569;
+    line-height: 1.55;
+    margin: 0;
+}
+
+/* ===== RIGHT COLUMN ===== */
+.right-col {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+/* ===== INFO CARD ===== */
+.info-card {
+    background: white;
+    border-radius: 20px;
+    padding: 28px 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.06);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    animation: fadeUp .4s .04s ease both;
+}
+
+.info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.info-row > i {
+    color: #667eea;
+    font-size: 1rem;
+    margin-top: 3px;
+    width: 18px;
+    flex-shrink: 0;
+}
+
+.info-row > div {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.info-label {
+    font-size: .72rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+.info-value {
+    font-size: .9rem;
+    font-weight: 500;
+    color: #1e293b;
+    line-height: 1.45;
+}
+
+/* ===== SECTION CARD ===== */
+.section-card {
+    background: white;
+    border-radius: 20px;
+    padding: 26px 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.06);
+    animation: fadeUp .4s .1s ease both;
+}
+
+.section-card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.section-card-title i { color: #667eea; }
+
+/* ===== HOSPITAL CHANNEL LIST ===== */
+.hosp-section-card { padding: 26px 0 0 !important; }
+.hosp-section-card .section-card-title { padding: 0 30px 16px; border-bottom: 1px solid #f1f5f9; margin-bottom: 0; }
+
+.hosp-channel-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.hosp-channel-group {
+    border-bottom: 1px solid #f1f5f9;
+}
+.hosp-channel-group:last-child { border-bottom: none; }
+
+.hosp-channel-header {
+    background: #f8fafc;
+    padding: 9px 30px;
+    font-size: .72rem;
+    font-weight: 700;
+    color: #64748b;
+    letter-spacing: .6px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.hosp-channel-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 30px;
+    transition: background .15s;
+}
+.hosp-channel-row:hover { background: #fafbff; }
+
+.hosp-channel-avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    border: 2px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #94a3b8;
+    font-size: 1.1rem;
+}
+
+.hosp-channel-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.hosp-channel-name {
+    font-size: .9rem;
+    font-weight: 700;
+    color: #667eea;
+}
+
+.hosp-channel-specialty {
+    font-size: .78rem;
+    color: #64748b;
+    font-weight: 400;
+}
+
+.hosp-channel-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 9px 20px;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: .82rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: all .2s;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(102,126,234,.25);
+}
+.hosp-channel-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102,126,234,.40);
+}
+.hosp-channel-btn.selected {
+    box-shadow: 0 8px 20px rgba(102,126,234,.45);
+    transform: translateY(-1px);
+}
+
+/* ===== CHARGES SECTION ===== */
+.charges-card { padding-bottom: 20px; }
+
+.charge-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 0;
+    border-bottom: 1px dashed #f1f5f9;
+}
+.charge-row:last-child { border-bottom: none; }
+
+.charge-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: .88rem;
+    font-weight: 500;
+    color: #475569;
+}
+
+.charge-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: .75rem;
+}
+
+.charge-icon.no-show     { background: #fff1f0; color: #ef4444; }
+.charge-icon.booking     { background: #f0f4ff; color: #667eea; }
+.charge-icon.doctor-fee  { background: #f0fdf4; color: #10b981; }
+.charge-icon.hospital-fee{ background: #fff7ed; color: #f59e0b; }
+.charge-icon.total-fee   { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+
+.charge-value {
+    font-size: .88rem;
+    font-weight: 600;
+    color: #1e293b;
+    white-space: nowrap;
+}
+
+.charge-divider {
+    height: 2px;
+    background: linear-gradient(135deg, #f0f4ff, #f8fafc);
+    border-radius: 2px;
+    margin: 6px 0;
+}
+
+.total-row {
+    background: linear-gradient(135deg, #f0f4ff 0%, #f8fafc 100%);
+    border-radius: 14px;
+    padding: 14px 16px !important;
+    margin: 4px -4px 0;
+    border-bottom: none !important;
+}
+
+.total-label {
+    font-weight: 700 !important;
+    color: #1e293b !important;
+    font-size: .95rem !important;
+}
+
+.total-value {
+    font-size: 1rem !important;
+    font-weight: 800 !important;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ===== ANIMATION ===== */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+    .profile-grid { grid-template-columns: 1fr; }
+    .photo-card { height: 280px; }
+}
+
+@media (max-width: 560px) {
+    .reviews-grid { grid-template-columns: 1fr; }
+    .datetime-row { grid-template-columns: 1fr; }
+}

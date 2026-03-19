@@ -10,9 +10,7 @@ const Footer = () => {
     const platformLinks = [
         { label: 'Home', path: '/' },
         { label: 'Features', path: '/features' },
-        { label: 'Doctors', path: '/doctors' },
-        { label: 'Specialties', path: '/specialties' },
-        { label: 'Pricing', path: '/pricing' }
+        { label: 'Doctors', path: '/doctors' }
     ];
 
     const companyLinks = [
