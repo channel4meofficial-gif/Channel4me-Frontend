@@ -12,6 +12,10 @@ function DoctorInformation() {
     navigate('/doctor/dashboard/appointments');
   };
 
+  const handleNavigateToEPrescription = () => {
+    navigate('/doctor/dashboard/e-prescription');
+  };
+
   return (
   <div className="layout">
 
@@ -32,6 +36,9 @@ function DoctorInformation() {
         </a>
         <a className="nav-item" href="#" onClick={e => { e.preventDefault(); handleNavigateToPatients(); }}>
           <span className="nav-icon">👥</span> My Patients
+        </a>
+        <a className="nav-item" href="#" onClick={e => { e.preventDefault(); handleNavigateToEPrescription(); }}>
+          <span className="nav-icon">📝</span> E-Prescription
         </a>
 
         <div className="sidebar-bottom">
@@ -69,17 +76,7 @@ function DoctorInformation() {
 
         {/* Content */}
         <div className="content">
-
-          {/* Quick Schedule Banner */}
-          <div className="schedule-bar">
-            <span className="schedule-bar-icon">⏰</span>
-            <div className="schedule-bar-text">
-              <div className="t1">Next Appointment in 45 minutes</div>
-              <div className="t2">MT Dinuka · Hemas Hospital · 12:00 PM</div>
-            </div>
-            <button className="schedule-bar-btn">View Details →</button>
-          </div>
-
+          
           {/* Stat Cards */}
           <div className="stats-row">
 
