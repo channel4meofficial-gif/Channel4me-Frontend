@@ -52,6 +52,7 @@ const PatientStep3: React.FC = () => {
         console.log('Navigating to dashboard, authenticated:', isAuthenticated);
         navigate('/patient/dashboard');
     };
+    const handleFindDoctors = () => navigate('/doctors');
     const handleReturnHome = () => {
         console.log('Returning to homepage');
         navigate('/');
