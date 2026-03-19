@@ -65,6 +65,9 @@ import Unauthorized from './pages/public/Unauthorized';
 
 // Dashboards
 import PatientDashboard from './pages/patient/Dashboard';
+import PatientEditProfile from './pages/patient/Dashboard/PatientEditProfile';
+import NewBloodReport from './pages/patient/Dashboard/NewBloodReport';
+import EmergencyContactEdit from './pages/patient/Dashboard/EmergencyContactEdit';
 import PendingApproval from './pages/doctor/PendingApproval';
 import AdminDashboard from './pages/admin/admindashboard';
 
@@ -111,39 +114,34 @@ function App() {
                             <Route path="/doctor/register/step2" element={<DoctorStep2 />} />
                             <Route path="/doctor/register/step3" element={<DoctorStep3 />} />
 
-                            {/* Patient Dashboard */}
-                            <Route path="/patient/dashboard" element={
-                                <PrivateRoute allowedRoles={['patient']}>
-                                    <PatientDashboard />
-                                </PrivateRoute>
-                            } />
-
-                            {/* Doctor Dashboard */}
-                            <Route path="/doctor/dashboard" element={
-                                <PrivateRoute allowedRoles={['doctor']}>
-                                    <DoctorInformation />
-                                </PrivateRoute>
-                            } />
-                            <Route path="/doctor/dashboard/appointments" element={
-                                <PrivateRoute allowedRoles={['doctor']}>
-                                    <Appointment />
-                                </PrivateRoute>
-                            } />
-                            <Route path="/doctor/dashboard/patients" element={
-                                <PrivateRoute allowedRoles={['doctor']}>
-                                    <PatientList />
-                                </PrivateRoute>
-                            } />
-                            <Route path="/doctor/dashboard/patients/:id" element={
-                                <PrivateRoute allowedRoles={['doctor']}>
-                                    <PatientDetails />
-                                </PrivateRoute>
-                            } />
-                            <Route path="/doctor/dashboard/e-prescription" element={
-                                <PrivateRoute allowedRoles={['doctor']}>
-                                    <EPrescription />
-                                </PrivateRoute>
-                            } />
+                        {/* Patient Routes */}
+                        <Route path="/patient/dashboard" element={
+                            <PrivateRoute allowedRoles={['patient']}>
+                                <PatientDashboard />
+                            </PrivateRoute>
+                        } />
+                        
+                        {/* Doctor Dashboard Flow */}
+                        <Route path="/doctor/dashboard" element={
+                            <PrivateRoute allowedRoles={['doctor']}>
+                                <DoctorInformation />
+                            </PrivateRoute>
+                        } />
+                        <Route path="/doctor/dashboard/appointments" element={
+                            <PrivateRoute allowedRoles={['doctor']}>
+                                <Appointment />
+                            </PrivateRoute>
+                        } />
+                        <Route path="/doctor/dashboard/patients" element={
+                            <PrivateRoute allowedRoles={['doctor']}>
+                                <PatientList />
+                            </PrivateRoute>
+                        } />
+                        <Route path="/doctor/dashboard/patients/:id" element={
+                            <PrivateRoute allowedRoles={['doctor']}>
+                                <PatientDetails />
+                            </PrivateRoute>
+                        } />
 
                             {/* Admin */}
                             <Route path="/admin/dashboard" element={
