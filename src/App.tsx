@@ -1,12 +1,29 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 
 // Core Pages
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/sign-in/LoginPage';
 import RegistrationType from './pages/RegistrationType';
 import PlaceholderPage from './pages/PlaceholderPage';
+
+// Platform Pages (your footer branch)
+import FeaturesPage from './pages/FeaturesPage';
+import DoctorsPage from './pages/DoctorsPage';
+
+// Company Pages (your footer branch)
+import AboutPage from './pages/AboutPage';
+import CareersPage from './pages/CareersPage';
+import PressPage from './pages/PressPage';
+import BlogPage from './pages/BlogPage';
+import ContactPage from './pages/ContactPage';
+
+// Support Pages (your footer branch)
+import HelpCenterPage from './pages/HelpCenterPage';
+import FaqPage from './pages/FaqPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import TermsPage from './pages/TermsPage';
+import CookiePolicyPage from './pages/CookiePolicyPage';
 
 // Patient Registration
 import PatientStep1 from './pages/patient/sign-up/Step1';
@@ -25,7 +42,7 @@ import PatientList from './pages/doctor/dashboard/PatientList';
 import PatientDetails from './pages/doctor/dashboard/PatientDetails';
 import EPrescription from './pages/doctor/dashboard/EPrescription';
 
-// Chatbot Page
+// Chatbot
 import Chatbot from './pages/chatbot/Chatbot';
 
 // Context Providers
@@ -37,7 +54,7 @@ import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './routes/PrivateRoute';
 import Unauthorized from './pages/public/Unauthorized';
 
-// New Dashboards/Pages
+// Dashboards
 import PatientDashboard from './pages/patient/Dashboard';
 import PendingApproval from './pages/doctor/PendingApproval';
 import AdminDashboard from './pages/admin/admindashboard';
@@ -61,7 +78,6 @@ function ScrollToHash() {
 }
 
 function App() {
-    console.log('App rendering, current location:', window.location.pathname);
     return (
         <BrowserRouter>
             <ScrollToHash />
@@ -69,30 +85,31 @@ function App() {
                 <PatientRegistrationProvider>
                     <DoctorRegistrationProvider>
                         <Routes>
+
                             <Route path="/" element={<HomePage />} />
 
-                            {/* Auth Routes */}
+                            {/* Auth */}
                             <Route path="/login" element={<LoginPage />} />
                             <Route path="/register" element={<RegistrationType />} />
 
-                            {/* Patient Registration Flow */}
+                            {/* Patient Registration */}
                             <Route path="/patient/register/step1" element={<PatientStep1 />} />
                             <Route path="/patient/register/step2" element={<PatientStep2 />} />
                             <Route path="/patient/register/step3" element={<PatientStep3 />} />
 
-                            {/* Doctor Registration Flow */}
+                            {/* Doctor Registration */}
                             <Route path="/doctor/register/step1" element={<DoctorStep1 />} />
                             <Route path="/doctor/register/step2" element={<DoctorStep2 />} />
                             <Route path="/doctor/register/step3" element={<DoctorStep3 />} />
 
-                            {/* Patient Routes */}
+                            {/* Patient Dashboard */}
                             <Route path="/patient/dashboard" element={
                                 <PrivateRoute allowedRoles={['patient']}>
                                     <PatientDashboard />
                                 </PrivateRoute>
                             } />
 
-                            {/* Doctor Dashboard Flow */}
+                            {/* Doctor Dashboard */}
                             <Route path="/doctor/dashboard" element={
                                 <PrivateRoute allowedRoles={['doctor']}>
                                     <DoctorInformation />
@@ -113,46 +130,44 @@ function App() {
                                     <PatientDetails />
                                 </PrivateRoute>
                             } />
-
-                            {/* Admin Routes */}
-                            <Route path="/admin/dashboard" element={
-                                <PrivateRoute allowedRoles={['admin']}>
-                                    <AdminDashboard />
-                                </PrivateRoute>
-                            } />
-
                             <Route path="/doctor/dashboard/e-prescription" element={
                                 <PrivateRoute allowedRoles={['doctor']}>
                                     <EPrescription />
                                 </PrivateRoute>
                             } />
 
-                            {/* Special Pages */}
+                            {/* Admin */}
+                            <Route path="/admin/dashboard" element={
+                                <PrivateRoute allowedRoles={['admin']}>
+                                    <AdminDashboard />
+                                </PrivateRoute>
+                            } />
+
+                            {/* Special */}
                             <Route path="/doctor/pending" element={<PendingApproval />} />
                             <Route path="/unauthorized" element={<Unauthorized />} />
 
-                            {/* Platform Routes */}
-                            <Route path="/features" element={<PlaceholderPage />} />
-                            <Route path="/doctors" element={<PlaceholderPage />} />
-                            <Route path="/specialties" element={<PlaceholderPage />} />
-                            <Route path="/pricing" element={<PlaceholderPage />} />
+                            {/* Platform (REAL pages from your branch) */}
+                            <Route path="/features" element={<FeaturesPage />} />
+                            <Route path="/doctors" element={<DoctorsPage />} />
 
-                            {/* Company Routes */}
-                            <Route path="/about" element={<PlaceholderPage />} />
-                            <Route path="/careers" element={<PlaceholderPage />} />
-                            <Route path="/press" element={<PlaceholderPage />} />
-                            <Route path="/blog" element={<PlaceholderPage />} />
-                            <Route path="/contact" element={<PlaceholderPage />} />
+                            {/* Company */}
+                            <Route path="/about" element={<AboutPage />} />
+                            <Route path="/careers" element={<CareersPage />} />
+                            <Route path="/press" element={<PressPage />} />
+                            <Route path="/blog" element={<BlogPage />} />
+                            <Route path="/contact" element={<ContactPage />} />
 
-                            {/* Support Routes */}
-                            <Route path="/help" element={<PlaceholderPage />} />
-                            <Route path="/faq" element={<PlaceholderPage />} />
-                            <Route path="/privacy" element={<PlaceholderPage />} />
-                            <Route path="/terms" element={<PlaceholderPage />} />
-                            <Route path="/cookies" element={<PlaceholderPage />} />
+                            {/* Support */}
+                            <Route path="/help" element={<HelpCenterPage />} />
+                            <Route path="/faq" element={<FaqPage />} />
+                            <Route path="/privacy" element={<PrivacyPolicyPage />} />
+                            <Route path="/terms" element={<TermsPage />} />
+                            <Route path="/cookies" element={<CookiePolicyPage />} />
 
-                            {/* Chatbot Route */}
+                            {/* Chatbot */}
                             <Route path="/chatbot" element={<Chatbot />} />
+
                         </Routes>
                     </DoctorRegistrationProvider>
                 </PatientRegistrationProvider>
