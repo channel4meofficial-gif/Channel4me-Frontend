@@ -54,7 +54,7 @@ const PatientDashboard: React.FC = () => {
                                 <div className="pps-card">
                                     <div className="pps-card-header" style={{ borderBottom: 'none', paddingBottom: 0, marginBottom: '24px' }}>
                                         <h3 className="pps-card-title">Emergency Contact</h3>
-                                        <button className="pps-btn-edit">
+                                        <button className="pps-btn-edit" onClick={() => navigate('/patient/emergency-contact/edit')}>
                                             Edit <EditIcon />
                                         </button>
                                     </div>

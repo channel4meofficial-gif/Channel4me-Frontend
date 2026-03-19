@@ -40,6 +40,7 @@ import Unauthorized from './pages/public/Unauthorized';
 import PatientDashboard from './pages/patient/Dashboard';
 import PatientEditProfile from './pages/patient/Dashboard/PatientEditProfile';
 import NewBloodReport from './pages/patient/Dashboard/NewBloodReport';
+import EmergencyContactEdit from './pages/patient/Dashboard/EmergencyContactEdit';
 import PendingApproval from './pages/doctor/PendingApproval';
 import AdminDashboard from './pages/admin/Dashboard';
 
@@ -100,6 +101,11 @@ function App() {
                         <Route path="/patient/blood-report/new" element={
                             <PrivateRoute allowedRoles={['patient']}>
                                 <NewBloodReport />
+                            </PrivateRoute>
+                        } />
+                        <Route path="/patient/emergency-contact/edit" element={
+                            <PrivateRoute allowedRoles={['patient']}>
+                                <EmergencyContactEdit />
                             </PrivateRoute>
                         } />
                         
