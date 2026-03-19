@@ -1,20 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PublicLayout from '../../../components/layout/PublicLayout/publiclayout';
-import './PatientProfile.css';
+import '../../../styles/patient/PatientProfile.css';
 
 const DEFAULT_AVATAR = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 
 const DEFAULT_PROFILE_DATA = {
-    firstName: 'Nimal',
-    lastName: 'Perera',
-    age: '45',
-    location: '',
-    guardianFirstName: 'Sunitha',
-    guardianLastName: '',
-    contactNumber1: '0771234567',
-    contactNumber2: '',
+    firstName: 'Cristiano',
+    lastName: 'Ronaldo',
+    age: '40',
+    location: 'Riyadh, Saudi Arabia',
+    guardianFirstName: 'Dolores',
+    guardianLastName: 'Aveiro',
+    contactNumber1: '0778518614',
+    contactNumber2: '0742107576',
 };
+
+const DEFAULT_BLOOD_REPORT = {
+    bloodSugar: '85mg/dL',
+    cholesterol: '200 mg/dL',
+    kidneyHealth: '200 mg/dL',
+    thyroidDisorders: '4.0 mIU/L',
+};
+
+const DEFAULT_UPCOMING_APPOINTMENTS = [
+    { id: '1', time: '5.00 pm', location: 'Roseth Hospital', doctor: 'Dr Sudarshan' },
+];
+
+const DEFAULT_DOCTOR_FEEDBACK = [
+    {
+        id: '1',
+        text: "I've reviewed your case and prescribed the needed medicine. Please follow the instructions in the app. Your consultation is complete, and your medication has been updated. Follow the steps shown in the app.",
+    },
+];
 
 function EditIcon() {
     return (
@@ -38,7 +56,9 @@ const PatientDashboard: React.FC = () => {
     const navigate = useNavigate();
     const [profileData, setProfileData] = useState(DEFAULT_PROFILE_DATA);
     const [profileImage, setProfileImage] = useState(DEFAULT_AVATAR);
-    const [bloodReport, setBloodReport] = useState<{ [key: string]: string } | null>(null);
+    const [bloodReport, setBloodReport] = useState<{ [key: string]: string }>(DEFAULT_BLOOD_REPORT);
+    const [upcomingAppointments, setUpcomingAppointments] = useState(DEFAULT_UPCOMING_APPOINTMENTS);
+    const [doctorFeedback, setDoctorFeedback] = useState(DEFAULT_DOCTOR_FEEDBACK);
 
     useEffect(() => {
         const storedProfileData = localStorage.getItem('patientProfileData');
@@ -61,6 +81,24 @@ const PatientDashboard: React.FC = () => {
                 setBloodReport(JSON.parse(storedBloodReport));
             } catch (e) {
                 console.error("Failed to parse patientBloodReport", e);
+            }
+        }
+
+        const storedAppointments = localStorage.getItem('patientUpcomingAppointments');
+        if (storedAppointments) {
+            try {
+                setUpcomingAppointments(JSON.parse(storedAppointments));
+            } catch (e) {
+                console.error("Failed to parse patientUpcomingAppointments", e);
+            }
+        }
+
+        const storedFeedback = localStorage.getItem('patientDoctorFeedback');
+        if (storedFeedback) {
+            try {
+                setDoctorFeedback(JSON.parse(storedFeedback));
+            } catch (e) {
+                console.error("Failed to parse patientDoctorFeedback", e);
             }
         }
     }, []);
@@ -87,7 +125,7 @@ const PatientDashboard: React.FC = () => {
                                     <h2 className="pps-profile-name">{`${firstName} ${lastName}`}</h2>
                                     <p className="pps-profile-age">Age {age || '-'}</p>
                                     {location && <p className="pps-profile-location"><PinIcon /> {location}</p>}
-                                    <button className="pps-btn-edit" onClick={() => navigate('/patient/profile/edit')}>
+                                    <button className="pps-btn-edit" onClick={() => navigate('/patient/dashboard/edit-profile')}>
                                         Edit <EditIcon />
                                     </button>
                                 </div>
@@ -99,7 +137,7 @@ const PatientDashboard: React.FC = () => {
                                 <div className="pps-card">
                                     <div className="pps-card-header" style={{ borderBottom: 'none', paddingBottom: 0, marginBottom: '24px' }}>
                                         <h3 className="pps-card-title">Emergency Contact</h3>
-                                        <button className="pps-btn-edit" onClick={() => navigate('/patient/emergency-contact/edit')}>
+                                        <button className="pps-btn-edit" onClick={() => navigate('/patient/dashboard/edit-emergency-contact')}>
                                             Edit <EditIcon />
                                         </button>
                                     </div>
@@ -124,9 +162,18 @@ const PatientDashboard: React.FC = () => {
                                         <h3 className="pps-card-title blue">Up-comming appointments</h3>
                                     </div>
                                     <ul className="pps-list">
-                                        <li className="pps-list-item" style={{ color: '#888' }}>
-                                            No upcoming appointments.
-                                        </li>
+                                        {upcomingAppointments.length === 0 ? (
+                                            <li className="pps-list-item" style={{ color: '#888' }}>
+                                                No upcoming appointments.
+                                            </li>
+                                        ) : (
+                                            upcomingAppointments.map(apt => (
+                                                <li key={apt.id} className="pps-list-item">
+                                                    <span className="label">{apt.time} at {apt.location}</span>
+                                                    <span>: {apt.doctor}</span>
+                                                </li>
+                                            ))
+                                        )}
                                     </ul>
                                 </div>
                             </div>
@@ -136,7 +183,7 @@ const PatientDashboard: React.FC = () => {
                         <div className="pps-card" style={{ marginBottom: '24px' }}>
                             <div className="pps-card-header">
                                 <h3 className="pps-card-title blue">Health Conditions (Last Time Sync)</h3>
-                                <button className="pps-btn-edit" onClick={() => navigate('/patient/blood-report/new')}>
+                                <button className="pps-btn-edit" onClick={() => navigate('/patient/dashboard/new-blood-report')}>
                                     New Blood Report
                                 </button>
                             </div>
@@ -160,9 +207,17 @@ const PatientDashboard: React.FC = () => {
                                 <h3 className="pps-card-title blue">Doctor Feedback</h3>
                             </div>
                             <div className="pps-feedback-list">
-                                <div className="pps-feedback-item" style={{ color: '#888', textAlign: 'center', padding: '16px' }}>
-                                    No doctor feedback available yet.
-                                </div>
+                                {doctorFeedback.length === 0 ? (
+                                    <div className="pps-feedback-item" style={{ color: '#888', textAlign: 'center', padding: '16px' }}>
+                                        No doctor feedback available yet.
+                                    </div>
+                                ) : (
+                                    doctorFeedback.map((feedback) => (
+                                        <div key={feedback.id} className="pps-feedback-item">
+                                            {feedback.text}
+                                        </div>
+                                    ))
+                                )}
                             </div>
                         </div>
 
