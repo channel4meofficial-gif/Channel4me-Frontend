@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import PublicLayout from '../../../components/layout/PublicLayout/publiclayout';
+import { useAuth } from '../../../context/AuthContext';
 import './PatientProfile.css';
 
 const PATIENT_AVATAR = "https://randomuser.me/api/portraits/men/75.jpg";
@@ -25,6 +26,7 @@ function PinIcon() {
 
 const PatientDashboard: React.FC = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
 
     return (
         <PublicLayout>
@@ -39,12 +41,15 @@ const PatientDashboard: React.FC = () => {
                                     <div className="pps-profile-img-wrap">
                                         <img src={PATIENT_AVATAR} alt="Profile" className="pps-profile-img" />
                                     </div>
-                                    <h2 className="pps-profile-name">Cristiano Ronaldo</h2>
-                                    <p className="pps-profile-age">Age 40</p>
-                                    <p className="pps-profile-location"><PinIcon /> Riyadh, Saudi Arabia</p>
+                                    <h2 className="pps-profile-name">{user?.name || 'Patient User'}</h2>
+                                    <p className="pps-profile-age">Age {user?.age || '25'}</p>
+                                    <p className="pps-profile-location"><PinIcon /> {user?.location || 'Colombo, Sri Lanka'}</p>
                                     <button className="pps-btn-edit" onClick={() => navigate('/patient/profile/edit')}>
                                         Edit <EditIcon />
                                     </button>
+                                    <div className="pps-member-id" style={{ marginTop: '15px', padding: '8px', background: '#f1f5f9', borderRadius: '8px', fontSize: '12px', fontWeight: '600' }}>
+                                        ID: <span style={{ color: '#667eea' }}>{user?.memberId || 'CH4M-0000'}</span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -60,13 +65,10 @@ const PatientDashboard: React.FC = () => {
                                     </div>
                                     <ul className="pps-list">
                                         <li className="pps-list-item">
-                                            <span className="label">Guardian Name</span> <span>: Dolores Aveiro</span>
+                                            <span className="label">Guardian Name</span> <span>: {user?.guardianName || 'Emergency Contact'}</span>
                                         </li>
                                         <li className="pps-list-item">
-                                            <span className="label">Contact Number1</span> <span>: 0778518614</span>
-                                        </li>
-                                        <li className="pps-list-item">
-                                            <span className="label">Contact Number2</span> <span>: 0742107576</span>
+                                            <span className="label">Contact Number</span> <span>: {user?.contactNumber || 'Not provided'}</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -77,9 +79,15 @@ const PatientDashboard: React.FC = () => {
                                         <h3 className="pps-card-title blue">Up-comming appointments</h3>
                                     </div>
                                     <ul className="pps-list">
-                                        <li className="pps-list-item">
-                                            5.00 pm at Roseth Hospital. Dr Sudarshan
-                                        </li>
+                                        {user?.appointments && user.appointments.length > 0 ? (
+                                            user.appointments.map(apt => (
+                                                <li key={apt.id} className="pps-list-item">
+                                                    {apt.time} at {apt.location || 'Roseth Hospital'}. Dr {apt.doctorName}
+                                                </li>
+                                            ))
+                                        ) : (
+                                            <li className="pps-list-item">No upcoming appointments</li>
+                                        )}
                                     </ul>
                                 </div>
                             </div>

@@ -6,6 +6,7 @@ export interface Appointment {
   specialization: string;
   date: string;
   time: string;
+  location?: string;
   status: 'upcoming' | 'completed' | 'cancelled';
   prescriptionUrl?: string;
   rating?: number;
@@ -20,6 +21,8 @@ export interface User {
   location?: string;
   guardianName?: string;
   contactNumber?: string;
+  memberId?: string;
+  createdDate?: string;
   appointments?: Appointment[];
 }
 
