@@ -3,8 +3,23 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
 }
 
+/* ==============================
+   MAIN CONTENT AREA
+================================ */
+.main-content {
+    flex: 1 0 auto;
+    width: 100%;
+    padding-top: 120px; /* Space for fixed header */
+    padding-bottom: 60px;
+}
+
+/* ==============================
+   PAGE CONTENT CONTAINER
+================================ */
 .container {
     max-width: 1280px;
     margin: 0 auto;
@@ -25,30 +40,15 @@
     font-size: 0.9375rem;
 }
 
-.btn-primary {
-    background: #667eea;
-    color: white;
-    box-shadow: 0 4px 14px 0 rgba(102, 126, 234, 0.39);
-}
+/* ==============================
+   RESPONSIVE ADJUSTMENTS
+================================ */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 16px;
+    }
 
-.btn-primary:hover {
-    background: #5a6fd6;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
-}
-
-.btn-outline {
-    background: white;
-    color: #64748b;
-    border: 2px solid #e2e8f0;
-}
-
-.btn-outline:hover {
-    border-color: #667eea;
-    color: #667eea;
-    background: #f0f7ff;
-}
-
-.main-content {
-    flex: 1;
+    .main-content {
+        padding-top: 100px;
+    }
 }
