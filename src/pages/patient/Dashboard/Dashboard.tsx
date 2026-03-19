@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PublicLayout from '../../../components/layout/PublicLayout/publiclayout';
 import './PatientProfile.css';
 
-const PATIENT_AVATAR = "https://randomuser.me/api/portraits/men/75.jpg";
+const DEFAULT_AVATAR = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+
+const DEFAULT_PROFILE_DATA = {
+    firstName: 'Nimal',
+    lastName: 'Perera',
+    age: '45',
+    location: '',
+    guardianFirstName: 'Sunitha',
+    guardianLastName: '',
+    contactNumber1: '0771234567',
+    contactNumber2: '',
+};
 
 function EditIcon() {
     return (
@@ -25,6 +36,40 @@ function PinIcon() {
 
 const PatientDashboard: React.FC = () => {
     const navigate = useNavigate();
+    const [profileData, setProfileData] = useState(DEFAULT_PROFILE_DATA);
+    const [profileImage, setProfileImage] = useState(DEFAULT_AVATAR);
+    const [bloodReport, setBloodReport] = useState<{ [key: string]: string } | null>(null);
+
+    useEffect(() => {
+        const storedProfileData = localStorage.getItem('patientProfileData');
+        if (storedProfileData) {
+            try {
+                setProfileData(JSON.parse(storedProfileData));
+            } catch (e) {
+                console.error("Failed to parse patientProfileData", e);
+            }
+        }
+
+        const storedImage = localStorage.getItem('patientProfileImage');
+        if (storedImage) {
+            setProfileImage(storedImage);
+        }
+
+        const storedBloodReport = localStorage.getItem('patientBloodReport');
+        if (storedBloodReport) {
+            try {
+                setBloodReport(JSON.parse(storedBloodReport));
+            } catch (e) {
+                console.error("Failed to parse patientBloodReport", e);
+            }
+        }
+    }, []);
+
+    const {
+        firstName, lastName, age, location,
+        guardianFirstName, guardianLastName,
+        contactNumber1, contactNumber2
+    } = profileData;
 
     return (
         <PublicLayout>
@@ -37,11 +82,11 @@ const PatientDashboard: React.FC = () => {
                             <div className="pps-col-left">
                                 <div className="pps-card pps-profile-card">
                                     <div className="pps-profile-img-wrap">
-                                        <img src={PATIENT_AVATAR} alt="Profile" className="pps-profile-img" />
+                                        <img src={profileImage} alt="Profile" className="pps-profile-img" />
                                     </div>
-                                    <h2 className="pps-profile-name">Cristiano Ronaldo</h2>
-                                    <p className="pps-profile-age">Age 40</p>
-                                    <p className="pps-profile-location"><PinIcon /> Riyadh, Saudi Arabia</p>
+                                    <h2 className="pps-profile-name">{`${firstName} ${lastName}`}</h2>
+                                    <p className="pps-profile-age">Age {age || '-'}</p>
+                                    {location && <p className="pps-profile-location"><PinIcon /> {location}</p>}
                                     <button className="pps-btn-edit" onClick={() => navigate('/patient/profile/edit')}>
                                         Edit <EditIcon />
                                     </button>
@@ -60,14 +105,16 @@ const PatientDashboard: React.FC = () => {
                                     </div>
                                     <ul className="pps-list">
                                         <li className="pps-list-item">
-                                            <span className="label">Guardian Name</span> <span>: Dolores Aveiro</span>
+                                            <span className="label">Guardian Name</span> <span>: {`${guardianFirstName} ${guardianLastName}`.trim()}</span>
                                         </li>
                                         <li className="pps-list-item">
-                                            <span className="label">Contact Number1</span> <span>: 0778518614</span>
+                                            <span className="label">Contact Number1</span> <span>: {contactNumber1 || '-'}</span>
                                         </li>
-                                        <li className="pps-list-item">
-                                            <span className="label">Contact Number2</span> <span>: 0742107576</span>
-                                        </li>
+                                        {contactNumber2 && (
+                                            <li className="pps-list-item">
+                                                <span className="label">Contact Number2</span> <span>: {contactNumber2}</span>
+                                            </li>
+                                        )}
                                     </ul>
                                 </div>
 
@@ -77,8 +124,8 @@ const PatientDashboard: React.FC = () => {
                                         <h3 className="pps-card-title blue">Up-comming appointments</h3>
                                     </div>
                                     <ul className="pps-list">
-                                        <li className="pps-list-item">
-                                            5.00 pm at Roseth Hospital. Dr Sudarshan
+                                        <li className="pps-list-item" style={{ color: '#888' }}>
+                                            No upcoming appointments.
                                         </li>
                                     </ul>
                                 </div>
@@ -94,10 +141,16 @@ const PatientDashboard: React.FC = () => {
                                 </button>
                             </div>
                             <div className="pps-condition-grid">
-                                <div className="pps-condition-item">Blood Sugar Level - 85mg/dL</div>
-                                <div className="pps-condition-item">Cholesterol - 200 mg/dL</div>
-                                <div className="pps-condition-item">Kidney Health - 200 mg/dL</div>
-                                <div className="pps-condition-item">Thyroid Disorders - 4.0 mIU/L</div>
+                                {bloodReport ? (
+                                    <>
+                                        <div className="pps-condition-item">Blood Sugar Level - {bloodReport.bloodSugar || 'Not recorded'}</div>
+                                        <div className="pps-condition-item">Cholesterol - {bloodReport.cholesterol || 'Not recorded'}</div>
+                                        <div className="pps-condition-item">Kidney Health - {bloodReport.kidneyHealth || 'Not recorded'}</div>
+                                        <div className="pps-condition-item">Thyroid Disorders - {bloodReport.thyroidDisorders || 'Not recorded'}</div>
+                                    </>
+                                ) : (
+                                    <div style={{ color: '#888', gridColumn: 'span 2' }}>No health conditions recorded yet. Click "New Blood Report" to add.</div>
+                                )}
                             </div>
                         </div>
 
@@ -107,11 +160,8 @@ const PatientDashboard: React.FC = () => {
                                 <h3 className="pps-card-title blue">Doctor Feedback</h3>
                             </div>
                             <div className="pps-feedback-list">
-                                <div className="pps-feedback-item">
-                                    I've reviewed your case and prescribed the needed medicine. Please follow the instructions in the app. - Dr. prasad
-                                </div>
-                                <div className="pps-feedback-item">
-                                    Your consultation is complete, and your medication has been updated. Follow the steps shown in the app. - Dr. Nalin
+                                <div className="pps-feedback-item" style={{ color: '#888', textAlign: 'center', padding: '16px' }}>
+                                    No doctor feedback available yet.
                                 </div>
                             </div>
                         </div>
