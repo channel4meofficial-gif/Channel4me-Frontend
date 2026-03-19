@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import '../../styles/doctor-booking/DoctorBookingPage.css';
+import { createBooking } from '../../services/bookingService';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface Doctor {
@@ -27,6 +28,7 @@ interface LocationState {
   time?: string;
 }
 
+
 // ─── Default Doctor ───────────────────────────────────────────────────────────
 const defaultDoctor: Doctor = {
   name: 'Dr. Emma Wilson',
@@ -40,6 +42,8 @@ const DoctorBookingPage: React.FC = () => {
   const navigate = useNavigate();
 
   const doctor: Doctor = state?.doctor || defaultDoctor;
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const [form, setForm] = useState<BookingForm>({
     patientId: '',
@@ -56,8 +60,41 @@ const DoctorBookingPage: React.FC = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleMakePayment = (): void => {
-    navigate('/doctor-booking/payment', { state: { doctor, form } });
+  const handleMakePayment = async (): Promise<void> => {
+    if (!form.patientId || !form.hospital || !form.date || !form.time || !form.nic || !form.contactNo) {
+      setErrorMessage('Please fill in all required booking details before continuing.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setErrorMessage('');
+
+    try {
+      const booking = await createBooking({
+        patient_id: form.patientId,
+        ref_number: form.refNo || undefined,
+        hospital: form.hospital,
+        date_and_time: `${form.date}T${form.time}`,
+        nic_number: form.nic,
+        contact_number: form.contactNo,
+      });
+
+      navigate('/doctor-booking/payment', {
+        state: {
+          doctor,
+          form: {
+            ...form,
+            refNo: booking.ref_number,
+          },
+          booking,
+        },
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unable to create booking.';
+      setErrorMessage(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -189,9 +226,11 @@ const DoctorBookingPage: React.FC = () => {
           </div>
         </div>
 
+        {errorMessage && <p style={{ color: '#dc2626', textAlign: 'center', marginBottom: '16px' }}>{errorMessage}</p>}
+
         <div className="btn-row">
-          <button className="btn btn-primary btn-lg" onClick={handleMakePayment}>
-            <i className="fas fa-credit-card"></i> Make Payment
+          <button className="btn btn-primary btn-lg" onClick={handleMakePayment} disabled={isSubmitting}>
+            <i className="fas fa-credit-card"></i> {isSubmitting ? 'Creating Booking...' : 'Make Payment'}
           </button>
         </div>
       </div>
