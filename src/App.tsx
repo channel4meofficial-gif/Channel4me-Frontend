@@ -113,29 +113,29 @@ function App() {
                             <Route path="/doctor/register/step2" element={<DoctorStep2 />} />
                             <Route path="/doctor/register/step3" element={<DoctorStep3 />} />
 
-                            {/* Patient Dashboard */}
+                            {/* Patient Routes */}
                             <Route path="/patient/dashboard" element={
                                 <PrivateRoute allowedRoles={['patient']}>
                                     <PatientDashboard />
                                 </PrivateRoute>
                             } />
-                            <Route path="/patient/profile/edit" element={
+                            <Route path="/patient/dashboard/edit-profile" element={
                                 <PrivateRoute allowedRoles={['patient']}>
                                     <PatientEditProfile />
                                 </PrivateRoute>
                             } />
-                            <Route path="/patient/blood-report/new" element={
+                            <Route path="/patient/dashboard/new-blood-report" element={
                                 <PrivateRoute allowedRoles={['patient']}>
                                     <NewBloodReport />
                                 </PrivateRoute>
                             } />
-                            <Route path="/patient/emergency-contact/edit" element={
+                            <Route path="/patient/dashboard/edit-emergency-contact" element={
                                 <PrivateRoute allowedRoles={['patient']}>
                                     <EmergencyContactEdit />
                                 </PrivateRoute>
                             } />
 
-                            {/* Doctor Dashboard */}
+                            {/* Doctor Dashboard Flow */}
                             <Route path="/doctor/dashboard" element={
                                 <PrivateRoute allowedRoles={['doctor']}>
                                     <DoctorInformation />
