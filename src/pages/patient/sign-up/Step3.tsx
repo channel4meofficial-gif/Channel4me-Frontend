@@ -11,7 +11,7 @@ import StepIndicator from '../../../components/ui/common/StepIndicator';
 const PatientStep3: React.FC = () => {
     const navigate = useNavigate();
     const { data } = usePatientRegistration();
-    const { login } = useAuth();
+    const { login, isAuthenticated } = useAuth();
     const [memberId, setMemberId] = useState('');
     const [createdDate, setCreatedDate] = useState('');
 
@@ -20,34 +20,43 @@ const PatientStep3: React.FC = () => {
         const now = new Date();
         setCreatedDate(now.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }));
         
-        // Auto-login on mount for Patient Step 3 (since registration is complete)
-        const mockUser: User = {
-            id: 'PAT-' + Math.random().toString(36).substr(2, 9),
-            name: data.personal?.fullName || 'Patient User',
-            email: data.personal?.email || '',
-            role: 'patient',
-            age: data.personal?.dob?.year ? (new Date().getFullYear() - parseInt(data.personal.dob.year)) : 25,
-            location: 'Colombo, Sri Lanka',
-            guardianName: data.health?.emergencyName || 'Emergency Contact Person',
-            contactNumber: data.health?.emergencyPhone || data.personal?.mobile || '0771234567',
-            appointments: [
-                {
-                    id: 'new-apt-1',
-                    doctorName: 'Dr. Kamal',
-                    specialization: 'General Physician',
-                    date: '2026-04-05',
-                    time: '11:00 AM',
-                    status: 'upcoming'
-                }
-            ]
-        };
-        login(mockUser, 'mock-jwt-token-patient');
-    }, [data.personal, login]);
+        // Auto-login on mount for Patient Step 3 if not already authenticated
+        if (!isAuthenticated) {
+            const mockUser: User = {
+                id: 'PAT-' + Math.random().toString(36).substr(2, 9),
+                name: data.personal?.fullName || 'Patient User',
+                email: data.personal?.email || '',
+                role: 'patient',
+                age: data.personal?.dob?.year ? (new Date().getFullYear() - parseInt(data.personal.dob.year)) : 25,
+                location: 'Colombo, Sri Lanka',
+                guardianName: data.health?.emergencyName || 'Emergency Contact Person',
+                contactNumber: data.health?.emergencyPhone || data.personal?.mobile || '0771234567',
+                memberId: 'CH4M-' + Math.floor(1000 + Math.random() * 9000), // temp fallback
+                createdDate: now.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
+                appointments: [
+                    {
+                        id: 'new-apt-1',
+                        doctorName: 'Dr. Kamal',
+                        specialization: 'General Physician',
+                        date: '2026-04-05',
+                        time: '11:00 AM',
+                        status: 'upcoming'
+                    }
+                ]
+            };
+            login(mockUser, 'mock-jwt-token-patient');
+        }
+    }, [data.personal, login, isAuthenticated]);
 
-    const handleGoToDashboard = () => navigate('/patient/dashboard');
+    const handleGoToDashboard = () => {
+        console.log('Navigating to dashboard, authenticated:', isAuthenticated);
+        navigate('/patient/dashboard');
+    };
     const handleFindDoctors = () => navigate('/doctors');
-    const handleHealthProfile = () => navigate('/patient/health-profile');
-    const handleBookAppointment = () => navigate('/patient/book-appointment');
+    const handleReturnHome = () => {
+        console.log('Returning to homepage');
+        navigate('/');
+    };
 
     return (
         <PublicLayout>
@@ -163,7 +172,7 @@ const PatientStep3: React.FC = () => {
                                 <button className="btn btn-primary btn-full" onClick={handleGoToDashboard} style={{ width: '100%', marginBottom: '12px' }}>
                                     <i className="fas fa-rocket"></i> Go to Your Dashboard
                                 </button>
-                                <button className="btn btn-outline" onClick={() => navigate('/')} style={{ width: '100%' }}>
+                                <button className="btn btn-outline" onClick={handleReturnHome} style={{ width: '100%' }}>
                                     <i className="fas fa-home"></i> Return to Homepage
                                 </button>
                             </div>

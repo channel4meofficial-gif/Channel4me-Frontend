@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PublicLayout from '../../../components/layout/PublicLayout/publiclayout';
 import './NewBloodReport.css';
@@ -12,11 +12,24 @@ const NewBloodReport: React.FC = () => {
         thyroidDisorders: '',
     });
 
+    useEffect(() => {
+        const stored = localStorage.getItem('patientBloodReport');
+        if (stored) {
+            try {
+                setForm(JSON.parse(stored));
+            } catch (e) {
+                console.error("Failed to parse patientBloodReport", e);
+            }
+        }
+    }, []);
+
     const handleChange = (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm(prev => ({ ...prev, [field]: e.target.value }));
     };
 
     const handleSave = () => {
+        // Save form to local storage
+        localStorage.setItem('patientBloodReport', JSON.stringify(form));
         navigate('/patient/dashboard');
     };
 
