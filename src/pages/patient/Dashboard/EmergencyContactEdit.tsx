@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PublicLayout from '../../../components/layout/PublicLayout/publiclayout';
-import './EmergencyContactEdit.css';
+import '../../../styles/patient/EmergencyContactEdit.css';
 
 function UserIcon() {
     return (
