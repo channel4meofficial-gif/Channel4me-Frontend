@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import '../../styles/doctor-booking/PaymentPage.css';
+import { updatePaymentStatus } from '../../services/bookingService';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface Charges {
@@ -29,6 +30,11 @@ interface BookingForm {
 interface LocationState {
   doctor?: Doctor;
   form?: BookingForm;
+  booking?: {
+    _id: string;
+    ref_number: string;
+    payment_status: 'pending' | 'completed' | 'failed';
+  };
 }
 
 type PayMethod = 'card' | 'cash' | '';
@@ -46,6 +52,7 @@ const PaymentPage: React.FC = () => {
 
   const doctor: Doctor       = state?.doctor || defaultDoctor;
   const form: BookingForm    = state?.form   || {};
+  const booking = state?.booking;
 
   const charges: Charges | null = doctor.charges || null;
   const total: number | null    = charges
@@ -54,11 +61,24 @@ const PaymentPage: React.FC = () => {
 
   const [payMethod, setPayMethod] = useState<PayMethod>('');
 
-  const handlePay = (): void => {
+  const handlePay = async (): Promise<void> => {
+    if (!booking?._id) {
+      alert('Booking details are missing. Please create the booking again.');
+      return;
+    }
+
     if (payMethod === 'card') {
-      navigate('/doctor-booking/card-payment', { state: { doctor, form, payMethod, total } });
+      navigate('/doctor-booking/card-payment', { state: { doctor, form, booking, payMethod, total } });
     } else if (payMethod === 'cash') {
-      navigate('/doctor-booking/payment-receipt', { state: { doctor, form, payMethod, total } });
+      try {
+        const updatedBooking = await updatePaymentStatus(booking._id, 'pending');
+        navigate('/doctor-booking/payment-receipt', {
+          state: { doctor, form, booking: updatedBooking, payMethod, total },
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Unable to update payment status.';
+        alert(message);
+      }
     } else {
       alert('Please select a payment method.');
     }
