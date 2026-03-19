@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/doctor-booking/DoctorPage.css';
+import { getDoctors, ApiDoctor } from '../../services/doctorService';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface Doctor {
@@ -17,8 +18,9 @@ interface StarRatingProps {
   stars: number[];
 }
 
-// ─── Doctor Data ──────────────────────────────────────────────────────────────
-const doctors: Doctor[] = [
+// ─── Local fallback Doctor Data ──────────────────────────────────────────────
+// Used when the backend returns no doctors (e.g., empty DB during development)
+const fallbackDoctors: Doctor[] = [
   {
     id: 1,
     name: 'Dr. Sonali Perera',
@@ -129,8 +131,17 @@ const doctors: Doctor[] = [
   },
 ];
 
-// Get unique specialties for the dropdown
-const specialties: string[] = ['All', ...new Set(doctors.map((d) => d.specialty))];
+// ─── Helper: map an API doctor to the card shape ──────────────────────────────
+const mapApiDoctor = (doc: ApiDoctor, index: number): Doctor => ({
+  id: index + 1,
+  name: doc.fullName,
+  specialty: doc.specialization,
+  rating: 4.5,
+  reviews: 0,
+  stars: [1, 1, 1, 1, 0.5],
+  // Fall back to a local image by cycling through the 12 available assets
+  image: fallbackDoctors[(index % 12)].image,
+});
 
 // ─── StarRating Component ─────────────────────────────────────────────────────
 const StarRating: React.FC<StarRatingProps> = ({ stars }) => {
@@ -152,6 +163,39 @@ const DoctorPage: React.FC = () => {
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState<string>('');
   const [filterSpecialty, setFilterSpecialty] = useState<string>('All');
+  const [doctors, setDoctors] = useState<Doctor[]>(fallbackDoctors);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [apiError, setApiError] = useState<string>('');
+
+  // Fetch doctors from the backend on mount; fall back to local data on error
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetchDoctors = async () => {
+      try {
+        const apiDoctors = await getDoctors();
+        if (!cancelled) {
+          if (apiDoctors.length > 0) {
+            setDoctors(apiDoctors.map(mapApiDoctor));
+          }
+          // If empty, keep the fallback doctors already in state
+        }
+      } catch {
+        if (!cancelled) {
+          setApiError('Showing locally available doctors (backend offline).');
+          // fallbackDoctors already set as initial state — no action needed
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    fetchDoctors();
+    return () => { cancelled = true; };
+  }, []);
+
+  // Build specialty list dynamically from whichever doctors are shown
+  const specialties: string[] = ['All', ...new Set(doctors.map((d) => d.specialty))];
 
   const filteredDoctors: Doctor[] = doctors.filter((doc) => {
     const matchesName = doc.name.toLowerCase().includes(filterName.toLowerCase());
@@ -171,6 +215,11 @@ const DoctorPage: React.FC = () => {
             <p className="page-subtitle">
               Top-rated specialists available now — book your appointment instantly
             </p>
+            {apiError && (
+              <p style={{ color: '#f59e0b', fontSize: '0.8rem', marginTop: '4px' }}>
+                ⚠ {apiError}
+              </p>
+            )}
           </div>
 
           {/* FILTER BAR */}
@@ -208,39 +257,47 @@ const DoctorPage: React.FC = () => {
             </div>
           </div>
 
-          {/* DOCTORS GRID */}
-          <div className="doctors-grid">
-            {filteredDoctors.length > 0 ? (
-              filteredDoctors.map((doc) => (
-                <div className="doc-card" key={doc.id}>
-                  <div className="doc-image">
-                    <img src={doc.image} alt={doc.name} />
-                  </div>
-                  <div className="doc-info">
-                    <h3 className="doc-name">{doc.name}</h3>
-                    <span className="doc-specialty">{doc.specialty}</span>
-                    <div className="doc-rating">
-                      <StarRating stars={doc.stars} />
-                      <span>
-                        {doc.rating} ({doc.reviews} reviews)
-                      </span>
+          {/* LOADING STATE */}
+          {loading ? (
+            <div className="no-results" style={{ opacity: 0.6 }}>
+              <i className="fas fa-spinner fa-spin"></i>
+              <p>Loading doctors…</p>
+            </div>
+          ) : (
+            /* DOCTORS GRID */
+            <div className="doctors-grid">
+              {filteredDoctors.length > 0 ? (
+                filteredDoctors.map((doc) => (
+                  <div className="doc-card" key={doc.id}>
+                    <div className="doc-image">
+                      <img src={doc.image} alt={doc.name} />
                     </div>
-                    <button
-                      className="btn btn-primary btn-sm"
-                      onClick={() => navigate(`/doctor-booking/doctor/${doc.id}/profile`)}
-                    >
-                      Book Now
-                    </button>
+                    <div className="doc-info">
+                      <h3 className="doc-name">{doc.name}</h3>
+                      <span className="doc-specialty">{doc.specialty}</span>
+                      <div className="doc-rating">
+                        <StarRating stars={doc.stars} />
+                        <span>
+                          {doc.rating} ({doc.reviews} reviews)
+                        </span>
+                      </div>
+                      <button
+                        className="btn btn-primary btn-sm"
+                        onClick={() => navigate(`/doctor-booking/doctor/${doc.id}/profile`)}
+                      >
+                        Book Now
+                      </button>
+                    </div>
                   </div>
+                ))
+              ) : (
+                <div className="no-results">
+                  <i className="fas fa-user-md"></i>
+                  <p>No doctors found matching your search.</p>
                 </div>
-              ))
-            ) : (
-              <div className="no-results">
-                <i className="fas fa-user-md"></i>
-                <p>No doctors found matching your search.</p>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
 
         </div>
       </main>
