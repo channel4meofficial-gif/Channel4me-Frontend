@@ -6,7 +6,7 @@ const EPrescription: React.FC = () => {
   const navigate = useNavigate();
   const [patientName, setPatientName] = useState('');
   const [age, setAge] = useState('');
-  const [contactNumber, setContactNumber] = useState('');
+  const [patientID, setPatientID] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [medications, setMedications] = useState([{ name: '', dosage: '', frequency: '', duration: '' }]);
   const [notes, setNotes] = useState('');
@@ -85,16 +85,19 @@ const EPrescription: React.FC = () => {
 
             <div className="form-row">
               <div className="form-group">
-                <label>Contact Number</label>
+                <label>Patient ID</label>
                 <input
-                  type="tel"
-                  value={contactNumber}
-                  onChange={(e) => setContactNumber(e.target.value)}
-                  placeholder="e.g. +94 70 123 4567"
+                  type="text"
+                  value={patientID}
+                  onChange={(e) => setPatientID(e.target.value)}
+                  placeholder="e.g. ID1"
                   required
                 />
               </div>
-              <div className="form-group">
+            </div>
+
+            <div className="form-row">
+              <div className="form-group full-width">
                 <label>Date</label>
                 <input
                   type="date"
