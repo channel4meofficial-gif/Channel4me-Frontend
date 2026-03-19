@@ -38,6 +38,7 @@ import Unauthorized from './pages/public/Unauthorized';
 
 // New Dashboards/Pages
 import PatientDashboard from './pages/patient/Dashboard';
+import PatientEditProfile from './pages/patient/Dashboard/PatientEditProfile';
 import PendingApproval from './pages/doctor/PendingApproval';
 import AdminDashboard from './pages/admin/Dashboard';
 
@@ -88,6 +89,11 @@ function App() {
                         <Route path="/patient/dashboard" element={
                             <PrivateRoute allowedRoles={['patient']}>
                                 <PatientDashboard />
+                            </PrivateRoute>
+                        } />
+                        <Route path="/patient/profile/edit" element={
+                            <PrivateRoute allowedRoles={['patient']}>
+                                <PatientEditProfile />
                             </PrivateRoute>
                         } />
                         

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import PublicLayout from '../../../components/layout/PublicLayout/publiclayout';
 import './PatientProfile.css';
 
@@ -23,6 +24,8 @@ function PinIcon() {
 }
 
 const PatientDashboard: React.FC = () => {
+    const navigate = useNavigate();
+
     return (
         <PublicLayout>
             <div className="pps-page">
@@ -39,7 +42,7 @@ const PatientDashboard: React.FC = () => {
                                     <h2 className="pps-profile-name">Cristiano Ronaldo</h2>
                                     <p className="pps-profile-age">Age 40</p>
                                     <p className="pps-profile-location"><PinIcon /> Riyadh, Saudi Arabia</p>
-                                    <button className="pps-btn-edit">
+                                    <button className="pps-btn-edit" onClick={() => navigate('/patient/profile/edit')}>
                                         Edit <EditIcon />
                                     </button>
                                 </div>
