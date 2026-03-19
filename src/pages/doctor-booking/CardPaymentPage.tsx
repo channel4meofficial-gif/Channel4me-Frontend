@@ -59,6 +59,7 @@ const CardPaymentPage: React.FC = () => {
   const [expMonth, setExpMonth]   = useState<string>('');
   const [expYear, setExpYear]     = useState<string>('');
   const [cvv, setCvv]             = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleCardNumber = (e: React.ChangeEvent<HTMLInputElement>): void => {
     let val = e.target.value.replace(/\D/g, '').slice(0, 16);
@@ -71,6 +72,28 @@ const CardPaymentPage: React.FC = () => {
       alert('Booking details are missing. Please create the booking again.');
       return;
     }
+
+    if (!cardType) {
+      setErrorMessage('Please select a card type.');
+      return;
+    }
+
+    if (cardNumber.replace(/\s/g, '').length !== 16) {
+      setErrorMessage('Please enter a valid 16-digit card number.');
+      return;
+    }
+
+    if (!expMonth || !expYear) {
+      setErrorMessage('Please select the card expiration month and year.');
+      return;
+    }
+
+    if (!/^\d{3,4}$/.test(cvv)) {
+      setErrorMessage('Please enter a valid 3 or 4 digit CVV.');
+      return;
+    }
+
+    setErrorMessage('');
 
     try {
       const updatedBooking = await updatePaymentStatus(booking._id, 'completed');
@@ -92,6 +115,10 @@ const CardPaymentPage: React.FC = () => {
             <i className="fas fa-credit-card"></i> Payment Details
           </div>
           <div className="inner-divider"></div>
+
+          {errorMessage && (
+            <p style={{ color: '#dc2626', marginBottom: '16px' }}>{errorMessage}</p>
+          )}
 
           <div className="field-group">
             <label className="field-label">Card Type <span className="req">*</span></label>
