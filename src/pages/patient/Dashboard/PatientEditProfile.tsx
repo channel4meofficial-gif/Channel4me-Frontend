@@ -1,9 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PublicLayout from '../../../components/layout/PublicLayout/publiclayout';
 import './PatientEditProfile.css';
 
-const PATIENT_AVATAR = "https://randomuser.me/api/portraits/men/75.jpg";
+const DEFAULT_AVATAR = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+
+const DEFAULT_PROFILE_DATA = {
+    firstName: 'Nimal',
+    lastName: 'Perera',
+    age: '45',
+    location: '',
+    guardianFirstName: 'Sunitha',
+    guardianLastName: '',
+    contactNumber1: '0771234567',
+    contactNumber2: '',
+};
 
 /* ── Icons ── */
 function UserIcon() {
@@ -46,22 +57,50 @@ function PhoneIcon() {
 /* ── Component ── */
 const PatientEditProfile: React.FC = () => {
     const navigate = useNavigate();
-    const [form, setForm] = useState({
-        firstName: 'Cristiano',
-        lastName: 'Ronaldo',
-        dob: '',
-        location: 'Portugal, Lisbon',
-        guardianFirstName: 'Dolores',
-        guardianLastName: 'Aveiro',
-        contactNumber1: '0742107576',
-        contactNumber2: '0761523464',
-    });
+    const [form, setForm] = useState(DEFAULT_PROFILE_DATA);
+    const [profileImage, setProfileImage] = useState(DEFAULT_AVATAR);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        const storedProfileData = localStorage.getItem('patientProfileData');
+        if (storedProfileData) {
+            try {
+                setForm(JSON.parse(storedProfileData));
+            } catch (e) {
+                console.error("Failed to parse patientProfileData from local storage", e);
+            }
+        }
+        
+        const storedImage = localStorage.getItem('patientProfileImage');
+        if (storedImage) {
+            setProfileImage(storedImage);
+        }
+    }, []);
 
     const handleChange = (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm(prev => ({ ...prev, [field]: e.target.value }));
     };
 
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                if (typeof reader.result === 'string') {
+                    setProfileImage(reader.result);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const triggerFileInput = () => {
+        fileInputRef.current?.click();
+    };
+
     const handleSave = () => {
+        localStorage.setItem('patientProfileData', JSON.stringify(form));
+        localStorage.setItem('patientProfileImage', profileImage);
         navigate('/patient/dashboard');
     };
 
@@ -75,9 +114,16 @@ const PatientEditProfile: React.FC = () => {
 
                         {/* Avatar */}
                         <div className="pep-avatar-section">
-                            <div className="pep-avatar-wrap">
-                                <img src={PATIENT_AVATAR} alt="Profile" />
+                            <div className="pep-avatar-wrap" onClick={triggerFileInput} style={{ cursor: 'pointer' }}>
+                                <img src={profileImage} alt="Profile" />
                             </div>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                ref={fileInputRef}
+                                style={{ display: 'none' }}
+                                onChange={handleImageChange}
+                            />
                             <p className="pep-avatar-hint">Click on the profile to change the picture.</p>
                         </div>
 
@@ -112,10 +158,12 @@ const PatientEditProfile: React.FC = () => {
                                     <div className="pep-input-wrap">
                                         <CalendarIcon />
                                         <input
-                                            type="date"
-                                            value={form.dob}
-                                            onChange={handleChange('dob')}
-                                            placeholder="Date of Birth"
+                                            type="number"
+                                            value={form.age}
+                                            onChange={handleChange('age')}
+                                            placeholder="Age"
+                                            min="0"
+                                            max="150"
                                         />
                                     </div>
                                 </div>

@@ -98,6 +98,8 @@ function App() {
                     <DoctorRegistrationProvider>
                         <Routes>
                             <Route path="/" element={<HomePage />} />
+
+                            {/* Auth */}
                             <Route path="/login" element={<LoginPage />} />
                             <Route path="/register" element={<RegistrationType />} />
 
