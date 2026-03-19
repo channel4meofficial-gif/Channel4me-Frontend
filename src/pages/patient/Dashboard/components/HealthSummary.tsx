@@ -1,6 +1,6 @@
 import React from 'react';
 import { User } from '../../../../types/auth';
-import styles from '../Dashboard.module.css';
+import styles from '../../../styles/patient/Dashboard.module.css';
 
 interface HealthSummaryProps {
   user?: User | null;

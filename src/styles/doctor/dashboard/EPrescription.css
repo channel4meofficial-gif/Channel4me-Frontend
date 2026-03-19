@@ -165,22 +165,31 @@
 }
 
 .action-btn {
-  padding: 0.75rem 1.5rem;
+  display: inline-flex;          /* ← key fix */
+  align-items: center;           /* ← vertically centres text */
+  justify-content: center;       /* ← horizontally centres text */
+  white-space: nowrap;           /* ← stops text wrapping/overflowing */
+  padding: 0.75rem 1.75rem;
   border-radius: 6px;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.95rem;
   cursor: pointer;
   transition: all 0.2s;
+  min-width: max-content;        /* ← button grows to fit its text */
+  line-height: 1.4;
+  font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
 }
 
 .action-btn.cancel {
-  background: white;
-  border: 1px solid #d1d5db;
-  color: #4b5563;
+  background: #ef4444;
+  border: 1px solid #ef4444;
+  color: white;
 }
 
 .action-btn.cancel:hover {
-  background: #f3f4f6;
+  background: #dc2626;
+  border-color: #dc2626;
 }
 
 .action-btn.submit {

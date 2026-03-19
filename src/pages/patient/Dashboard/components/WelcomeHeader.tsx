@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../Dashboard.module.css';
+import styles from '../../../styles/patient/Dashboard.module.css';
 
 interface WelcomeHeaderProps {
   name?: string;

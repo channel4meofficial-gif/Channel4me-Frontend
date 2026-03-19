@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PublicLayout from '../../../components/layout/PublicLayout/publiclayout';
-import './NewBloodReport.css';
+import '../../../styles/patient/NewBloodReport.css';
 
 const NewBloodReport: React.FC = () => {
     const navigate = useNavigate();

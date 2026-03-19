@@ -97,7 +97,6 @@ function App() {
                 <PatientRegistrationProvider>
                     <DoctorRegistrationProvider>
                         <Routes>
-
                             <Route path="/" element={<HomePage />} />
 
                             {/* Auth */}
@@ -114,34 +113,54 @@ function App() {
                             <Route path="/doctor/register/step2" element={<DoctorStep2 />} />
                             <Route path="/doctor/register/step3" element={<DoctorStep3 />} />
 
-                        {/* Patient Routes */}
-                        <Route path="/patient/dashboard" element={
-                            <PrivateRoute allowedRoles={['patient']}>
-                                <PatientDashboard />
-                            </PrivateRoute>
-                        } />
-                        
-                        {/* Doctor Dashboard Flow */}
-                        <Route path="/doctor/dashboard" element={
-                            <PrivateRoute allowedRoles={['doctor']}>
-                                <DoctorInformation />
-                            </PrivateRoute>
-                        } />
-                        <Route path="/doctor/dashboard/appointments" element={
-                            <PrivateRoute allowedRoles={['doctor']}>
-                                <Appointment />
-                            </PrivateRoute>
-                        } />
-                        <Route path="/doctor/dashboard/patients" element={
-                            <PrivateRoute allowedRoles={['doctor']}>
-                                <PatientList />
-                            </PrivateRoute>
-                        } />
-                        <Route path="/doctor/dashboard/patients/:id" element={
-                            <PrivateRoute allowedRoles={['doctor']}>
-                                <PatientDetails />
-                            </PrivateRoute>
-                        } />
+                            {/* Patient Routes */}
+                            <Route path="/patient/dashboard" element={
+                                <PrivateRoute allowedRoles={['patient']}>
+                                    <PatientDashboard />
+                                </PrivateRoute>
+                            } />
+                            <Route path="/patient/dashboard/edit-profile" element={
+                                <PrivateRoute allowedRoles={['patient']}>
+                                    <PatientEditProfile />
+                                </PrivateRoute>
+                            } />
+                            <Route path="/patient/dashboard/new-blood-report" element={
+                                <PrivateRoute allowedRoles={['patient']}>
+                                    <NewBloodReport />
+                                </PrivateRoute>
+                            } />
+                            <Route path="/patient/dashboard/edit-emergency-contact" element={
+                                <PrivateRoute allowedRoles={['patient']}>
+                                    <EmergencyContactEdit />
+                                </PrivateRoute>
+                            } />
+
+                            {/* Doctor Dashboard Flow */}
+                            <Route path="/doctor/dashboard" element={
+                                <PrivateRoute allowedRoles={['doctor']}>
+                                    <DoctorInformation />
+                                </PrivateRoute>
+                            } />
+                            <Route path="/doctor/dashboard/appointments" element={
+                                <PrivateRoute allowedRoles={['doctor']}>
+                                    <Appointment />
+                                </PrivateRoute>
+                            } />
+                            <Route path="/doctor/dashboard/patients" element={
+                                <PrivateRoute allowedRoles={['doctor']}>
+                                    <PatientList />
+                                </PrivateRoute>
+                            } />
+                            <Route path="/doctor/dashboard/patients/:id" element={
+                                <PrivateRoute allowedRoles={['doctor']}>
+                                    <PatientDetails />
+                                </PrivateRoute>
+                            } />
+                            <Route path="/doctor/dashboard/e-prescription" element={
+                                <PrivateRoute allowedRoles={['doctor']}>
+                                    <EPrescription />
+                                </PrivateRoute>
+                            } />
 
                             {/* Admin */}
                             <Route path="/admin/dashboard" element={
@@ -154,7 +173,7 @@ function App() {
                             <Route path="/doctor/pending" element={<PendingApproval />} />
                             <Route path="/unauthorized" element={<Unauthorized />} />
 
-                            {/* Platform (REAL pages from your branch) */}
+                            {/* Platform */}
                             <Route path="/features" element={<FeaturesPage />} />
                             <Route path="/doctors" element={<DoctorsPage />} />
 
@@ -183,7 +202,6 @@ function App() {
 
                             {/* Chatbot */}
                             <Route path="/chatbot" element={<Chatbot />} />
-
                         </Routes>
                     </DoctorRegistrationProvider>
                 </PatientRegistrationProvider>
