@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import PublicLayout from "../components/layout/PublicLayout/publiclayout";
 import "../styles/homepage.css";
 import heroImage from "../assets/hero-illustration.png";
+import doctorImage1 from "../assets/doctor-booking images/Doctorimage1.jpeg";
+import doctorImage2 from "../assets/doctor-booking images/Doctorimage2.jpeg";
+import doctorImage3 from "../assets/doctor-booking images/Doctorimage3.jpeg";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -13,7 +16,7 @@ const HomePage: React.FC = () => {
   const handleLogin = () => navigate("/login");
   const handleSignUp = () => navigate("/register");
   const handleGetStarted = () => navigate("/register");
-  const handleViewAllDoctors = () => navigate("/doctors"); // keep if you still have a dedicated page
+  const handleViewAllDoctors = () => navigate("/doctor-booking/doctors");
   const handleBookDemo = () => console.log("Book demo clicked");
 
   // Quick Actions data
@@ -131,25 +134,31 @@ const HomePage: React.FC = () => {
   // Doctors data
   const doctors = [
     {
+      id: 1,
       name: "Dr. Sarah Johnson",
       specialty: "Cardiologist",
       rating: 4.8,
       reviews: 245,
       availability: "Today",
+      image: doctorImage1,
     },
     {
+      id: 2,
       name: "Dr. Michael Chen",
       specialty: "Neurologist",
       rating: 5.0,
       reviews: 189,
       availability: "Today",
+      image: doctorImage2,
     },
     {
+      id: 3,
       name: "Dr. Priya Sharma",
       specialty: "Pediatrician",
       rating: 5.0,
       reviews: 312,
       availability: "Tomorrow",
+      image: doctorImage3,
     },
   ];
 
@@ -166,7 +175,7 @@ const HomePage: React.FC = () => {
       features: [
         "Appointment booking",
         "Medical records",
-        "E‑prescriptions",
+        "E-prescriptions",
         "Priority support",
       ],
     },
@@ -232,13 +241,17 @@ const HomePage: React.FC = () => {
                     <p>AI-powered preliminary diagnosis</p>
                   </button>
 
-                  <div className={`action-card ${"primary"}`}>
+                  <button
+                    onClick={() => navigate("/doctor-booking/doctors")}
+                    className={`action-card ${"primary"}`}
+                    type="button"
+                  >
                     <div className="action-icon">
                       <i className="fas fa-calendar-check"></i>
                     </div>
                     <h4>Book Doctor</h4>
                     <p>Instant appointment booking</p>
-                  </div>
+                  </button>
 
                   <div className={`action-card ${"primary"}`}>
                     <div className="action-icon">
@@ -301,9 +314,25 @@ const HomePage: React.FC = () => {
                   </div>
                   <h3>{feature.title}</h3>
                   <p>{feature.description}</p>
-                  <a href="#features" className="feature-link">
-                    Learn More →
-                  </a>
+                  {feature.title === "Instant Booking" ? (
+                    <span
+                      role="button"
+                      tabIndex={0}
+                      className="feature-link"
+                      onClick={() => navigate("/doctor-booking/doctors")}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          navigate("/doctor-booking/doctors");
+                        }
+                      }}
+                    >
+                      Learn More →
+                    </span>
+                  ) : (
+                    <a href="#features" className="feature-link">
+                      Learn More →
+                    </a>
+                  )}
                 </div>
               ))}
             </div>
@@ -374,7 +403,7 @@ const HomePage: React.FC = () => {
                 <div key={index} className="doctor-card">
                   <div className="doctor-image">
                     <img
-                      src={`/images/doctor${index + 1}.jpg`}
+                      src={doctor.image}
                       alt={doctor.name}
                     />
                   </div>
@@ -391,7 +420,14 @@ const HomePage: React.FC = () => {
                       <i className="fas fa-clock"></i> Available{" "}
                       {doctor.availability}
                     </p>
-                    <button className="btn btn-primary btn-sm">Book Now</button>
+                    <button
+                      className="btn btn-primary btn-sm"
+                      onClick={() =>
+                        navigate(`/doctor-booking/doctor/${doctor.id}/profile`)
+                      }
+                    >
+                      Book Now
+                    </button>
                   </div>
                 </div>
               ))}
