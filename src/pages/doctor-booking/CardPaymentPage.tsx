@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import '../../styles/doctor-booking/CardPaymentPage.css';
+import { updatePaymentStatus } from '../../services/bookingService';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface Doctor {
@@ -26,6 +27,11 @@ interface BookingForm {
 interface LocationState {
   doctor?: Doctor;
   form?: BookingForm;
+  booking?: {
+    _id: string;
+    ref_number: string;
+    payment_status: 'pending' | 'completed' | 'failed';
+  };
   total?: number | null;
 }
 
@@ -45,6 +51,7 @@ const CardPaymentPage: React.FC = () => {
 
   const doctor: Doctor           = state?.doctor || {};
   const form: BookingForm        = state?.form   || {};
+  const booking = state?.booking;
   const total: number | null     = state?.total  || null;
 
   const [cardType, setCardType]   = useState<CardType>('');
@@ -59,8 +66,21 @@ const CardPaymentPage: React.FC = () => {
     setCardNumber(val);
   };
 
-  const handlePayNow = (): void => {
-    navigate('/doctor-booking/payment-receipt', { state: { doctor, form, payMethod: 'card', total } });
+  const handlePayNow = async (): Promise<void> => {
+    if (!booking?._id) {
+      alert('Booking details are missing. Please create the booking again.');
+      return;
+    }
+
+    try {
+      const updatedBooking = await updatePaymentStatus(booking._id, 'completed');
+      navigate('/doctor-booking/payment-receipt', {
+        state: { doctor, form, booking: updatedBooking, payMethod: 'card', total },
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unable to complete payment.';
+      alert(message);
+    }
   };
 
   return (
