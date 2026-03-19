@@ -52,9 +52,10 @@ const PatientStep3: React.FC = () => {
         console.log('Navigating to dashboard, authenticated:', isAuthenticated);
         navigate('/patient/dashboard');
     };
-    const handleFindDoctors = () => navigate('/doctors');
-    const handleHealthProfile = () => navigate('/patient/health-profile');
-    const handleBookAppointment = () => navigate('/patient/book-appointment');
+    const handleReturnHome = () => {
+        console.log('Returning to homepage');
+        navigate('/');
+    };
 
     return (
         <PublicLayout>
@@ -170,7 +171,7 @@ const PatientStep3: React.FC = () => {
                                 <button className="btn btn-primary btn-full" onClick={handleGoToDashboard} style={{ width: '100%', marginBottom: '12px' }}>
                                     <i className="fas fa-rocket"></i> Go to Your Dashboard
                                 </button>
-                                <button className="btn btn-outline" onClick={() => navigate('/')} style={{ width: '100%' }}>
+                                <button className="btn btn-outline" onClick={handleReturnHome} style={{ width: '100%' }}>
                                     <i className="fas fa-home"></i> Return to Homepage
                                 </button>
                             </div>
