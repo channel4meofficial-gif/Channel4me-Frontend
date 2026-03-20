@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from '../Dashboard.module.css';
+import styles from '../../../styles/patient/Dashboard.module.css';
 
 const QuickActions: React.FC = () => {
   const navigate = useNavigate();

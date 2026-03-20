@@ -7,10 +7,6 @@ const AdminDashboard: React.FC = () => {
     return (
         <div className="admin-page">
             <aside className="admin-sidebar">
-                <div className="sidebar-logo">
-                    <span className="logo-icon">💊</span>
-                    <span className="logo-text">Channel4Me</span>
-                </div>
 
                 <div className="sidebar-section">
                     <span className="sidebar-heading">MAIN MENU</span>

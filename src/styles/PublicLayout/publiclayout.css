@@ -13,7 +13,7 @@
 .main-content {
     flex: 1 0 auto;
     width: 100%;
-    padding-top: 120px; /* Space for fixed header */
+    padding-top: 20px; /* Reduced from 120px since header is in flow or has its own space */
     padding-bottom: 60px;
 }
 
@@ -49,6 +49,6 @@
     }
 
     .main-content {
-        padding-top: 100px;
+        padding-top: 10px;
     }
 }
