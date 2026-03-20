@@ -200,7 +200,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ===== HERO SECTION ===== */
 .hero {
-    padding: 130px 0 80px;
+    padding: 40px 0 80px; /* Reduced top padding from 130px */
     background: linear-gradient(135deg, #f0f4ff 0%, #f8fafc 100%);
     overflow: hidden;
 }
