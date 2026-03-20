@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import PublicLayout from '../../components/layout/PublicLayout/publiclayout';
 import '../../styles/doctor-booking/CardPaymentPage.css';
 import { updatePaymentStatus } from '../../services/bookingService';
 
@@ -107,7 +108,7 @@ const CardPaymentPage: React.FC = () => {
   };
 
   return (
-    <>
+    <PublicLayout>
       <div className="card-payment-wrapper">
         <div className="page-card-flat">
 
@@ -248,7 +249,7 @@ const CardPaymentPage: React.FC = () => {
 
         </div>
       </div>
-    </>
+    </PublicLayout>
   );
 };
 
