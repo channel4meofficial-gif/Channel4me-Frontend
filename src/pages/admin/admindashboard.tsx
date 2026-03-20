@@ -4,7 +4,7 @@ import Header from '../../components/ui/header/header';
 import Footer from '../../components/ui/footer/footer';
 
 const AdminDashboard: React.FC = () => {
-    const [activeTab, setActiveTab] = useState('appointments');
+    const [activeTab, setActiveTab] = useState('overview');
 
     return (
         <div>
@@ -52,7 +52,7 @@ const AdminDashboard: React.FC = () => {
                 <header className="main-header">
                     <div className="header-greeting">
                         <h1>Good Morning, <span>Admin</span> 👋</h1>
-                        <p>Monday, 19 March 2026 · You have 5 appointments today</p>
+                        <p>Monday, 19 March 2026</p>
                     </div>
                 </header>
 
@@ -98,16 +98,7 @@ const OverviewTab = () => (
         </div>
 
         <div className="dashboard-bottom">
-            <div className="dashboard-table-container">
-                <div className="board-header">
-                    <div>
-                        <h2>Recent Activity</h2>
-                        <p>Latest updates from your platform</p>
-                    </div>
-                </div>
-                <div className="empty-state">Select Appointments or Doctor Approvals tab to view details.</div>
-            </div>
-            <div className="dashboard-notifications">
+            <div className="dashboard-notifications full-width">
                 <div className="board-header">
                     <div>
                         <h2>Notifications</h2>
@@ -116,21 +107,22 @@ const OverviewTab = () => (
                 </div>
                 <div className="notification-list">
                     <div className="notification-item">
-                        <div className="notif-dot blue"></div>
+                        <div className="notif-dot green"></div>
                         <div className="notif-content">
-                            <h4>New Appointment Request</h4>
-                            <p>MT Dinuka has requested an appointment for today at 12:00 PM.</p>
+                            <h4>Booking Confirmed</h4>
+                            <p>Patient MT Dinuka booked Dr. Michael Chen for today at 12:00 PM.</p>
                             <span>2 minutes ago</span>
                         </div>
                     </div>
                     <div className="notification-item">
-                        <div className="notif-dot red"></div>
+                        <div className="notif-dot green"></div>
                         <div className="notif-content">
-                            <h4>Emergency Alert</h4>
-                            <p>Patient Dulhara requires immediate attention at Hemas Hospital.</p>
+                            <h4>Booking Confirmed</h4>
+                            <p>Patient Dulhara booked Dr. Priya Sharma for today at 3:00 PM.</p>
                             <span>15 minutes ago</span>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
