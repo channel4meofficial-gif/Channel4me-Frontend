@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import PublicLayout from '../../components/layout/PublicLayout/publiclayout';
 import '../../styles/doctor-booking/DoctorSessionsPage.css';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -189,9 +190,10 @@ const DoctorSessionsPage: React.FC = () => {
   };
 
   return (
-    <div className="sp-page">
-      <main className="sp-main">
-        <div className="sp-container">
+    <PublicLayout>
+      <div className="sp-page">
+        <main className="sp-main">
+          <div className="sp-container">
 
           <div className="sp-doc-card">
             <div className="sp-doc-hosp-bar">{hospital.toUpperCase()}</div>
@@ -267,9 +269,10 @@ const DoctorSessionsPage: React.FC = () => {
             })}
           </div>
 
-        </div>
-      </main>
-    </div>
+          </div>
+        </main>
+      </div>
+    </PublicLayout>
   );
 };
 
