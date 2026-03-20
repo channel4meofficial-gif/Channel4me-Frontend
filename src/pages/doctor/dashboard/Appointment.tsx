@@ -20,7 +20,7 @@ const APPOINTMENTS = [
     avatarStyle: { background: 'linear-gradient(135deg,#fce7f3,#fbcfe8)', color: '#be185d' },
     time: '1:00 PM',
     hospital: 'Asiri',
-    status: 'pending',
+    status: 'confirmed',
   },
   {
     id: 3,
@@ -50,7 +50,7 @@ const APPOINTMENTS = [
     avatarStyle: { background: 'linear-gradient(135deg,#ffedd5,#fed7aa)', color: '#c2410c' },
     time: '5:00 PM',
     hospital: 'Asiri',
-    status: 'pending',
+    status: 'confirmed',
   },
 ];
 
@@ -68,14 +68,13 @@ function HospitalTag({ name }) {
 
 // ── Component ──────────────────────────────────────────────
 export default function Appointment() {
-  const [activeDay, setActiveDay]   = useState(19);
-  const [activeFilter, setFilter]   = useState('all');
-
-  const filters = ['all', 'confirmed', 'pending', 'cancelled'];
-
-  const filtered = APPOINTMENTS.filter(a =>
-    activeFilter === 'all' ? true : a.status === activeFilter
-  );
+  const [activeDay, setActiveDay] = useState(27);
+  const currentDate = {
+    full: 'Monday, January 27, 2025',
+    display: 'January 27, 2025',
+    short: 'Jan 27'
+  };
+  const filtered = APPOINTMENTS;
 
   const confirmed = APPOINTMENTS.filter(a => a.status === 'confirmed').length;
   const pending   = APPOINTMENTS.filter(a => a.status === 'pending').length;
@@ -103,7 +102,7 @@ export default function Appointment() {
           <div className="date-nav-center">
             <div className="date-nav-icon">📅</div>
             <div className="date-nav-text">
-              <div className="date-full">Monday, January 19, 2026</div>
+              <div className="date-full">{currentDate.full}</div>
               <div className="date-rel">Today · Week 3</div>
             </div>
           </div>
@@ -118,7 +117,7 @@ export default function Appointment() {
             <div className="summary-info">
               <div className="s-label">Total Appointments</div>
               <div className="s-value">{APPOINTMENTS.length}</div>
-              <div className="s-sub">For January 19, 2026</div>
+              <div className="s-sub">For January 27, 2025</div>
             </div>
           </div>
           <div className="summary-card">
@@ -144,26 +143,16 @@ export default function Appointment() {
 
           <div className="appt-list-header">
             <div>
-              <div className="appt-list-title">Appointments for January 19, 2026</div>
+              <div className="appt-list-title">Appointments for January 27, 2025</div>
               <div className="appt-list-meta">{filtered.length} appointment{filtered.length !== 1 ? 's' : ''} shown</div>
             </div>
-            <div className="appt-filter-row">
-              {filters.map(f => (
-                <button
-                  key={f}
-                  className={`filter-chip${activeFilter === f ? ' active' : ''}`}
-                  onClick={() => setFilter(f)}
-                >
-                  {f.charAt(0).toUpperCase() + f.slice(1)}
-                </button>
-              ))}
-            </div>
+
           </div>
 
           {filtered.length === 0 ? (
             <div className="appt-empty">
               <div className="appt-empty-icon">🗓️</div>
-              <div className="appt-empty-text">No {activeFilter} appointments for this day</div>
+              <div className="appt-empty-text">No appointments for this day</div>
             </div>
           ) : (
             <div className="appt-table-wrap">
@@ -183,7 +172,6 @@ export default function Appointment() {
                     <th>Time</th>
                     <th>Hospital</th>
                     <th>Status</th>
-                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -204,7 +192,7 @@ export default function Appointment() {
                       </td>
 
                       {/* Date */}
-                      <td>Jan 19</td>
+                      <td>{currentDate.short}</td>
 
                       {/* Time */}
                       <td>
@@ -224,15 +212,7 @@ export default function Appointment() {
                         <StatusPill status={a.status} />
                       </td>
 
-                      {/* Actions */}
-                      <td>
-                        <div className="action-cell">
-                          {a.status === 'pending' && (
-                            <button className="act-btn approve" title="Approve appointment">✓</button>
-                          )}
-                          <button className="act-btn cancel" title="Cancel appointment">✕</button>
-                        </div>
-                      </td>
+
 
                     </tr>
                   ))}
