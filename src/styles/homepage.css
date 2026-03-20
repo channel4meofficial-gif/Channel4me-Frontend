@@ -207,8 +207,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .hero-content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
+    grid-template-columns: 45fr 55fr; /* Increased image side from 50/50 */
+    gap: 40px;
     align-items: center;
 }
 
@@ -330,8 +330,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .hero-image img {
-    max-width: 100%;
-    max-height: 800px;
+    width: 100%;
+    max-width: 650px; /* Increased from being only limited by 100% */
+    max-height: 900px; /* Increased from 800px */
     object-fit: contain;
     border-radius: 20px;
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
