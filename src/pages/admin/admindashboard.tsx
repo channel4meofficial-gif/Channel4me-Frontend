@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import '../../styles/admin/admindashboard.css';
+import Header from '../../components/ui/header/header';
+import Footer from '../../components/ui/footer/footer';
 
 const AdminDashboard: React.FC = () => {
     const [activeTab, setActiveTab] = useState('appointments');
 
     return (
+        <div>
+            <Header/>
         <div className="admin-page">
             <aside className="admin-sidebar">
 
@@ -58,6 +62,8 @@ const AdminDashboard: React.FC = () => {
                     {activeTab === 'approvals' && <DoctorApprovalsTab />}
                 </div>
             </main>
+        </div>
+        <Footer />
         </div>
     );
 };
