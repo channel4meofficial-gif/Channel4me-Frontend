@@ -59,17 +59,17 @@ const Header: React.FC = () => {
           <div className="nav-buttons">
             {isAuthenticated ? (
               <>
-                <Link to={`/${user?.role}/dashboard`} className="nav-profile-link" title="Profile">
-                   <div className="profile-icon-container">
-                      <i className="fas fa-user-circle"></i>
-                   </div>
-                </Link>
                 <button 
                   onClick={() => { logout(); navigate('/'); }} 
                   className="btn btn-logout"
                 >
                   Log Out
                 </button>
+                <Link to={`/${user?.role}/dashboard`} className="nav-profile-link" title="Profile">
+                   <div className="profile-icon-container">
+                      <i className="fas fa-user-circle"></i>
+                   </div>
+                </Link>
               </>
             ) : (
               <>
