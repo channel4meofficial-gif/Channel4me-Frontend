@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import PublicLayout from '../../components/layout/PublicLayout/publiclayout';
 import '../../styles/doctor-booking/DoctorBookingPage.css';
-import { createBooking } from '../../services/bookingService';
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+const API_BASE_URL = 'http://localhost:5000';
+
 interface Doctor {
   name: string;
   specialty: string;
@@ -29,15 +29,18 @@ interface LocationState {
   time?: string;
 }
 
+interface BookingResponse {
+  _id: string;
+  ref_number: string;
+  payment_status: 'pending' | 'completed' | 'failed';
+}
 
-// ─── Default Doctor ───────────────────────────────────────────────────────────
 const defaultDoctor: Doctor = {
   name: 'Dr. Emma Wilson',
   specialty: 'Cardiologist',
   image: 'https://img.freepik.com/free-photo/female-doctor-hospital_23-2148827757.jpg',
 };
 
-// ─── DoctorBookingPage Component ──────────────────────────────────────────────
 const DoctorBookingPage: React.FC = () => {
   const { state } = useLocation() as { state: LocationState | null };
   const navigate = useNavigate();
@@ -71,14 +74,27 @@ const DoctorBookingPage: React.FC = () => {
     setErrorMessage('');
 
     try {
-      const booking = await createBooking({
-        patient_id: form.patientId,
-        ref_number: form.refNo || undefined,
-        hospital: form.hospital,
-        date_and_time: `${form.date}T${form.time}`,
-        nic_number: form.nic,
-        contact_number: form.contactNo,
+      const response = await fetch(`${API_BASE_URL}/api/v1/bookings`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          patient_id: form.patientId,
+          ref_number: form.refNo || undefined,
+          hospital: form.hospital,
+          date_and_time: `${form.date}T${form.time}`,
+          nic_number: form.nic,
+          contact_number: form.contactNo,
+        }),
       });
+
+      const result = await response.json();
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Unable to create booking.');
+      }
+
+      const booking: BookingResponse = result.data;
 
       navigate('/doctor-booking/payment', {
         state: {
@@ -104,17 +120,12 @@ const DoctorBookingPage: React.FC = () => {
         <div className="page-card">
           <div className="card-band"></div>
           <div className="card-body">
-
             <div className="doctor-panel">
               <span className="available-badge">
                 <i className="fas fa-circle" style={{ fontSize: '.5rem' }}></i> Available
               </span>
               <div className="doctor-photo-wrap">
-                <img
-                  src={doctor.image}
-                  alt={doctor.name}
-                  className="doctor-photo"
-                />
+                <img src={doctor.image} alt={doctor.name} className="doctor-photo" />
               </div>
               <h3 className="doctor-name">{doctor.name}</h3>
               <span className="doctor-specialty">{doctor.specialty}</span>
@@ -129,100 +140,52 @@ const DoctorBookingPage: React.FC = () => {
             </div>
 
             <div className="form-panel">
-
               <div className="form-row two-col">
                 <div className="field-group">
                   <label className="field-label">Patient Id</label>
-                  <input
-                    type="text"
-                    name="patientId"
-                    placeholder="e.g. 0001"
-                    value={form.patientId}
-                    onChange={handleChange}
-                  />
+                  <input type="text" name="patientId" placeholder="e.g. 0001" value={form.patientId} onChange={handleChange} />
                 </div>
                 <div className="field-group">
                   <label className="field-label">Ref No</label>
-                  <input
-                    type="text"
-                    name="refNo"
-                    placeholder="e.g. 11289234"
-                    value={form.refNo}
-                    onChange={handleChange}
-                  />
+                  <input type="text" name="refNo" placeholder="e.g. 11289234" value={form.refNo} onChange={handleChange} />
                 </div>
               </div>
 
               <div className="form-row one-col">
                 <div className="field-group">
                   <label className="field-label">Hospital</label>
-                  <input
-                    type="text"
-                    name="hospital"
-                    placeholder="e.g. Asiri Hospital, Colombo"
-                    value={form.hospital}
-                    onChange={handleChange}
-                  />
+                  <input type="text" name="hospital" placeholder="e.g. Asiri Hospital, Colombo" value={form.hospital} onChange={handleChange} />
                 </div>
               </div>
 
               <div className="form-row half-col">
                 <div className="field-group">
                   <label className="field-label">Appointment No</label>
-                  <input
-                    type="text"
-                    name="appointmentNo"
-                    placeholder="e.g. 001"
-                    value={form.appointmentNo}
-                    onChange={handleChange}
-                  />
+                  <input type="text" name="appointmentNo" placeholder="e.g. 001" value={form.appointmentNo} onChange={handleChange} />
                 </div>
               </div>
 
               <div className="form-row two-col">
                 <div className="field-group">
                   <label className="field-label">Date</label>
-                  <input
-                    type="date"
-                    name="date"
-                    value={form.date}
-                    onChange={handleChange}
-                  />
+                  <input type="date" name="date" value={form.date} onChange={handleChange} />
                 </div>
                 <div className="field-group">
                   <label className="field-label">Time</label>
-                  <input
-                    type="time"
-                    name="time"
-                    value={form.time}
-                    onChange={handleChange}
-                  />
+                  <input type="time" name="time" value={form.time} onChange={handleChange} />
                 </div>
               </div>
 
               <div className="form-row two-col">
                 <div className="field-group">
                   <label className="field-label">NIC</label>
-                  <input
-                    type="text"
-                    name="nic"
-                    placeholder="e.g. 789245672V"
-                    value={form.nic}
-                    onChange={handleChange}
-                  />
+                  <input type="text" name="nic" placeholder="e.g. 789245672V" value={form.nic} onChange={handleChange} />
                 </div>
                 <div className="field-group">
                   <label className="field-label">Contact No</label>
-                  <input
-                    type="tel"
-                    name="contactNo"
-                    placeholder="e.g. 0743328921"
-                    value={form.contactNo}
-                    onChange={handleChange}
-                  />
+                  <input type="tel" name="contactNo" placeholder="e.g. 0743328921" value={form.contactNo} onChange={handleChange} />
                 </div>
               </div>
-
             </div>
           </div>
         </div>
