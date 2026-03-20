@@ -327,19 +327,22 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden; /* Added to allow cropping via negative margins/transforms */
+    overflow: hidden;
+    background: #ffffff; /* Replaced default gradient with white to fix "gray area" */
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1); /* Moved shadow here from img to avoid clipping */
 }
 
 .hero-image img {
-    width: 120%; /* Increased from 115% to allow more room for floating */
-    height: 110%; /* Added vertical buffer */
+    width: 120%;
+    height: 110%;
     max-width: none;
     margin-left: -15%;
-    margin-top: -5%; /* Center the vertical buffer */
-    max-height: none; /* Removed fixed max-height to allow scaling */
+    margin-top: -5%;
+    max-height: none;
     object-fit: cover;
     border-radius: 20px;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+    /* Removed box-shadow from here to prevent clipping artifacts */
     animation: float 6s ease-in-out infinite;
 }
 
