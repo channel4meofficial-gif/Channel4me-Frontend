@@ -81,7 +81,7 @@
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     border-radius: 8px;
 }
 
@@ -89,6 +89,18 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    width: 100%;
+}
+
+.menu-badge {
+    margin-left: auto;
+    align-self: center;
+    background-color: #e53e3e;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 12px;
 }
 
 .menu-icon {
