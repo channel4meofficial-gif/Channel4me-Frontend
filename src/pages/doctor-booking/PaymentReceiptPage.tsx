@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
+import PublicLayout from '../../components/layout/PublicLayout/publiclayout';
 import '../../styles/doctor-booking/PaymentReceiptPage.css';
 import logo from '../../assets/doctor-booking images/Channel4Me-logo.jpeg';
 
@@ -36,18 +37,20 @@ export default function PaymentReceiptPage(): React.ReactElement {
 
   if (!booking) {
     return (
-      <div className="receipt-wrapper">
-        <div className="receipt-card">
-          <div className="receipt-header">
-            <span className="receipt-title">RECEIPT</span>
-          </div>
-          <div className="receipt-body">
-            <div className="receipt-row">
-              <span className="receipt-value">No completed booking/payment was found for this page.</span>
+      <PublicLayout>
+        <div className="receipt-wrapper">
+          <div className="receipt-card">
+            <div className="receipt-header">
+              <span className="receipt-title">RECEIPT</span>
+            </div>
+            <div className="receipt-body">
+              <div className="receipt-row">
+                <span className="receipt-value">No completed booking/payment was found for this page.</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </PublicLayout>
     );
   }
 
@@ -69,7 +72,7 @@ export default function PaymentReceiptPage(): React.ReactElement {
   };
 
   return (
-    <>
+    <PublicLayout>
       <div className="receipt-wrapper">
         <div className="receipt-card">
 
@@ -140,6 +143,6 @@ export default function PaymentReceiptPage(): React.ReactElement {
           </div>
         </div>
       </div>
-    </>
+    </PublicLayout>
   );
 }
