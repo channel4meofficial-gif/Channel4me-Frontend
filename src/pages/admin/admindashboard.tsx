@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import '../../styles/admin/admindashboard.css';
+import Header from '../../components/ui/header/header';
+import Footer from '../../components/ui/footer/footer';
 
 const AdminDashboard: React.FC = () => {
-    const [activeTab, setActiveTab] = useState('appointments');
+    const [activeTab, setActiveTab] = useState('overview');
 
     return (
+        <div>
+            <Header/>
         <div className="admin-page">
             <aside className="admin-sidebar">
 
@@ -48,7 +52,7 @@ const AdminDashboard: React.FC = () => {
                 <header className="main-header">
                     <div className="header-greeting">
                         <h1>Good Morning, <span>Admin</span> 👋</h1>
-                        <p>Monday, 19 March 2026 · You have 5 appointments today</p>
+                        <p>Monday, 19 March 2026</p>
                     </div>
                 </header>
 
@@ -58,6 +62,8 @@ const AdminDashboard: React.FC = () => {
                     {activeTab === 'approvals' && <DoctorApprovalsTab />}
                 </div>
             </main>
+        </div>
+        <Footer />
         </div>
     );
 };
@@ -92,16 +98,7 @@ const OverviewTab = () => (
         </div>
 
         <div className="dashboard-bottom">
-            <div className="dashboard-table-container">
-                <div className="board-header">
-                    <div>
-                        <h2>Recent Activity</h2>
-                        <p>Latest updates from your platform</p>
-                    </div>
-                </div>
-                <div className="empty-state">Select Appointments or Doctor Approvals tab to view details.</div>
-            </div>
-            <div className="dashboard-notifications">
+            <div className="dashboard-notifications full-width">
                 <div className="board-header">
                     <div>
                         <h2>Notifications</h2>
@@ -110,21 +107,22 @@ const OverviewTab = () => (
                 </div>
                 <div className="notification-list">
                     <div className="notification-item">
-                        <div className="notif-dot blue"></div>
+                        <div className="notif-dot green"></div>
                         <div className="notif-content">
-                            <h4>New Appointment Request</h4>
-                            <p>MT Dinuka has requested an appointment for today at 12:00 PM.</p>
+                            <h4>Booking Confirmed</h4>
+                            <p>Patient MT Dinuka booked Dr. Michael Chen for today at 12:00 PM.</p>
                             <span>2 minutes ago</span>
                         </div>
                     </div>
                     <div className="notification-item">
-                        <div className="notif-dot red"></div>
+                        <div className="notif-dot green"></div>
                         <div className="notif-content">
-                            <h4>Emergency Alert</h4>
-                            <p>Patient Dulhara requires immediate attention at Hemas Hospital.</p>
+                            <h4>Booking Confirmed</h4>
+                            <p>Patient Dulhara booked Dr. Priya Sharma for today at 3:00 PM.</p>
                             <span>15 minutes ago</span>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -133,21 +131,17 @@ const OverviewTab = () => (
 
 const AppointmentsTab = () => {
     const [appointments, setAppointments] = useState([
-        { id: 1, name: 'MT Dinuka', time: '12:00 PM', hospital: 'Hemas', status: 'Accepted' },
-        { id: 2, name: 'Ashani', time: '1:00 PM', hospital: 'Asiri', status: 'Pending' },
-        { id: 3, name: 'Dulhara', time: '3:00 PM', hospital: 'Hemas', status: 'Accepted' },
-        { id: 4, name: 'James', time: '4:00 PM', hospital: 'Asiri', status: 'Accepted' },
-        { id: 5, name: 'Michael', time: '5:00 PM', hospital: 'Asiri', status: 'Pending' },
+        { id: 1, patient: 'MT Dinuka', doctor: 'Dr. Sarah Johnson', time: '12:00 PM', hospital: 'Hemas', date: 'Mar 19' },
+        { id: 2, patient: 'Ashani', doctor: 'Dr. Michael Chen', time: '1:00 PM', hospital: 'Asiri', date: 'Mar 19' },
+        { id: 3, patient: 'Dulhara', doctor: 'Dr. Priya Sharma', time: '3:00 PM', hospital: 'Hemas', date: 'Mar 19' },
+        { id: 4, patient: 'James', doctor: 'Dr. Ramesh Silva', time: '4:00 PM', hospital: 'Asiri', date: 'Mar 19' },
+        { id: 5, patient: 'Michael', doctor: 'Dr. Emily Chen', time: '5:00 PM', hospital: 'Asiri', date: 'Mar 19' },
     ]);
 
     const getInitials = (name: string) => {
         const parts = name.trim().split(' ');
         if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
         return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-    };
-
-    const handleAction = (id: number, action: 'Accepted' | 'Cancelled') => {
-        setAppointments(prev => prev.map(app => app.id === id ? { ...app, status: action } : app));
     };
 
     return (
@@ -164,11 +158,10 @@ const AppointmentsTab = () => {
                     <thead>
                         <tr>
                             <th>PATIENT</th>
+                            <th>DOCTOR</th>
                             <th>DATE</th>
                             <th>TIME</th>
                             <th>HOSPITAL</th>
-                            <th>STATUS</th>
-                            <th>ACTION</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -179,30 +172,25 @@ const AppointmentsTab = () => {
                                 <tr key={app.id}>
                                     <td>
                                         <div className="app-user">
-                                            <div className={`app-initials avatar-${colorClass}`}>{getInitials(app.name)}</div>
+                                            <div className={`app-initials avatar-${colorClass}`}>{getInitials(app.patient)}</div>
                                             <div className="user-details-group">
-                                                <span className="app-name">{app.name}</span>
+                                                <span className="app-name">{app.patient}</span>
                                                 <span className="app-subtitle">Consultation</span>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="font-medium">Mar 19</td>
-                                    <td className="font-medium">🕒 {app.time}</td>
-                                    <td><span className="hospital-pill">🏥 {app.hospital}</span></td>
                                     <td>
-                                        <span className={`status-pill pill-${app.status.toLowerCase()}`}>{app.status}</span>
-                                    </td>
-                                    <td>
-                                        <div className="app-actions">
-                                            {app.status === 'Pending' && (
-                                                <>
-                                                    <button className="icon-btn check-btn" onClick={() => handleAction(app.id, 'Accepted')}>&#10003;</button>
-                                                    <button className="icon-btn close-btn" onClick={() => handleAction(app.id, 'Cancelled')}>&#10005;</button>
-                                                </>
-                                            )}
-                                            <button className="view-icon-btn">👁️</button>
+                                        <div className="app-user">
+                                            <div className={`app-initials avatar-${colorClass}`}>{getInitials(app.doctor)}</div>
+                                            <div className="user-details-group">
+                                                <span className="app-name">{app.doctor}</span>
+                                                <span className="app-subtitle">Specialist</span>
+                                            </div>
                                         </div>
                                     </td>
+                                    <td className="font-medium">{app.date}</td>
+                                    <td className="font-medium">🕒 {app.time}</td>
+                                    <td><span className="hospital-pill">🏥 {app.hospital}</span></td>
                                 </tr>
                             )
                         })}

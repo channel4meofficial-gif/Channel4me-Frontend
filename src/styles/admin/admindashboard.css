@@ -81,7 +81,7 @@
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     border-radius: 8px;
 }
 
@@ -89,6 +89,18 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    width: 100%;
+}
+
+.menu-badge {
+    margin-left: auto;
+    align-self: center;
+    background-color: #e53e3e;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 12px;
 }
 
 .menu-icon {
@@ -346,11 +358,11 @@
 /* Dashboard Bottom Layout */
 .dashboard-bottom {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 1fr;
     gap: 24px;
 }
 
-.dashboard-table-container, .dashboard-notifications {
+.dashboard-notifications {
     background: white;
     border-radius: 12px;
     padding: 24px;
@@ -358,7 +370,7 @@
 }
 
 .full-width {
-    grid-column: 1 / -1;
+    width: 100%;
 }
 
 .board-header {
