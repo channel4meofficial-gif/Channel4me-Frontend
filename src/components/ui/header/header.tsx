@@ -22,9 +22,7 @@ const Header: React.FC = () => {
   };
 
   // Navigation links – adjust paths as needed (hash links for homepage sections)
-  const navLinks = [
-    { label: 'Home', path: '/#home' },
-  ];
+  const navLinks: { label: string; path: string }[] = [];
 
   // Check if a link is active (for highlighting)
   const isActive = (path: string) => {
