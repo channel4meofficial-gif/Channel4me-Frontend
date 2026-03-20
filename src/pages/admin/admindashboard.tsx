@@ -131,11 +131,11 @@ const OverviewTab = () => (
 
 const AppointmentsTab = () => {
     const [appointments, setAppointments] = useState([
-        { id: 1, patient: 'MT Dinuka', doctor: 'Dr. Sarah Johnson', time: '12:00 PM', hospital: 'Hemas', date: 'Mar 19' },
-        { id: 2, patient: 'Ashani', doctor: 'Dr. Michael Chen', time: '1:00 PM', hospital: 'Asiri', date: 'Mar 19' },
-        { id: 3, patient: 'Dulhara', doctor: 'Dr. Priya Sharma', time: '3:00 PM', hospital: 'Hemas', date: 'Mar 19' },
-        { id: 4, patient: 'James', doctor: 'Dr. Ramesh Silva', time: '4:00 PM', hospital: 'Asiri', date: 'Mar 19' },
-        { id: 5, patient: 'Michael', doctor: 'Dr. Emily Chen', time: '5:00 PM', hospital: 'Asiri', date: 'Mar 19' },
+        { id: 1, patient: 'MT Dinuka', doctor: 'Dr. Sarah Johnson', time: '12:00 PM', hospital: 'Hemas', date: 'Jan 27' },
+        { id: 2, patient: 'Ashani', doctor: 'Dr. Michael Chen', time: '1:00 PM', hospital: 'Asiri', date: 'Jan 27' },
+        { id: 3, patient: 'Dulhara', doctor: 'Dr. Priya Sharma', time: '3:00 PM', hospital: 'Hemas', date: 'Jan 27' },
+        { id: 4, patient: 'James', doctor: 'Dr. Ramesh Silva', time: '4:00 PM', hospital: 'Asiri', date: 'Jan 27' },
+        { id: 5, patient: 'Michael', doctor: 'Dr. Emily Chen', time: '5:00 PM', hospital: 'Asiri', date: 'Jan 27' },
     ]);
 
     const getInitials = (name: string) => {
