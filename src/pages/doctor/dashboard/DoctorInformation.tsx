@@ -84,19 +84,6 @@ function DoctorInformation() {
                 today
               </p>
             </div>
-            <div className="topbar-right">
-              <div className="search-box">
-                <span>🔍</span>
-                <input type="text" placeholder="Search patients, records…" />
-              </div>
-              <button className="icon-btn" title="Notifications">
-                🔔
-                <span className="dot"></span>
-              </button>
-              <button className="icon-btn" title="Help">
-                ❓
-              </button>
-            </div>
           </header>
 
           {/* Content */}
