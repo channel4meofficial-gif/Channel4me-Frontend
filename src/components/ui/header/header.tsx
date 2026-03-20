@@ -33,7 +33,7 @@ const Header: React.FC = () => {
 
   return (
     <header className="header">
-      <div className="container">
+      <div className="container header-container">
         <nav className="navbar">
           {/* Logo */}
           <Link to="/" className="logo" onClick={closeMobileMenu}>

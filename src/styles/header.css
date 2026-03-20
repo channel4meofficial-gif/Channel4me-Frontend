@@ -8,10 +8,9 @@
   padding: 25px 0;          /* increased from 15px to 25px */
 }
 
-.container {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 24px;
+.header-container {
+  max-width: 100%;
+  padding: 0 40px;
 }
 
 /* ===== NAVBAR ===== */
