@@ -161,8 +161,6 @@ function DoctorInformation() {
                       <col style={{ width: "100px" }} />
                       <col style={{ width: "130px" }} />
                       <col style={{ width: "140px" }} />
-                      <col style={{ width: "140px" }} />
-                      <col style={{ width: "56px" }} />
                     </colgroup>
                     <thead>
                       <tr>
@@ -170,8 +168,6 @@ function DoctorInformation() {
                         <th>Date</th>
                         <th>Time</th>
                         <th>Hospital</th>
-                        <th>Status</th>
-                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -193,16 +189,6 @@ function DoctorInformation() {
                         </td>
                         <td>
                           <span className="hospital-tag hemas">🏥 Hemas</span>
-                        </td>
-                        <td>
-                          <span className="status-badge confirmed">
-                            Confirmed
-                          </span>
-                        </td>
-                        <td>
-                          <button className="action-btn view" title="View">
-                            👁
-                          </button>
                         </td>
                       </tr>
                       <tr>
@@ -233,14 +219,6 @@ function DoctorInformation() {
                         <td>
                           <span className="hospital-tag asiri">🏥 Asiri</span>
                         </td>
-                        <td>
-                          <span className="status-badge pending">Pending</span>
-                        </td>
-                        <td>
-                          <button className="action-btn view" title="View">
-                            👁
-                          </button>
-                        </td>
                       </tr>
                       <tr>
                         <td>
@@ -269,16 +247,6 @@ function DoctorInformation() {
                         </td>
                         <td>
                           <span className="hospital-tag hemas">🏥 Hemas</span>
-                        </td>
-                        <td>
-                          <span className="status-badge confirmed">
-                            Confirmed
-                          </span>
-                        </td>
-                        <td>
-                          <button className="action-btn view" title="View">
-                            👁
-                          </button>
                         </td>
                       </tr>
                     </tbody>
