@@ -139,21 +139,17 @@ const OverviewTab = () => (
 
 const AppointmentsTab = () => {
     const [appointments, setAppointments] = useState([
-        { id: 1, name: 'MT Dinuka', time: '12:00 PM', hospital: 'Hemas', status: 'Accepted' },
-        { id: 2, name: 'Ashani', time: '1:00 PM', hospital: 'Asiri', status: 'Pending' },
-        { id: 3, name: 'Dulhara', time: '3:00 PM', hospital: 'Hemas', status: 'Accepted' },
-        { id: 4, name: 'James', time: '4:00 PM', hospital: 'Asiri', status: 'Accepted' },
-        { id: 5, name: 'Michael', time: '5:00 PM', hospital: 'Asiri', status: 'Pending' },
+        { id: 1, patient: 'MT Dinuka', doctor: 'Dr. Sarah Johnson', time: '12:00 PM', hospital: 'Hemas', date: 'Mar 19' },
+        { id: 2, patient: 'Ashani', doctor: 'Dr. Michael Chen', time: '1:00 PM', hospital: 'Asiri', date: 'Mar 19' },
+        { id: 3, patient: 'Dulhara', doctor: 'Dr. Priya Sharma', time: '3:00 PM', hospital: 'Hemas', date: 'Mar 19' },
+        { id: 4, patient: 'James', doctor: 'Dr. Ramesh Silva', time: '4:00 PM', hospital: 'Asiri', date: 'Mar 19' },
+        { id: 5, patient: 'Michael', doctor: 'Dr. Emily Chen', time: '5:00 PM', hospital: 'Asiri', date: 'Mar 19' },
     ]);
 
     const getInitials = (name: string) => {
         const parts = name.trim().split(' ');
         if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
         return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-    };
-
-    const handleAction = (id: number, action: 'Accepted' | 'Cancelled') => {
-        setAppointments(prev => prev.map(app => app.id === id ? { ...app, status: action } : app));
     };
 
     return (
@@ -170,11 +166,10 @@ const AppointmentsTab = () => {
                     <thead>
                         <tr>
                             <th>PATIENT</th>
+                            <th>DOCTOR</th>
                             <th>DATE</th>
                             <th>TIME</th>
                             <th>HOSPITAL</th>
-                            <th>STATUS</th>
-                            <th>ACTION</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -185,30 +180,25 @@ const AppointmentsTab = () => {
                                 <tr key={app.id}>
                                     <td>
                                         <div className="app-user">
-                                            <div className={`app-initials avatar-${colorClass}`}>{getInitials(app.name)}</div>
+                                            <div className={`app-initials avatar-${colorClass}`}>{getInitials(app.patient)}</div>
                                             <div className="user-details-group">
-                                                <span className="app-name">{app.name}</span>
+                                                <span className="app-name">{app.patient}</span>
                                                 <span className="app-subtitle">Consultation</span>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="font-medium">Mar 19</td>
-                                    <td className="font-medium">🕒 {app.time}</td>
-                                    <td><span className="hospital-pill">🏥 {app.hospital}</span></td>
                                     <td>
-                                        <span className={`status-pill pill-${app.status.toLowerCase()}`}>{app.status}</span>
-                                    </td>
-                                    <td>
-                                        <div className="app-actions">
-                                            {app.status === 'Pending' && (
-                                                <>
-                                                    <button className="icon-btn check-btn" onClick={() => handleAction(app.id, 'Accepted')}>&#10003;</button>
-                                                    <button className="icon-btn close-btn" onClick={() => handleAction(app.id, 'Cancelled')}>&#10005;</button>
-                                                </>
-                                            )}
-                                            <button className="view-icon-btn">👁️</button>
+                                        <div className="app-user">
+                                            <div className={`app-initials avatar-${colorClass}`}>{getInitials(app.doctor)}</div>
+                                            <div className="user-details-group">
+                                                <span className="app-name">{app.doctor}</span>
+                                                <span className="app-subtitle">Specialist</span>
+                                            </div>
                                         </div>
                                     </td>
+                                    <td className="font-medium">{app.date}</td>
+                                    <td className="font-medium">🕒 {app.time}</td>
+                                    <td><span className="hospital-pill">🏥 {app.hospital}</span></td>
                                 </tr>
                             )
                         })}
