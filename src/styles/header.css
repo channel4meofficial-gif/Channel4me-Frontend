@@ -8,10 +8,9 @@
   padding: 25px 0;          /* increased from 15px to 25px */
 }
 
-.container {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 24px;
+.header-container {
+  max-width: 100%;
+  padding: 0 40px;
 }
 
 /* ===== NAVBAR ===== */
@@ -116,17 +115,60 @@
   transform: translateY(-2px);
 }
 
-.btn-primary {
-  background: #0066ff;
+.btn-logout {
+  background: #ef4444;
   color: white;
   font-weight: 600;
-  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);  /* deeper shadow */
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
-.btn-primary:hover {
-  background: #0052d4;
+.btn-logout:hover {
+  background: #dc2626;
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 102, 255, 0.4);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+}
+
+/* ===== PROFILE ICON ===== */
+.nav-profile-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  margin-left: 15px;
+  transition: transform 0.2s ease;
+}
+
+.nav-profile-link:hover {
+  transform: scale(1.1);
+}
+
+.profile-icon-container {
+  width: 45px;
+  height: 45px;
+  background: #f0f7ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0066ff;
+  font-size: 28px;
+  border: 2px solid #e0e7ff;
+  transition: all 0.2s ease;
+}
+
+.nav-profile-link:hover .profile-icon-container {
+  border-color: #0066ff;
+  background: #e0efff;
+}
+
+.profile-mobile-link {
+  display: flex !important;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-mobile-link i {
+  font-size: 24px;
 }
 
 /* ===== MOBILE MENU TOGGLE ===== */

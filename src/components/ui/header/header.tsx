@@ -33,7 +33,7 @@ const Header: React.FC = () => {
 
   return (
     <header className="header">
-      <div className="container">
+      <div className="container header-container">
         <nav className="navbar">
           {/* Logo */}
           <Link to="/" className="logo" onClick={closeMobileMenu}>
@@ -59,16 +59,17 @@ const Header: React.FC = () => {
           <div className="nav-buttons">
             {isAuthenticated ? (
               <>
-                <Link to={`/${user?.role}/dashboard`} className="btn btn-outline" style={{ marginRight: '10px' }}>
-                  Dashboard
-                </Link>
                 <button 
                   onClick={() => { logout(); navigate('/'); }} 
-                  className="btn btn-primary"
-                  style={{ background: '#ef4444' }}
+                  className="btn btn-logout"
                 >
                   Log Out
                 </button>
+                <Link to={`/${user?.role}/dashboard`} className="nav-profile-link" title="Profile">
+                   <div className="profile-icon-container">
+                      <i className="fas fa-user-circle"></i>
+                   </div>
+                </Link>
               </>
             ) : (
               <>
@@ -101,10 +102,11 @@ const Header: React.FC = () => {
           <div className="nav-buttons-mobile">
             {isAuthenticated ? (
               <>
-                <Link to={`/${user?.role}/dashboard`} className="btn btn-outline" onClick={closeMobileMenu}>Dashboard</Link>
+                <Link to={`/${user?.role}/dashboard`} className="nav-link profile-mobile-link" onClick={closeMobileMenu}>
+                  <i className="fas fa-user-circle"></i> Profile
+                </Link>
                 <button 
-                  className="btn btn-primary" 
-                  style={{ background: '#ef4444' }}
+                  className="btn btn-logout" 
                   onClick={() => { logout(); closeMobileMenu(); navigate('/'); }}
                 >
                   Log Out
