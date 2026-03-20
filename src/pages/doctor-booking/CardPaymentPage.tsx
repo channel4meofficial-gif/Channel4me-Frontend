@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import PublicLayout from '../../components/layout/PublicLayout/publiclayout';
 import '../../styles/doctor-booking/CardPaymentPage.css';
+import { updatePaymentStatus } from '../../services/bookingService';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface Doctor {
@@ -26,6 +28,11 @@ interface BookingForm {
 interface LocationState {
   doctor?: Doctor;
   form?: BookingForm;
+  booking?: {
+    _id: string;
+    ref_number: string;
+    payment_status: 'pending' | 'completed' | 'failed';
+  };
   total?: number | null;
 }
 
@@ -45,6 +52,7 @@ const CardPaymentPage: React.FC = () => {
 
   const doctor: Doctor           = state?.doctor || {};
   const form: BookingForm        = state?.form   || {};
+  const booking = state?.booking;
   const total: number | null     = state?.total  || null;
 
   const [cardType, setCardType]   = useState<CardType>('');
@@ -52,6 +60,7 @@ const CardPaymentPage: React.FC = () => {
   const [expMonth, setExpMonth]   = useState<string>('');
   const [expYear, setExpYear]     = useState<string>('');
   const [cvv, setCvv]             = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleCardNumber = (e: React.ChangeEvent<HTMLInputElement>): void => {
     let val = e.target.value.replace(/\D/g, '').slice(0, 16);
@@ -59,12 +68,47 @@ const CardPaymentPage: React.FC = () => {
     setCardNumber(val);
   };
 
-  const handlePayNow = (): void => {
-    navigate('/doctor-booking/payment-receipt', { state: { doctor, form, payMethod: 'card', total } });
+  const handlePayNow = async (): Promise<void> => {
+    if (!booking?._id) {
+      alert('Booking details are missing. Please create the booking again.');
+      return;
+    }
+
+    if (!cardType) {
+      setErrorMessage('Please select a card type.');
+      return;
+    }
+
+    if (cardNumber.replace(/\s/g, '').length !== 16) {
+      setErrorMessage('Please enter a valid 16-digit card number.');
+      return;
+    }
+
+    if (!expMonth || !expYear) {
+      setErrorMessage('Please select the card expiration month and year.');
+      return;
+    }
+
+    if (!/^\d{3,4}$/.test(cvv)) {
+      setErrorMessage('Please enter a valid 3 or 4 digit CVV.');
+      return;
+    }
+
+    setErrorMessage('');
+
+    try {
+      const updatedBooking = await updatePaymentStatus(booking._id, 'completed');
+      navigate('/doctor-booking/payment-receipt', {
+        state: { doctor, form, booking: updatedBooking, payMethod: 'card', total },
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unable to complete payment.';
+      alert(message);
+    }
   };
 
   return (
-    <>
+    <PublicLayout>
       <div className="card-payment-wrapper">
         <div className="page-card-flat">
 
@@ -72,6 +116,10 @@ const CardPaymentPage: React.FC = () => {
             <i className="fas fa-credit-card"></i> Payment Details
           </div>
           <div className="inner-divider"></div>
+
+          {errorMessage && (
+            <p style={{ color: '#dc2626', marginBottom: '16px' }}>{errorMessage}</p>
+          )}
 
           <div className="field-group">
             <label className="field-label">Card Type <span className="req">*</span></label>
@@ -201,7 +249,7 @@ const CardPaymentPage: React.FC = () => {
 
         </div>
       </div>
-    </>
+    </PublicLayout>
   );
 };
 

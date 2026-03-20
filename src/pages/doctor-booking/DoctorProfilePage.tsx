@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import PublicLayout from '../../components/layout/PublicLayout/publiclayout';
 import '../../styles/doctor-booking/DoctorProfilePage.css';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -280,7 +281,7 @@ const DoctorProfilePage: React.FC = () => {
   const total: number = doctor.charges.booking + doctor.charges.doctor + doctor.charges.hospital;
 
   return (
-    <>
+    <PublicLayout>
       <main className="profile-wrapper">
         <div className="container">
           <div className="profile-grid">
@@ -426,7 +427,7 @@ const DoctorProfilePage: React.FC = () => {
           </div>
         </div>
       </main>
-    </>
+    </PublicLayout>
   );
 };
 
