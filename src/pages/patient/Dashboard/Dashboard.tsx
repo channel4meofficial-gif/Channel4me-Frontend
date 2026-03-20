@@ -3,15 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import PublicLayout from '../../../components/layout/PublicLayout/publiclayout';
 import '../../../styles/patient/PatientProfile.css';
 
-const DEFAULT_AVATAR = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+const DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a0aec0'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
 
 const DEFAULT_PROFILE_DATA = {
-    firstName: 'Cristiano',
-    lastName: 'Ronaldo',
-    age: '40',
-    location: 'Riyadh, Saudi Arabia',
-    guardianFirstName: 'Dolores',
-    guardianLastName: 'Aveiro',
+    firstName: 'Nimal',
+    lastName: 'Perera',
+    age: '45',
+    location: 'Colombo, Sri Lanka',
+    guardianFirstName: 'Kumari',
+    guardianLastName: 'Perera',
     contactNumber1: '0778518614',
     contactNumber2: '0742107576',
 };
@@ -34,6 +34,11 @@ const DEFAULT_DOCTOR_FEEDBACK = [
     },
 ];
 
+const DEFAULT_RECENT_CONSULTATIONS = [
+    { id: '1', date: 'March 15, 2026', doctor: 'Dr. Sudarshan', rating: 0, comment: '' },
+    { id: '2', date: 'March 10, 2026', doctor: 'Dr. Perera', rating: 4, comment: 'Great service' },
+];
+
 function EditIcon() {
     return (
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -52,6 +57,27 @@ function PinIcon() {
     );
 }
 
+function StarIcon({ filled, onClick }: { filled: boolean; onClick?: () => void }) {
+    return (
+        <svg
+            onClick={onClick}
+            style={{ cursor: onClick ? 'pointer' : 'default', transition: 'transform 0.1s' }}
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill={filled ? "#fbbf24" : "none"}
+            stroke={filled ? "#fbbf24" : "#cbd5e1"}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            onMouseEnter={(e) => onClick && (e.currentTarget.style.transform = 'scale(1.2)')}
+            onMouseLeave={(e) => onClick && (e.currentTarget.style.transform = 'scale(1)')}
+        >
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+        </svg>
+    );
+}
+
 const PatientDashboard: React.FC = () => {
     const navigate = useNavigate();
     const [profileData, setProfileData] = useState(DEFAULT_PROFILE_DATA);
@@ -59,6 +85,11 @@ const PatientDashboard: React.FC = () => {
     const [bloodReport, setBloodReport] = useState<{ [key: string]: string }>(DEFAULT_BLOOD_REPORT);
     const [upcomingAppointments, setUpcomingAppointments] = useState(DEFAULT_UPCOMING_APPOINTMENTS);
     const [doctorFeedback, setDoctorFeedback] = useState(DEFAULT_DOCTOR_FEEDBACK);
+    const [recentConsultations, setRecentConsultations] = useState(DEFAULT_RECENT_CONSULTATIONS);
+    const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+    const [selectedAppt, setSelectedAppt] = useState<typeof DEFAULT_RECENT_CONSULTATIONS[0] | null>(null);
+    const [tempRating, setTempRating] = useState(0);
+    const [tempComment, setTempComment] = useState('');
 
     useEffect(() => {
         const storedProfileData = localStorage.getItem('patientProfileData');
@@ -101,7 +132,33 @@ const PatientDashboard: React.FC = () => {
                 console.error("Failed to parse patientDoctorFeedback", e);
             }
         }
+
+        const storedRecent = localStorage.getItem('patientRecentConsultations');
+        if (storedRecent) {
+            try {
+                setRecentConsultations(JSON.parse(storedRecent));
+            } catch (e) {
+                console.error("Failed to parse patientRecentConsultations", e);
+            }
+        }
     }, []);
+
+    const handleOpenReview = (appt: typeof DEFAULT_RECENT_CONSULTATIONS[0]) => {
+        setSelectedAppt(appt);
+        setTempRating(appt.rating || 0);
+        setTempComment(appt.comment || '');
+        setIsReviewModalOpen(true);
+    };
+
+    const handleSubmitReview = () => {
+        if (!selectedAppt) return;
+        const updated = recentConsultations.map(item =>
+            item.id === selectedAppt.id ? { ...item, rating: tempRating, comment: tempComment } : item
+        );
+        setRecentConsultations(updated);
+        localStorage.setItem('patientRecentConsultations', JSON.stringify(updated));
+        setIsReviewModalOpen(false);
+    };
 
     const {
         firstName, lastName, age, location,
@@ -198,28 +255,85 @@ const PatientDashboard: React.FC = () => {
                                 ) : (
                                     <div style={{ color: '#888', gridColumn: 'span 2' }}>No health conditions recorded yet. Click "New Blood Report" to add.</div>
                                 )}
+                        </div>
+                    </div>
+
+                    {/* Recent Consultations & Doctor Feedback Row */}
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '24px' }}>
+                            {/* Recent Consultations */}
+                            <div className="pps-card">
+                                <div className="pps-card-header">
+                                    <h3 className="pps-card-title blue">Recent Consultations</h3>
+                                </div>
+                                <ul className="pps-list">
+                                    {recentConsultations.map(appt => (
+                                        <li key={appt.id} className="pps-list-item" style={{ justifyContent: 'space-between' }}>
+                                            <div>
+                                                <div style={{ fontWeight: 600 }}>{appt.doctor}</div>
+                                                <div style={{ fontSize: '12px', color: '#64748b' }}>{appt.date}</div>
+                                            </div>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                {appt.rating > 0 ? (
+                                                    <div style={{ display: 'flex', gap: '2px' }}>
+                                                        {[1, 2, 3, 4, 5].map(s => <StarIcon key={s} filled={s <= appt.rating} />)}
+                                                    </div>
+                                                ) : (
+                                                    <button className="pps-btn-review" onClick={() => handleOpenReview(appt)}>Review</button>
+                                                )}
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            {/* Doctor Feedback */}
+                            <div className="pps-card">
+                                <div className="pps-card-header">
+                                    <h3 className="pps-card-title blue">Doctor Feedback</h3>
+                                </div>
+                                <div className="pps-feedback-list">
+                                    {doctorFeedback.length === 0 ? (
+                                        <div className="pps-feedback-item" style={{ color: '#888', textAlign: 'center', padding: '16px' }}>
+                                            No doctor feedback available yet.
+                                        </div>
+                                    ) : (
+                                        doctorFeedback.map((feedback) => (
+                                            <div key={feedback.id} className="pps-feedback-item">
+                                                {feedback.text}
+                                            </div>
+                                        ))
+                                    )}
+                                </div>
                             </div>
                         </div>
 
-                        {/* Doctor Feedback */}
-                        <div className="pps-card pps-feedback-card">
-                            <div className="pps-card-header">
-                                <h3 className="pps-card-title blue">Doctor Feedback</h3>
-                            </div>
-                            <div className="pps-feedback-list">
-                                {doctorFeedback.length === 0 ? (
-                                    <div className="pps-feedback-item" style={{ color: '#888', textAlign: 'center', padding: '16px' }}>
-                                        No doctor feedback available yet.
+                        {/* Review Modal */}
+                        {isReviewModalOpen && (
+                            <div className="pps-modal-overlay">
+                                <div className="pps-modal-content">
+                                    <h3 className="pps-modal-title">Rate Your Experience</h3>
+                                    <p className="pps-modal-subtitle">How was your consultation with <strong>{selectedAppt?.doctor}</strong>?</p>
+                                    
+                                    <div className="pps-star-rating">
+                                        {[1, 2, 3, 4, 5].map(s => (
+                                            <StarIcon key={s} filled={s <= tempRating} onClick={() => setTempRating(s)} />
+                                        ))}
                                     </div>
-                                ) : (
-                                    doctorFeedback.map((feedback) => (
-                                        <div key={feedback.id} className="pps-feedback-item">
-                                            {feedback.text}
-                                        </div>
-                                    ))
-                                )}
+
+                                    <textarea 
+                                        className="pps-review-textarea"
+                                        placeholder="Share your feedback (optional)..."
+                                        value={tempComment}
+                                        onChange={(e) => setTempComment(e.target.value)}
+                                    />
+
+                                    <div className="pps-modal-actions">
+                                        <button className="pps-btn-cancel" onClick={() => setIsReviewModalOpen(false)}>Cancel</button>
+                                        <button className="pps-btn-submit" onClick={handleSubmitReview}>Submit Review</button>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        )}
 
                     </div>
                 </main>
