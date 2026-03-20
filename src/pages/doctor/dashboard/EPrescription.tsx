@@ -36,14 +36,36 @@ const EPrescription: React.FC = () => {
     <div className="eprescription-layout">
       {/* Sidebar - Reusing standard layout visually if desired, or simple back navigation */}
       <aside className="sidebar">
-        <div className="sidebar-logo">
-          <div className="logo-icon">💊</div>
-          <div className="logo-text">Channel<span>4Me</span></div>
-        </div>
-
         <span className="nav-label">Main Menu</span>
-        <a className="nav-item" href="#" onClick={(e) => { e.preventDefault(); navigate('/doctor/dashboard'); }}>
+        <a
+          className="nav-item"
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate('/doctor/dashboard');
+          }}
+        >
           <span className="nav-icon">🏠</span> Dashboard
+        </a>
+        <a
+          className="nav-item"
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate('/doctor/dashboard/appointments');
+          }}
+        >
+          <span className="nav-icon">📅</span> Appointments
+        </a>
+        <a
+          className="nav-item"
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate('/doctor/dashboard/patients');
+          }}
+        >
+          <span className="nav-icon">👥</span> My Patients
         </a>
         <a className="nav-item active" href="#">
           <span className="nav-icon">📝</span> E-Prescription
