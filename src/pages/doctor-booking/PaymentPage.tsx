@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import PublicLayout from '../../components/layout/PublicLayout/publiclayout';
 import '../../styles/doctor-booking/PaymentPage.css';
-import { updatePaymentStatus } from '../../services/bookingService';
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+const API_BASE_URL = 'http://localhost:5000';
+
 interface Charges {
   booking: number;
   doctor: number;
@@ -40,26 +40,21 @@ interface LocationState {
 
 type PayMethod = 'card' | 'cash' | '';
 
-// ─── Default Doctor ───────────────────────────────────────────────────────────
 const defaultDoctor: Doctor = {
   name: 'Dr. Emma Wilson',
   specialty: 'Cardiologist',
 };
 
-// ─── PaymentPage Component ────────────────────────────────────────────────────
 const PaymentPage: React.FC = () => {
   const { state } = useLocation() as { state: LocationState | null };
-  const navigate  = useNavigate();
+  const navigate = useNavigate();
 
-  const doctor: Doctor       = state?.doctor || defaultDoctor;
-  const form: BookingForm    = state?.form   || {};
+  const doctor: Doctor = state?.doctor || defaultDoctor;
+  const form: BookingForm = state?.form || {};
   const booking = state?.booking;
 
   const charges: Charges | null = doctor.charges || null;
-  const total: number | null    = charges
-    ? charges.booking + charges.doctor + charges.hospital
-    : null;
-
+  const total: number | null = charges ? charges.booking + charges.doctor + charges.hospital : null;
   const [payMethod, setPayMethod] = useState<PayMethod>('');
 
   const handlePay = async (): Promise<void> => {
@@ -70,19 +65,37 @@ const PaymentPage: React.FC = () => {
 
     if (payMethod === 'card') {
       navigate('/doctor-booking/card-payment', { state: { doctor, form, booking, payMethod, total } });
-    } else if (payMethod === 'cash') {
+      return;
+    }
+
+    if (payMethod === 'cash') {
       try {
-        const updatedBooking = await updatePaymentStatus(booking._id, 'pending');
+        const response = await fetch(`${API_BASE_URL}/api/v1/bookings/${booking._id}/payment`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            payment_status: 'pending',
+          }),
+        });
+
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+          throw new Error(result.message || 'Unable to update payment status.');
+        }
+
         navigate('/doctor-booking/payment-receipt', {
-          state: { doctor, form, booking: updatedBooking, payMethod, total },
+          state: { doctor, form, booking: result.data, payMethod, total },
         });
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Unable to update payment status.';
         alert(message);
       }
-    } else {
-      alert('Please select a payment method.');
+      return;
     }
+
+    alert('Please select a payment method.');
   };
 
   return (
@@ -91,7 +104,6 @@ const PaymentPage: React.FC = () => {
         <div className="page-card">
           <div className="card-band"></div>
           <div className="card-body">
-
             <div className="illus-panel">
               <div className="illus-ring lg"></div>
               <div className="illus-ring md"></div>
@@ -103,23 +115,14 @@ const PaymentPage: React.FC = () => {
             </div>
 
             <div className="form-panel">
-
               <div className="form-row two-col">
                 <div className="field-group">
                   <label className="field-label">Patient Id</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 012283"
-                    defaultValue={form.patientId || ''}
-                  />
+                  <input type="text" placeholder="e.g. 012283" defaultValue={form.patientId || ''} />
                 </div>
                 <div className="field-group">
                   <label className="field-label">Ref No</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 11289234"
-                    defaultValue={form.refNo || ''}
-                  />
+                  <input type="text" placeholder="e.g. 11289234" defaultValue={form.refNo || ''} />
                 </div>
               </div>
 
@@ -142,15 +145,8 @@ const PaymentPage: React.FC = () => {
               <div className="field-group">
                 <label className="field-label">Payment Method</label>
                 <div className="pay-method-group">
-
                   <label className="pay-method-option">
-                    <input
-                      type="radio"
-                      name="payMethod"
-                      value="card"
-                      checked={payMethod === 'card'}
-                      onChange={() => setPayMethod('card')}
-                    />
+                    <input type="radio" name="payMethod" value="card" checked={payMethod === 'card'} onChange={() => setPayMethod('card')} />
                     <span className="pm-radio"></span>
                     <span className="pm-label">
                       <i className="fas fa-credit-card" style={{ color: '#667eea', marginRight: '6px' }}></i>
@@ -159,23 +155,15 @@ const PaymentPage: React.FC = () => {
                   </label>
 
                   <label className="pay-method-option">
-                    <input
-                      type="radio"
-                      name="payMethod"
-                      value="cash"
-                      checked={payMethod === 'cash'}
-                      onChange={() => setPayMethod('cash')}
-                    />
+                    <input type="radio" name="payMethod" value="cash" checked={payMethod === 'cash'} onChange={() => setPayMethod('cash')} />
                     <span className="pm-radio"></span>
                     <span className="pm-label">
                       <i className="fas fa-hospital" style={{ color: '#10b981', marginRight: '6px' }}></i>
                       Cash Payment (Pay during visit)
                     </span>
                   </label>
-
                 </div>
               </div>
-
             </div>
           </div>
         </div>
