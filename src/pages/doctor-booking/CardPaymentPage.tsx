@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import PublicLayout from '../../components/layout/PublicLayout/publiclayout';
 import '../../styles/doctor-booking/CardPaymentPage.css';
-import { updatePaymentStatus } from '../../services/bookingService';
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+const API_BASE_URL = 'http://localhost:5000';
+
 interface Doctor {
   name?: string;
   specialty?: string;
@@ -38,28 +38,23 @@ interface LocationState {
 
 type CardType = 'visa' | 'mastercard' | '';
 
-// ─── Constants ────────────────────────────────────────────────────────────────
-const months: string[] = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
-];
+const months: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const years: string[] = ['2024', '2025', '2026', '2027', '2028', '2029', '2030'];
 
-// ─── CardPaymentPage Component ────────────────────────────────────────────────
 const CardPaymentPage: React.FC = () => {
   const { state } = useLocation() as { state: LocationState | null };
-  const navigate  = useNavigate();
+  const navigate = useNavigate();
 
-  const doctor: Doctor           = state?.doctor || {};
-  const form: BookingForm        = state?.form   || {};
+  const doctor: Doctor = state?.doctor || {};
+  const form: BookingForm = state?.form || {};
   const booking = state?.booking;
-  const total: number | null     = state?.total  || null;
+  const total: number | null = state?.total || null;
 
-  const [cardType, setCardType]   = useState<CardType>('');
+  const [cardType, setCardType] = useState<CardType>('');
   const [cardNumber, setCardNumber] = useState<string>('');
-  const [expMonth, setExpMonth]   = useState<string>('');
-  const [expYear, setExpYear]     = useState<string>('');
-  const [cvv, setCvv]             = useState<string>('');
+  const [expMonth, setExpMonth] = useState<string>('');
+  const [expYear, setExpYear] = useState<string>('');
+  const [cvv, setCvv] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleCardNumber = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -73,22 +68,18 @@ const CardPaymentPage: React.FC = () => {
       alert('Booking details are missing. Please create the booking again.');
       return;
     }
-
     if (!cardType) {
       setErrorMessage('Please select a card type.');
       return;
     }
-
     if (cardNumber.replace(/\s/g, '').length !== 16) {
       setErrorMessage('Please enter a valid 16-digit card number.');
       return;
     }
-
     if (!expMonth || !expYear) {
       setErrorMessage('Please select the card expiration month and year.');
       return;
     }
-
     if (!/^\d{3,4}$/.test(cvv)) {
       setErrorMessage('Please enter a valid 3 or 4 digit CVV.');
       return;
@@ -97,9 +88,23 @@ const CardPaymentPage: React.FC = () => {
     setErrorMessage('');
 
     try {
-      const updatedBooking = await updatePaymentStatus(booking._id, 'completed');
+      const response = await fetch(`${API_BASE_URL}/api/v1/bookings/${booking._id}/payment`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          payment_status: 'completed',
+        }),
+      });
+
+      const result = await response.json();
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Unable to complete payment.');
+      }
+
       navigate('/doctor-booking/payment-receipt', {
-        state: { doctor, form, booking: updatedBooking, payMethod: 'card', total },
+        state: { doctor, form, booking: result.data, payMethod: 'card', total },
       });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unable to complete payment.';
@@ -111,28 +116,18 @@ const CardPaymentPage: React.FC = () => {
     <PublicLayout>
       <div className="card-payment-wrapper">
         <div className="page-card-flat">
-
           <div className="card-section-title">
             <i className="fas fa-credit-card"></i> Payment Details
           </div>
           <div className="inner-divider"></div>
 
-          {errorMessage && (
-            <p style={{ color: '#dc2626', marginBottom: '16px' }}>{errorMessage}</p>
-          )}
+          {errorMessage && <p style={{ color: '#dc2626', marginBottom: '16px' }}>{errorMessage}</p>}
 
           <div className="field-group">
             <label className="field-label">Card Type <span className="req">*</span></label>
             <div className="radio-row">
-
               <label className="card-type-option">
-                <input
-                  type="radio"
-                  name="cardType"
-                  value="visa"
-                  checked={cardType === 'visa'}
-                  onChange={() => setCardType('visa')}
-                />
+                <input type="radio" name="cardType" value="visa" checked={cardType === 'visa'} onChange={() => setCardType('visa')} />
                 <span className="card-type-box">
                   <span className="radio-dot"></span>
                   <span className="visa-logo">VISA</span>
@@ -141,13 +136,7 @@ const CardPaymentPage: React.FC = () => {
               </label>
 
               <label className="card-type-option">
-                <input
-                  type="radio"
-                  name="cardType"
-                  value="mastercard"
-                  checked={cardType === 'mastercard'}
-                  onChange={() => setCardType('mastercard')}
-                />
+                <input type="radio" name="cardType" value="mastercard" checked={cardType === 'mastercard'} onChange={() => setCardType('mastercard')} />
                 <span className="card-type-box">
                   <span className="radio-dot"></span>
                   <span className="mc-logo">
@@ -157,7 +146,6 @@ const CardPaymentPage: React.FC = () => {
                   <span className="card-type-name">Mastercard</span>
                 </span>
               </label>
-
             </div>
           </div>
 
@@ -165,14 +153,7 @@ const CardPaymentPage: React.FC = () => {
             <label className="field-label">Card Number <span className="req">*</span></label>
             <div className="card-num-wrap">
               <i className="fas fa-lock card-num-icon"></i>
-              <input
-                type="text"
-                className="card-num-input"
-                maxLength={19}
-                placeholder="XXXX  XXXX  XXXX  XXXX"
-                value={cardNumber}
-                onChange={handleCardNumber}
-              />
+              <input type="text" className="card-num-input" maxLength={19} placeholder="XXXX  XXXX  XXXX  XXXX" value={cardNumber} onChange={handleCardNumber} />
             </div>
           </div>
 
@@ -180,10 +161,7 @@ const CardPaymentPage: React.FC = () => {
             <div className="field-group">
               <label className="field-label">Expiration Month <span className="req">*</span></label>
               <div className="select-wrap">
-                <select
-                  value={expMonth}
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setExpMonth(e.target.value)}
-                >
+                <select value={expMonth} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setExpMonth(e.target.value)}>
                   <option value="" disabled>Month</option>
                   {months.map((m: string) => <option key={m}>{m}</option>)}
                 </select>
@@ -195,10 +173,7 @@ const CardPaymentPage: React.FC = () => {
             <div className="field-group">
               <label className="field-label">Expiration Year <span className="req">*</span></label>
               <div className="select-wrap">
-                <select
-                  value={expYear}
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setExpYear(e.target.value)}
-                >
+                <select value={expYear} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setExpYear(e.target.value)}>
                   <option value="" disabled>Year</option>
                   {years.map((y: string) => <option key={y}>{y}</option>)}
                 </select>
@@ -215,14 +190,7 @@ const CardPaymentPage: React.FC = () => {
               <i className="fas fa-info-circle" style={{ color: '#667eea', marginRight: '4px' }}></i>
               Three or four digit number printed on the back or front of your card.
             </p>
-            <input
-              type="password"
-              className="cvv-input"
-              maxLength={4}
-              placeholder="•••"
-              value={cvv}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCvv(e.target.value)}
-            />
+            <input type="password" className="cvv-input" maxLength={4} placeholder="***" value={cvv} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCvv(e.target.value)} />
           </div>
 
           <div className="order-block">
@@ -232,9 +200,7 @@ const CardPaymentPage: React.FC = () => {
               <span className="order-label">
                 <i className="fas fa-receipt"></i> Total Amount
               </span>
-              <span className="order-amount">
-                {total ? `Rs. ${total.toLocaleString()}.00` : 'Rs. —'}
-              </span>
+              <span className="order-amount">{total ? `Rs. ${total.toLocaleString()}.00` : 'Rs. -'}</span>
             </div>
           </div>
 
@@ -246,7 +212,6 @@ const CardPaymentPage: React.FC = () => {
               <i className="fas fa-lock"></i> Pay Now
             </button>
           </div>
-
         </div>
       </div>
     </PublicLayout>
