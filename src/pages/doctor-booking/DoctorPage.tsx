@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import PublicLayout from '../../components/layout/PublicLayout/publiclayout';
 import '../../styles/doctor-booking/DoctorPage.css';
 import { getDoctors, ApiDoctor } from '../../services/doctorService';
 
@@ -204,7 +205,7 @@ const DoctorPage: React.FC = () => {
   });
 
   return (
-    <>
+    <PublicLayout>
       <main className="doctors-wrapper">
         <div className="container">
 
@@ -301,7 +302,7 @@ const DoctorPage: React.FC = () => {
 
         </div>
       </main>
-    </>
+    </PublicLayout>
   );
 };
 
