@@ -68,7 +68,12 @@ function HospitalTag({ name }) {
 
 // ── Component ──────────────────────────────────────────────
 export default function Appointment() {
-  const [activeDay, setActiveDay] = useState(19);
+  const [activeDay, setActiveDay] = useState(27);
+  const currentDate = {
+    full: 'Monday, January 27, 2025',
+    display: 'January 27, 2025',
+    short: 'Jan 27'
+  };
   const filtered = APPOINTMENTS;
 
   const confirmed = APPOINTMENTS.filter(a => a.status === 'confirmed').length;
@@ -97,7 +102,7 @@ export default function Appointment() {
           <div className="date-nav-center">
             <div className="date-nav-icon">📅</div>
             <div className="date-nav-text">
-              <div className="date-full">Monday, January 19, 2026</div>
+              <div className="date-full">{currentDate.full}</div>
               <div className="date-rel">Today · Week 3</div>
             </div>
           </div>
@@ -112,7 +117,7 @@ export default function Appointment() {
             <div className="summary-info">
               <div className="s-label">Total Appointments</div>
               <div className="s-value">{APPOINTMENTS.length}</div>
-              <div className="s-sub">For January 19, 2026</div>
+              <div className="s-sub">For January 27, 2025</div>
             </div>
           </div>
           <div className="summary-card">
@@ -138,7 +143,7 @@ export default function Appointment() {
 
           <div className="appt-list-header">
             <div>
-              <div className="appt-list-title">Appointments for January 19, 2026</div>
+              <div className="appt-list-title">Appointments for January 27, 2025</div>
               <div className="appt-list-meta">{filtered.length} appointment{filtered.length !== 1 ? 's' : ''} shown</div>
             </div>
 
@@ -187,7 +192,7 @@ export default function Appointment() {
                       </td>
 
                       {/* Date */}
-                      <td>Jan 19</td>
+                      <td>{currentDate.short}</td>
 
                       {/* Time */}
                       <td>
