@@ -54,7 +54,7 @@ const LoginPage: React.FC = () => {
     const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
         setIsLoading(true);
         try {
-            const res = await fetch(`http://localhost:5000/api/auth/google/verify`, {
+            const res = await fetch(`http://localhost:5000/api/v1/auth/verify`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: credentialResponse.credential })
