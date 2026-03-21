@@ -9,9 +9,9 @@ interface HealthSummaryProps {
 const HealthSummary: React.FC<HealthSummaryProps> = ({ user }) => {
   const summaryData = [
     { label: 'Blood Type', value: 'O+' },
-    { label: 'Allergies', value: 'Penicillin' },
-    { label: 'Medications', value: 'Vitamin D3' },
-    { label: 'Weight', value: '72 kg' },
+    { label: 'Allergies', value: 'none' },
+    { label: 'Medications', value: 'Vitamin d3' },
+    { label: 'Weight', value: '60kg' },
   ];
 
   return (
