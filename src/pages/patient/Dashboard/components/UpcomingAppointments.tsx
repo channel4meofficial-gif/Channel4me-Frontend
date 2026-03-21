@@ -7,9 +7,7 @@ interface UpcomingAppointmentsProps {
 }
 
 const UpcomingAppointments: React.FC<UpcomingAppointmentsProps> = ({ appointments = [] }) => {
-  const upcoming = appointments
-    .filter(apt => apt.status === 'upcoming')
-    .slice(0, 3);
+  const upcoming: Appointment[] = [];
 
   return (
     <div className={styles.card}>
