@@ -1,5 +1,7 @@
 import '../../styles/chatbot/chatbot.css';
 import { useState, useRef, useEffect } from 'react';
+import { useAuth } from '../../context/AuthContext';
+import config from '../../config/config';
 
 type Message = {
   id: number;
@@ -8,19 +10,20 @@ type Message = {
   time: string;
   suggestions?: string[];
   isDiagnosis?: boolean;
+  aiData?: any;
 };
 const QUICK_SYMPTOMS = ['🤕 Headache', '💔 Chest pain', '🥵 Fever', '😴 Fatigue', '🤢 Nausea', '😮‍💨 Breathlessness'];
 
 const SPECIALISTS = [
-  { id: 1, name: 'Dr. Mark',  specialty: 'Cardiologist',           hospital: 'Hemas Hospital',  rating: 4.7, icon: '👨‍⚕️' },
-  { id: 2, name: 'Dr. Hashi', specialty: 'Electrophysiologist',    hospital: 'Asiri Hospital',  rating: 4.6, icon: '👩‍⚕️' },
-  { id: 3, name: 'Dr. Larry', specialty: 'General Cardiologist',   hospital: 'Hemas Hospital',  rating: 4.5, icon: '👨‍⚕️' },
+  { id: 1, name: 'Dr. Mark', specialty: 'Cardiologist', hospital: 'Hemas Hospital', rating: 4.7, icon: '👨‍⚕️' },
+  { id: 2, name: 'Dr. Hashi', specialty: 'Electrophysiologist', hospital: 'Asiri Hospital', rating: 4.6, icon: '👩‍⚕️' },
+  { id: 3, name: 'Dr. Larry', specialty: 'General Cardiologist', hospital: 'Hemas Hospital', rating: 4.5, icon: '👨‍⚕️' },
 ];
 
 const CONDITIONS = [
-  { label: 'Angina or Heart Attack',          dot: 'orange' },
-  { label: 'Severe Anxiety or Panic Attack',  dot: 'red'    },
-  { label: 'Infection',                        dot: 'blue'   },
+  { label: 'Angina or Heart Attack', dot: 'orange' },
+  { label: 'Severe Anxiety or Panic Attack', dot: 'red' },
+  { label: 'Infection', dot: 'blue' },
   { label: 'Other Cardiac / Respiratory Issues', dot: 'purple' },
 ];
 
@@ -30,8 +33,8 @@ function nowTime() {
 }
 
 function renderStars(rating) {
-  const full  = Math.floor(rating);
-  const half  = rating % 1 >= 0.5;
+  const full = Math.floor(rating);
+  const half = rating % 1 >= 0.5;
   return '★'.repeat(full) + (half ? '½' : '');
 }
 
@@ -71,12 +74,12 @@ function StepBar({ symptomCount }) {
     { label: 'Symptom 1', num: 1 },
     { label: 'Symptom 2', num: 2 },
     { label: 'Symptom 3', num: 3 },
-    { label: 'Diagnosis',  num: 4 },
+    { label: 'Diagnosis', num: 4 },
   ];
   return (
     <div className="cb-steps">
       {steps.map(s => {
-        const isDone   = symptomCount >= s.num;
+        const isDone = symptomCount >= s.num;
         const isActive = symptomCount + 1 === s.num;
         return (
           <div key={s.num} className={`cb-step${isDone ? ' done' : isActive ? ' active' : ''}`}>
@@ -90,7 +93,8 @@ function StepBar({ symptomCount }) {
 }
 
 // ── Diagnosis bubble ──────────────────────────────────────────
-function DiagnosisBubble({ onFindSpecialist, onNewChat }) {
+function DiagnosisBubble({ aiData, onFindSpecialist, onNewChat }: any) {
+  const conditionsToRender = aiData?.conditions || CONDITIONS;
   return (
     <div className="cb-diagnosis-bubble">
       <div className="cb-diag-header">
@@ -103,19 +107,18 @@ function DiagnosisBubble({ onFindSpecialist, onNewChat }) {
       <div className="cb-diag-body">
         <div className="cb-diag-conditions">
           <div className="cb-diag-conditions-title">Possible Conditions</div>
-          {CONDITIONS.map((c, i) => (
+          {conditionsToRender.map((c: any, i: number) => (
             <div className="cb-condition-item" key={i}>
-              <div className={`cb-condition-dot ${c.dot}`}></div>
+              <div className={`cb-condition-dot ${c.dot || 'purple'}`}></div>
               {c.label}
             </div>
           ))}
         </div>
         <div className="cb-diag-note">
-          ⚠️ This is an AI-generated prediction based on common medical information and may{' '}
-          <a href="#">not be 100% accurate</a>. It is not a medical diagnosis.
+          ⚠️ {aiData?.insightMessage || "This is an AI-generated prediction based on common medical information and may not be 100% accurate. It is not a medical diagnosis."}
         </div>
         <div className="cb-diag-actions">
-          <button className="cb-diag-btn primary" onClick={onFindSpecialist}>🏥 Find a Specialist</button>
+          <button className="cb-diag-btn primary" onClick={() => onFindSpecialist(aiData)}>🏥 Find a Specialist</button>
           <button className="cb-diag-btn secondary" onClick={onNewChat}>💬 New Chat</button>
         </div>
       </div>
@@ -126,21 +129,63 @@ function DiagnosisBubble({ onFindSpecialist, onNewChat }) {
 // ════════════════════════════════════════════════════════════
 // SCREEN 1 + 2 — CHAT
 // ════════════════════════════════════════════════════════════
-function ChatScreen({ onFindSpecialist, onNewChat, collectedSymptoms, setCollectedSymptoms }) {
-  const [messages, setMessages]   = useState<Message[]>(INIT_MESSAGES);
-  const [input, setInput]         = useState('');
-  const [isTyping, setIsTyping]   = useState(false);
+function ChatScreen({ onFindSpecialist, onNewChat, collectedSymptoms, setCollectedSymptoms }: any) {
+  const { token } = useAuth();
+  const [messages, setMessages] = useState<Message[]>(INIT_MESSAGES);
+  const [input, setInput] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
   const [showDiagnosis, setShowDiagnosis] = useState(false);
-  const messagesEndRef             = useRef<HTMLDivElement | null>(null);
-  const inputRef                   = useRef<HTMLInputElement | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
 
-  function sendMessage(text?: string) {
+  useEffect(() => {
+    async function initSession() {
+      if (!token) {
+        setMessages(prev => [...prev, { id: Date.now(), role: 'bot' as const, text: "⚠️ You must be logged in to use the AI Health Assistant.", time: nowTime() }]);
+        return;
+      }
+      try {
+        setIsTyping(true);
+        const res = await fetch(`${config.apiBaseUrl}/api/v1/chat/sessions`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ model: 'openrouter/free' })
+        });
+        const data = await res.json();
+        if (data.success) {
+          setSessionId(data.session.sessionId);
+        } else {
+          setMessages(prev => [...prev, { id: Date.now(), role: 'bot' as const, text: "⚠️ Failed to start chat session: " + (data.message || 'Unknown error'), time: nowTime() }]);
+        }
+      } catch (e) {
+        console.error("Failed to start session", e);
+        setMessages(prev => [...prev, { id: Date.now(), role: 'bot' as const, text: "⚠️ Cannot connect to the server. Please check your backend.", time: nowTime() }]);
+      } finally {
+        setIsTyping(false);
+      }
+    }
+    if (!sessionId && collectedSymptoms.length === 0) {
+      initSession();
+    }
+  }, [token, sessionId, collectedSymptoms.length]);
+
+  async function sendMessage(text?: string) {
     const trimmed = (text || input).trim();
     if (!trimmed || isTyping || showDiagnosis) return;
+
+    if (!sessionId) {
+      setMessages(prev => [...prev, { id: Date.now(), role: 'bot' as const, text: "⚠️ Chat session is not initialized. Please reload or log in.", time: nowTime() }]);
+      setInput('');
+      return;
+    }
 
     const userMsg = { id: Date.now(), role: 'user' as const, text: trimmed, time: nowTime() };
     const newSymptoms = [...collectedSymptoms, trimmed];
@@ -149,21 +194,71 @@ function ChatScreen({ onFindSpecialist, onNewChat, collectedSymptoms, setCollect
     setInput('');
     setIsTyping(true);
 
-    setTimeout(() => {
-      const reply = getBotReply(trimmed, newSymptoms.length);
-      if (reply) {
-        setMessages(prev => [...prev, { id: Date.now() + 1, role: 'bot' as const, text: reply.text, time: nowTime(), suggestions: reply.suggestions }]);
-      } else {
-        // show diagnosis
-        setMessages(prev => [...prev, {
-          id: Date.now() + 1, role: 'bot' as const, time: nowTime(),
-          isDiagnosis: true,
-        }]);
-        setShowDiagnosis(true);
-      }
-      setIsTyping(false);
-    }, 1100);
+    let promptToSend = trimmed;
+    if (newSymptoms.length === 1) {
+      promptToSend = `User's 1st symptom is: ${trimmed}. Acknowledge it briefly and ask for symptom 2.`;
+    } else if (newSymptoms.length === 2) {
+      promptToSend = `User's 2nd symptom is: ${trimmed}. Acknowledge it briefly and ask for symptom 3.`;
+    } else if (newSymptoms.length >= 3) {
+      const specialistsStr = JSON.stringify(SPECIALISTS);
+      promptToSend = `User's 3rd symptom is: ${trimmed}. You now have 3 symptoms. 
+Provide a final diagnosis. 
+CRITICAL RULES: 
+1. You MUST respond with ONLY a valid, raw JSON object. No markdown formatting, no backticks, no other text.
+2. The JSON object MUST have this exact structure:
+{
+  "conditions": [{ "label": "Name of condition", "dot": "red" /* or orange, blue, purple */ }],
+  "recommendedDoctorIds": [sequence of integer IDs from the provided specialist list that match the diagnosis],
+  "insightMessage": "A short summary of the AI analysis, e.g. 'Based on your symptoms...'"
+}
+3. ONLY recommend doctors from this list: ${specialistsStr}. Use their exact 'id'.`;
+    }
 
+    try {
+      const res = await fetch(`${config.apiBaseUrl}/api/v1/chat/sessions/${sessionId}/message`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ message: promptToSend })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        const aiReply = data.reply;
+        if (newSymptoms.length < 3) {
+          setMessages(prev => [...prev, { id: Date.now() + 1, role: 'bot' as const, text: aiReply, time: nowTime() }]);
+        } else {
+          try {
+            let jsonStr = aiReply;
+            if (jsonStr.includes('```json')) {
+              jsonStr = jsonStr.split('```json')[1].split('```')[0].trim();
+            } else if (jsonStr.includes('```')) {
+              jsonStr = jsonStr.split('```')[1].split('```')[0].trim();
+            }
+            const parsed = JSON.parse(jsonStr);
+            setMessages(prev => [...prev, {
+              id: Date.now() + 1, role: 'bot' as const, time: nowTime(),
+              isDiagnosis: true,
+              aiData: parsed
+            }]);
+            setShowDiagnosis(true);
+          } catch (e) {
+            console.error("Failed to parse AI JSON:", e, aiReply);
+            setMessages(prev => [...prev, { id: Date.now() + 1, role: 'bot' as const, text: aiReply, time: nowTime() }]);
+          }
+        }
+      } else {
+        const errDetail = data.error ? ` Details: ${data.error}` : "";
+        setMessages(prev => [...prev, { id: Date.now() + 1, role: 'bot' as const, text: "Error: " + data.message + errDetail, time: nowTime() }]);
+      }
+    } catch (e) {
+      console.error(e);
+      setMessages(prev => [...prev, { id: Date.now() + 1, role: 'bot' as const, text: "Failed to reach AI.", time: nowTime() }]);
+    } finally {
+      setIsTyping(false);
+    }
     inputRef.current?.focus();
   }
 
@@ -229,7 +324,7 @@ function ChatScreen({ onFindSpecialist, onNewChat, collectedSymptoms, setCollect
                 </div>
                 <div className="cb-msg-group">
                   {msg.isDiagnosis
-                    ? <DiagnosisBubble onFindSpecialist={onFindSpecialist} onNewChat={onNewChat} />
+                    ? <DiagnosisBubble aiData={msg.aiData} onFindSpecialist={onFindSpecialist} onNewChat={onNewChat} />
                     : <div className="cb-bubble">{msg.text}</div>
                   }
                   <div className="cb-msg-time">{msg.time}</div>
@@ -292,11 +387,17 @@ function ChatScreen({ onFindSpecialist, onNewChat, collectedSymptoms, setCollect
 // ════════════════════════════════════════════════════════════
 // SCREEN 3 — RESULTS
 // ════════════════════════════════════════════════════════════
-function ResultsScreen({ symptoms, onBack, onNewChat }) {
+function ResultsScreen({ symptoms, aiDiagnosis, onBack, onNewChat }: any) {
   const [activePage, setActivePage] = useState(0);
   const itemsPerPage = 2;
-  const totalPages = Math.ceil(SPECIALISTS.length / itemsPerPage);
-  const displayedSpecialists = SPECIALISTS.slice(activePage * itemsPerPage, (activePage + 1) * itemsPerPage);
+
+  const conditionsToRender = aiDiagnosis?.conditions || CONDITIONS;
+  const recommendedSpecialists = aiDiagnosis?.recommendedDoctorIds
+    ? SPECIALISTS.filter(doc => aiDiagnosis.recommendedDoctorIds.includes(doc.id))
+    : SPECIALISTS;
+
+  const totalPages = Math.ceil(recommendedSpecialists.length / itemsPerPage);
+  const displayedSpecialists = recommendedSpecialists.slice(activePage * itemsPerPage, (activePage + 1) * itemsPerPage);
 
   return (
     <div className="cb-results-page">
@@ -335,9 +436,9 @@ function ResultsScreen({ symptoms, onBack, onNewChat }) {
             <div className="cb-insights-body">
               <div className="cb-insights-conditions">
                 <div className="cb-insights-section-title">Possible Conditions to Consider</div>
-                {CONDITIONS.map((c, i) => (
+                {conditionsToRender.map((c: any, i: number) => (
                   <div key={i} className="cb-ins-condition">
-                    <div className={`cb-ins-dot ${c.dot}`}></div>
+                    <div className={`cb-ins-dot ${c.dot || 'purple'}`}></div>
                     {c.label}
                   </div>
                 ))}
@@ -362,7 +463,7 @@ function ResultsScreen({ symptoms, onBack, onNewChat }) {
                   <div className="cb-spec-header-sub">Matched to your symptoms</div>
                 </div>
               </div>
-              <span className="cb-spec-count">{SPECIALISTS.length} doctors</span>
+              <span className="cb-spec-count">{recommendedSpecialists.length} doctors</span>
             </div>
 
             <div className="cb-specialists-list">
@@ -405,18 +506,21 @@ function ResultsScreen({ symptoms, onBack, onNewChat }) {
 // ════════════════════════════════════════════════════════════
 export default function Chatbot() {
   // 'chat' | 'results'
-  const [screen, setScreen]             = useState('chat');
-  const [collectedSymptoms, setSymptoms] = useState([]);
+  const [screen, setScreen] = useState('chat');
+  const [collectedSymptoms, setSymptoms] = useState<string[]>([]);
+  const [aiDiagnosis, setAiDiagnosis] = useState<any>(null);
 
   function handleNewChat() {
     setScreen('chat');
     setSymptoms([]);
+    setAiDiagnosis(null);
   }
 
   if (screen === 'results') {
     return (
       <ResultsScreen
         symptoms={collectedSymptoms}
+        aiDiagnosis={aiDiagnosis}
         onBack={() => setScreen('chat')}
         onNewChat={handleNewChat}
       />
@@ -425,7 +529,10 @@ export default function Chatbot() {
 
   return (
     <ChatScreen
-      onFindSpecialist={() => setScreen('results')}
+      onFindSpecialist={(data: any) => {
+        if (data) setAiDiagnosis(data);
+        setScreen('results');
+      }}
       onNewChat={handleNewChat}
       collectedSymptoms={collectedSymptoms}
       setCollectedSymptoms={setSymptoms}
