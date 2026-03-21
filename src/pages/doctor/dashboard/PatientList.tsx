@@ -1,6 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../../styles/doctor/dashboard/PatientList.css';
+import Header from '../../../components/ui/header/header';
+import Footer from '../../../components/ui/footer/footer';
+import DoctorSidebar from './DoctorSidebar';
 
 // ── Patient data ────────────────────────────────────────────
 const PATIENTS = [
@@ -140,48 +143,57 @@ export default function PatientList() {
   };
 
   return (
-    <div className="pl-page">
-      <div className="pl-content">
+    <div>
+      <Header />
+      <div className="layout">
+        <DoctorSidebar />
+        <div className="main">
+          <div className="pl-page">
+            <div className="pl-content">
 
-        {/* ── Heading ── */}
-        <div className="pl-heading">
-          <div className="pl-heading-left">
-            <h2>👥 My Patients</h2>
-            <p>All patients under your care — view and manage records</p>
-          </div>
-        </div>
+              {/* ── Heading ── */}
+              <div className="pl-heading">
+                <div className="pl-heading-left">
+                  <h2>👥 My Patients</h2>
+                  <p>All patients under your care — view and manage records</p>
+                </div>
+              </div>
 
-        {/* ── Stats Strip ── */}
-        <div className="pl-stats-strip">
-          <div className="pl-stat-mini">
-            <div className="pl-stat-mini-icon blue">👥</div>
-            <div>
-              <div className="pl-stat-mini-num">{PATIENTS.length}</div>
-              <div className="pl-stat-mini-label">Total Patients</div>
+              {/* ── Stats Strip ── */}
+              <div className="pl-stats-strip">
+                <div className="pl-stat-mini">
+                  <div className="pl-stat-mini-icon blue">👥</div>
+                  <div>
+                    <div className="pl-stat-mini-num">{PATIENTS.length}</div>
+                    <div className="pl-stat-mini-label">Total Patients</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* ── Patient Grid ── */}
+              <div className="pl-grid">
+                {PATIENTS.length === 0 ? (
+                  <div className="pl-empty">
+                    <div className="pl-empty-icon">🔍</div>
+                    <div className="pl-empty-title">No patients found</div>
+                    <div className="pl-empty-sub">Try adjusting your search or filters</div>
+                  </div>
+                ) : (
+                  PATIENTS.map(patient => (
+                    <PatientCard
+                      key={patient.id}
+                      patient={patient}
+                      onView={() => handleNavigateToPatientsDetails(patient.id)}
+                    />
+                  ))
+                )}
+              </div>
+
             </div>
           </div>
         </div>
-
-        {/* ── Patient Grid ── */}
-        <div className="pl-grid">
-          {PATIENTS.length === 0 ? (
-            <div className="pl-empty">
-              <div className="pl-empty-icon">🔍</div>
-              <div className="pl-empty-title">No patients found</div>
-              <div className="pl-empty-sub">Try adjusting your search or filters</div>
-            </div>
-          ) : (
-            PATIENTS.map(patient => (
-              <PatientCard
-                key={patient.id}
-                patient={patient}
-                onView={() => handleNavigateToPatientsDetails(patient.id)}
-              />
-            ))
-          )}
-        </div>
-
       </div>
+      <Footer />
     </div>
   );
 }

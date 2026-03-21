@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import "../../../styles/doctor/dashboard/DcotorInformation.css";
 import Header from "../../../components/ui/header/header";
 import Footer from "../../../components/ui/footer/footer";
+import DoctorSidebar from "./DoctorSidebar";
 
 function DoctorInformation() {
   const navigate = useNavigate();
@@ -23,53 +24,7 @@ function DoctorInformation() {
       <Header />
       <div className="layout">
         {/* ── Sidebar ── */}
-        <aside className="sidebar">
-          <span className="nav-label">Main Menu</span>
-          <a className="nav-item active" href="#">
-            <span className="nav-icon">🏠</span> Dashboard
-          </a>
-          <a
-            className="nav-item"
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              handleNavigateToAppointments();
-            }}
-          >
-            <span className="nav-icon">📅</span> Appointments
-            <span className="nav-badge">5</span>
-          </a>
-          <a
-            className="nav-item"
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              handleNavigateToPatients();
-            }}
-          >
-            <span className="nav-icon">👥</span> My Patients
-          </a>
-          <a
-            className="nav-item"
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              handleNavigateToEPrescription();
-            }}
-          >
-            <span className="nav-icon">📝</span> E-Prescription
-          </a>
-
-          <div className="sidebar-bottom">
-            <div className="doctor-card">
-              <div className="doctor-avatar">EW</div>
-              <div className="doctor-info">
-                <div className="name">Dr. Emma Wilson</div>
-                <div className="role">Neurologist</div>
-              </div>
-            </div>
-          </div>
-        </aside>
+        <DoctorSidebar />
 
         {/* ── Main Area ── */}
         <div className="main">
