@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { DoctorPersonalData, Gender } from '../../../types/doctor';
 import { useDoctorRegistration } from '../../../context/doctorRegistrationContext';
 import PublicLayout from '../../../components/layout/PublicLayout/publiclayout';
@@ -9,17 +9,30 @@ import StepIndicator from '../../../components/ui/common/StepIndicator';
 
 const DoctorStep1: React.FC = () => {
   const navigate = useNavigate();
-  const { registrationData, updatePersonalData } = useDoctorRegistration();
+  const location = useLocation();
+  const { registrationData, updatePersonalData, resetRegistration } = useDoctorRegistration();
+  
+  React.useEffect(() => {
+    // Treat as a brand new registration if not explicitly navigating back from Step 2
+    if (!(location.state as any)?.fromStep2) {
+      localStorage.removeItem('doctorProfessionalData');
+      localStorage.removeItem('doctorPersonalData');
+      resetRegistration();
+    }
+  }, [location.state, resetRegistration]);
+
+  const isBackNavigation = (location.state as any)?.fromStep2;
+  const initialPersonal = isBackNavigation ? registrationData?.personal : null;
 
   const [formData, setFormData] = useState({
-    fullName: registrationData?.personal?.fullName || '',
-    email: registrationData?.personal?.email || '',
-    mobile: registrationData?.personal?.mobile || '',
-    dob: registrationData?.personal?.dob || '',
-    gender: registrationData?.personal?.gender || '',
-    password: registrationData?.personal?.password || '',
-    confirmPassword: registrationData?.personal?.confirmPassword || '',
-    agreeTerms: registrationData?.personal?.agreeTerms || false,
+    fullName: initialPersonal?.fullName || '',
+    email: initialPersonal?.email || '',
+    mobile: initialPersonal?.mobile || '',
+    dob: initialPersonal?.dob || '',
+    gender: initialPersonal?.gender || '',
+    password: initialPersonal?.password || '',
+    confirmPassword: initialPersonal?.confirmPassword || '',
+    agreeTerms: initialPersonal?.agreeTerms || false,
   });
 
   const [showPassword, setShowPassword] = useState(false);
