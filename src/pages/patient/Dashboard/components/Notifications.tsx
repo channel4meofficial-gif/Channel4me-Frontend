@@ -3,8 +3,7 @@ import styles from '../Dashboard.module.css';
 
 const Notifications: React.FC = () => {
   const notifications = [
-    { id: 1, text: "Prescription for Amoxicillin needs review.", icon: "fa-prescription" },
-    { id: 2, text: "Your result for Blood Test is now available.", icon: "fa-vial" }
+    { id: 1, text: "welcome to Channel4Me, you have logged in succesfully!", icon: "fa-bell" }
   ];
 
   if (notifications.length === 0) return null;
