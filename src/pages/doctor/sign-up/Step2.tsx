@@ -253,7 +253,7 @@ const DoctorRegisterStep2: React.FC = () => {
                 documentsCount: uploadedFiles.length
             };
             localStorage.setItem('doctorProfessionalData', JSON.stringify(storageData));
-            navigate('/doctor/register/step1');
+            navigate('/doctor/register/step1', { state: { fromStep2: true } });
         }
     };
 
