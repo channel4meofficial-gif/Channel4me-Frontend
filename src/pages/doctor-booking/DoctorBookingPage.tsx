@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import PublicLayout from '../../components/layout/PublicLayout/publiclayout';
 import '../../styles/doctor-booking/DoctorBookingPage.css';
@@ -6,6 +6,7 @@ import '../../styles/doctor-booking/DoctorBookingPage.css';
 const API_BASE_URL = 'http://localhost:5000';
 
 interface Doctor {
+  id?: number;
   name: string;
   specialty: string;
   image: string;
@@ -41,6 +42,55 @@ const defaultDoctor: Doctor = {
   image: 'https://img.freepik.com/free-photo/female-doctor-hospital_23-2148827757.jpg',
 };
 
+const normalizeDateForInput = (value?: string): string => {
+  if (!value) {
+    return '';
+  }
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return value;
+  }
+
+  const parsedDate = new Date(value);
+  if (Number.isNaN(parsedDate.getTime())) {
+    return '';
+  }
+
+  const year = parsedDate.getFullYear();
+  const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
+  const day = String(parsedDate.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const normalizeTimeForInput = (value?: string): string => {
+  if (!value) {
+    return '';
+  }
+
+  if (/^\d{2}:\d{2}$/.test(value)) {
+    return value;
+  }
+
+  const match = value.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (!match) {
+    return '';
+  }
+
+  let hours = Number(match[1]);
+  const minutes = match[2];
+  const meridiem = match[3].toUpperCase();
+
+  if (meridiem === 'PM' && hours !== 12) {
+    hours += 12;
+  }
+
+  if (meridiem === 'AM' && hours === 12) {
+    hours = 0;
+  }
+
+  return `${String(hours).padStart(2, '0')}:${minutes}`;
+};
+
 const DoctorBookingPage: React.FC = () => {
   const { state } = useLocation() as { state: LocationState | null };
   const navigate = useNavigate();
@@ -54,14 +104,37 @@ const DoctorBookingPage: React.FC = () => {
     refNo: '',
     hospital: state?.selectedHospital || '',
     appointmentNo: '',
-    date: state?.date || '',
-    time: state?.time || '',
+    date: normalizeDateForInput(state?.date),
+    time: normalizeTimeForInput(state?.time),
     nic: '',
     contactNo: '',
   });
 
+  useEffect(() => {
+    setForm((currentForm) => ({
+      ...currentForm,
+      hospital: state?.selectedHospital || currentForm.hospital,
+      date: normalizeDateForInput(state?.date) || currentForm.date,
+      time: normalizeTimeForInput(state?.time) || currentForm.time,
+    }));
+  }, [state?.selectedHospital, state?.date, state?.time]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleBack = (): void => {
+    if (window.history.length > 1) {
+      navigate(-1);
+      return;
+    }
+
+    if (doctor.id) {
+      navigate(`/doctor-booking/doctor/${doctor.id}/sessions`);
+      return;
+    }
+
+    navigate('/doctor-booking/doctors');
   };
 
   const handleMakePayment = async (): Promise<void> => {
@@ -117,6 +190,11 @@ const DoctorBookingPage: React.FC = () => {
   return (
     <PublicLayout>
       <div className="main-wrapper">
+        <button type="button" className="page-back-button" onClick={handleBack} aria-label="Go back">
+          <i className="fas fa-arrow-left"></i>
+          <span>Back</span>
+        </button>
+
         <div className="page-card">
           <div className="card-band"></div>
           <div className="card-body">
@@ -154,7 +232,7 @@ const DoctorBookingPage: React.FC = () => {
               <div className="form-row one-col">
                 <div className="field-group">
                   <label className="field-label">Hospital</label>
-                  <input type="text" name="hospital" placeholder="e.g. Asiri Hospital, Colombo" value={form.hospital} onChange={handleChange} />
+                  <input type="text" name="hospital" placeholder="e.g. Asiri Hospital, Colombo" value={form.hospital} onChange={handleChange} readOnly />
                 </div>
               </div>
 
@@ -168,11 +246,11 @@ const DoctorBookingPage: React.FC = () => {
               <div className="form-row two-col">
                 <div className="field-group">
                   <label className="field-label">Date</label>
-                  <input type="date" name="date" value={form.date} onChange={handleChange} />
+                  <input type="date" name="date" value={form.date} onChange={handleChange} readOnly />
                 </div>
                 <div className="field-group">
                   <label className="field-label">Time</label>
-                  <input type="time" name="time" value={form.time} onChange={handleChange} />
+                  <input type="time" name="time" value={form.time} onChange={handleChange} readOnly />
                 </div>
               </div>
 

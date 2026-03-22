@@ -57,6 +57,15 @@ const PaymentPage: React.FC = () => {
   const total: number | null = charges ? charges.booking + charges.doctor + charges.hospital : null;
   const [payMethod, setPayMethod] = useState<PayMethod>('');
 
+  const handleBack = (): void => {
+    if (window.history.length > 1) {
+      navigate(-1);
+      return;
+    }
+
+    navigate('/doctor-booking/book');
+  };
+
   const handlePay = async (): Promise<void> => {
     if (!booking?._id) {
       alert('Booking details are missing. Please create the booking again.');
@@ -101,6 +110,11 @@ const PaymentPage: React.FC = () => {
   return (
     <PublicLayout>
       <div className="payment-page-wrapper">
+        <button type="button" className="page-back-button" onClick={handleBack} aria-label="Go back">
+          <i className="fas fa-arrow-left"></i>
+          <span>Back</span>
+        </button>
+
         <div className="page-card">
           <div className="card-band"></div>
           <div className="card-body">

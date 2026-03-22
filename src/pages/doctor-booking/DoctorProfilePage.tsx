@@ -81,7 +81,7 @@ const doctorsData: DoctorsDataMap = {
     education: 'MBBS – University of Delhi',
     experience: '6 Years of experience in child healthcare and development.',
     image: require('../../assets/doctor-booking images/Doctorimage3.jpeg'),
-    hospitals: ['Nawaloka Hospital, Colombo', 'Durdans Hospital, Colombo'],
+    hospitals: ['Nawaloka Hospital, Colombo', 'Ruhuna Hospital, Galle'],
     reviews: [
       { stars: 5,   text: 'Dr. Isuri is wonderful with children. My son loves visiting her!' },
       { stars: 5,   text: 'Very gentle and caring pediatrician. Made my daughter feel at ease.' },
@@ -100,7 +100,7 @@ const doctorsData: DoctorsDataMap = {
     education: 'MBBS – University of Oxford',
     experience: '12 Years of experience in general medicine and patient care.',
     image: require('../../assets/doctor-booking images/Doctorimage4.jpeg'),
-    hospitals: ['Asiri Hospital, Colombo', 'Durdans Hospital, Colombo'],
+    hospitals: ['Asiri Hospital, Colombo', 'Ruhuna Hospital, Galle'],
     reviews: [
       { stars: 5,   text: 'Dr. Kasun is an exceptional physician. Very thorough in his examination.' },
       { stars: 4.5, text: 'Great doctor with a calm approach. Highly recommend for general care.' },
@@ -157,7 +157,7 @@ const doctorsData: DoctorsDataMap = {
     education: 'MBBS – University of Melbourne',
     experience: '9 Years of experience in neurology and brain disorders.',
     image: require('../../assets/doctor-booking images/Doctorimage7.jpeg'),
-    hospitals: ['Nawaloka Hospital, Colombo', 'Durdans Hospital, Colombo'],
+    hospitals: ['Nawaloka Hospital, Colombo', 'Ruhuna Hospital, Galle'],
     reviews: [
       { stars: 4.5, text: 'Dr. Chinthaka is very knowledgeable and precise in his diagnosis.' },
       { stars: 5,   text: 'Excellent neurologist. He helped me manage my condition very well.' },
@@ -195,7 +195,7 @@ const doctorsData: DoctorsDataMap = {
     education: 'MBBS – University of Mumbai',
     experience: '6 Years of experience in mental health and psychiatric care.',
     image: require('../../assets/doctor-booking images/Doctorimage9.jpeg'),
-    hospitals: ['Durdans Hospital, Colombo', 'Nawaloka Hospital, Colombo'],
+    hospitals: ['Ruhuna Hospital, Galle', 'Nawaloka Hospital, Colombo'],
     reviews: [
       { stars: 5,   text: 'Dr. Monali is incredibly empathetic and supportive. Life changing!' },
       { stars: 5,   text: 'She creates a safe environment to talk. Highly recommend her care.' },
@@ -214,7 +214,7 @@ const doctorsData: DoctorsDataMap = {
     education: 'MBBS – University of Madrid',
     experience: '3 Years of experience in skin care and dermatology.',
     image: require('../../assets/doctor-booking images/Doctorimage10.jpeg'),
-    hospitals: ['Asiri Hospital, Colombo', 'Durdans Hospital, Colombo'],
+    hospitals: ['Asiri Hospital, Colombo', 'Ruhuna Hospital, Galle'],
     reviews: [
       { stars: 4.5, text: 'Dr. Sehansa treated my skin condition very effectively. Great results!' },
       { stars: 5,   text: 'Very thorough and knowledgeable about skin issues. Highly recommend.' },
@@ -252,7 +252,7 @@ const doctorsData: DoctorsDataMap = {
     education: 'MBBS – University of Toronto',
     experience: '15 Years of experience in dental care and oral health.',
     image: require('../../assets/doctor-booking images/Doctorimage12.jpeg'),
-    hospitals: ['Asiri Hospital, Colombo', 'Durdans Hospital, Colombo'],
+    hospitals: ['Asiri Hospital, Colombo', 'Ruhuna Hospital, Galle'],
     reviews: [
       { stars: 5,   text: 'Dr. Vinu is the best dentist I have visited. Pain-free experience!' },
       { stars: 5,   text: 'Very gentle and professional. My teeth have never felt so clean.' },
@@ -280,10 +280,24 @@ const DoctorProfilePage: React.FC = () => {
 
   const total: number = doctor.charges.booking + doctor.charges.doctor + doctor.charges.hospital;
 
+  const handleBack = (): void => {
+    if (window.history.length > 1) {
+      navigate(-1);
+      return;
+    }
+
+    navigate('/doctor-booking/doctors');
+  };
+
   return (
     <PublicLayout>
       <main className="profile-wrapper">
         <div className="container">
+          <button type="button" className="page-back-button" onClick={handleBack} aria-label="Go back">
+            <i className="fas fa-arrow-left"></i>
+            <span>Back</span>
+          </button>
+
           <div className="profile-grid">
 
             <div className="left-col">

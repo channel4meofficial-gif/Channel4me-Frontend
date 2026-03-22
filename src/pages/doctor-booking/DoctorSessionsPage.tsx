@@ -32,6 +32,39 @@ interface SpecialNotes {
   [key: number]: string;
 }
 
+const toInputDate = (displayDate: string): string => {
+  const parsedDate = new Date(displayDate);
+  if (Number.isNaN(parsedDate.getTime())) {
+    return '';
+  }
+
+  const year = parsedDate.getFullYear();
+  const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
+  const day = String(parsedDate.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const toInputTime = (displayTime: string): string => {
+  const match = displayTime.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (!match) {
+    return '';
+  }
+
+  let hours = Number(match[1]);
+  const minutes = match[2];
+  const meridiem = match[3].toUpperCase();
+
+  if (meridiem === 'PM' && hours !== 12) {
+    hours += 12;
+  }
+
+  if (meridiem === 'AM' && hours === 12) {
+    hours = 0;
+  }
+
+  return `${String(hours).padStart(2, '0')}:${minutes}`;
+};
+
 // ─── Helper: generate upcoming dates dynamically ──────────────────────────────
 const getUpcomingDates = (count: number): { date: string; day: string }[] => {
   const days   = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
@@ -183,9 +216,23 @@ const DoctorSessionsPage: React.FC = () => {
 
   const [expanded, setExpanded] = useState<boolean>(true);
 
+  const handleBack = (): void => {
+    if (window.history.length > 1) {
+      navigate(-1);
+      return;
+    }
+
+    navigate(`/doctor-booking/doctor/${doctor.id}/profile`);
+  };
+
   const handleBook = (s: Session): void => {
     navigate('/doctor-booking/book', {
-      state: { doctor, selectedHospital: hospital, date: s.date, time: s.time },
+      state: {
+        doctor,
+        selectedHospital: hospital,
+        date: toInputDate(s.date),
+        time: toInputTime(s.time),
+      },
     });
   };
 
@@ -194,6 +241,10 @@ const DoctorSessionsPage: React.FC = () => {
       <div className="sp-page">
         <main className="sp-main">
           <div className="sp-container">
+          <button type="button" className="page-back-button" onClick={handleBack} aria-label="Go back">
+            <i className="fas fa-arrow-left"></i>
+            <span>Back</span>
+          </button>
 
           <div className="sp-doc-card">
             <div className="sp-doc-hosp-bar">{hospital.toUpperCase()}</div>
