@@ -8,8 +8,10 @@ import StepIndicator from '../../../components/ui/common/StepIndicator';
 
 const PatientStep2: React.FC = () => {
     const navigate = useNavigate();
-    const { data, updateHealth, nextStep, prevStep } = usePatientRegistration();
+    const { data, updateHealth, nextStep, prevStep, resetRegistration } = usePatientRegistration();
     const health = data.health;
+
+    const [submitError, setSubmitError] = useState('');
 
     const [gender, setGender] = useState(health?.gender || '');
     const [bloodType, setBloodType] = useState(health?.bloodType || '');
@@ -67,7 +69,7 @@ const PatientStep2: React.FC = () => {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!validate()) return;
 
@@ -83,8 +85,62 @@ const PatientStep2: React.FC = () => {
             healthNotes,
         };
         updateHealth(healthData);
-        nextStep();
-        navigate('/patient/register/step3');
+
+        // ── Split fullName into firstName / lastName for the backend ────────
+        const fullName = data.personal?.fullName?.trim() || '';
+        const spaceIdx = fullName.indexOf(' ');
+        const firstName = spaceIdx !== -1 ? fullName.slice(0, spaceIdx).trim() : fullName;
+        const lastName  = (spaceIdx !== -1 && fullName.slice(spaceIdx + 1).trim() !== '') 
+            ? fullName.slice(spaceIdx + 1).trim() 
+            : '.'; // fallback for single-word names
+
+        const dob = data.personal?.dob;
+        const dobString = (dob && dob.year && dob.month && dob.day) 
+            ? `${dob.year}-${String(dob.month).padStart(2, '0')}-${String(dob.day).padStart(2, '0')}` 
+            : undefined;
+
+        const payload = {
+            firstName: firstName || '.',
+            lastName,
+            email:           data.personal?.email || '',
+            phone:           data.personal?.mobile || '',
+            password:        data.personal?.password || '',
+            confirmPassword: data.personal?.confirmPassword || '',
+            dateOfBirth:     dobString,
+        };
+
+        if (!payload.email || !payload.password) {
+            setSubmitError('Personal information is missing. Please go back to Step 1 to fill out your details.');
+            return;
+        }
+
+        try {
+            const res = await fetch('http://localhost:5000/api/auth/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+            const result = await res.json();
+
+            if (!res.ok || !result.success) {
+                setSubmitError(result.message || 'Registration failed. Please try again.');
+                return;
+            }
+
+            // Success — clear context so the form resets on next visit
+            resetRegistration();
+            nextStep();
+            navigate('/patient/register/step3', {
+                state: {
+                    token: result.token || null,
+                    email: payload.email,
+                    fullName,
+                }
+            });
+        } catch (err) {
+            console.error('Signup error:', err);
+            setSubmitError('Cannot connect to the server. Please check your connection and try again.');
+        }
     };
 
     const handleBack = () => {
@@ -116,6 +172,20 @@ const PatientStep2: React.FC = () => {
                             </div>
                             
                             <form onSubmit={handleSubmit}>
+                                {/* API Error Banner */}
+                                {submitError && (
+                                    <div style={{
+                                        background: '#fef2f2',
+                                        border: '1px solid #fecaca',
+                                        color: '#dc2626',
+                                        padding: '12px 16px',
+                                        borderRadius: '8px',
+                                        marginBottom: '20px',
+                                        fontSize: '14px'
+                                    }}>
+                                        ⚠️ {submitError}
+                                    </div>
+                                )}
                                 {/* Basic Information */}
                                 <div className="form-grid">
                                     <div className="form-group">
