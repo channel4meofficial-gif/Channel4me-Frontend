@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 // Core Pages
 import HomePage from './pages/HomePage';
@@ -93,6 +94,7 @@ function App() {
     return (
         <BrowserRouter>
             <ScrollToHash />
+            <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ""}>
             <AuthProvider>
                 <PatientRegistrationProvider>
                     <DoctorRegistrationProvider>
@@ -206,6 +208,7 @@ function App() {
                     </DoctorRegistrationProvider>
                 </PatientRegistrationProvider>
             </AuthProvider>
+            </GoogleOAuthProvider>
         </BrowserRouter>
     );
 }
