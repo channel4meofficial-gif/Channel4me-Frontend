@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import PublicLayout from '../../components/layout/PublicLayout/publiclayout';
+import { useAuth } from '../../context/AuthContext';
 import '../../styles/doctor-booking/DoctorSessionsPage.css';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -17,6 +18,11 @@ interface Doctor {
   name: string;
   specialty: string;
   image?: string;
+  charges?: {
+    booking: number;
+    doctor: number;
+    hospital: number;
+  };
 }
 
 interface LocationState {
@@ -208,6 +214,7 @@ const specialNotes: SpecialNotes = {
 const DoctorSessionsPage: React.FC = () => {
   const { state } = useLocation() as { state: LocationState | null };
   const navigate  = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   const doctor: Doctor      = state?.doctor   || { id: 0, name: '', specialty: '' };
   const hospital: string    = state?.hospital || '';
@@ -226,13 +233,27 @@ const DoctorSessionsPage: React.FC = () => {
   };
 
   const handleBook = (s: Session): void => {
+    const bookingState = {
+      doctor,
+      selectedHospital: hospital,
+      date: toInputDate(s.date),
+      time: toInputTime(s.time),
+    };
+
+    if (!isAuthenticated) {
+      navigate('/login', {
+        state: {
+          from: {
+            pathname: '/doctor-booking/book',
+            state: bookingState,
+          },
+        },
+      });
+      return;
+    }
+
     navigate('/doctor-booking/book', {
-      state: {
-        doctor,
-        selectedHospital: hospital,
-        date: toInputDate(s.date),
-        time: toInputTime(s.time),
-      },
+      state: bookingState,
     });
   };
 
