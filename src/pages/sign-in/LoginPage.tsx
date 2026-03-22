@@ -59,8 +59,9 @@ const LoginPage: React.FC = () => {
             login(mockUser, mockToken);
 
             // Redirect to intended page or dashboard
-            const from = (location.state as any)?.from?.pathname || `/${loginRole}/dashboard`;
-            navigate(from, { replace: true });
+            const from = (location.state as any)?.from;
+            const destination = from?.pathname || `/${loginRole}/dashboard`;
+            navigate(destination, { replace: true, state: from?.state });
         } catch (error) {
             alert('Login failed. Please check your credentials.');
         } finally {
