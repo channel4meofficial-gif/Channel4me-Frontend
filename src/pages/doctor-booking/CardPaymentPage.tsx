@@ -6,6 +6,7 @@ import '../../styles/doctor-booking/CardPaymentPage.css';
 const API_BASE_URL = 'http://localhost:5000';
 
 interface Doctor {
+  id?: number;
   name?: string;
   specialty?: string;
   charges?: {
@@ -22,6 +23,7 @@ interface BookingForm {
   date?: string;
   time?: string;
   nic?: string;
+  email?: string;
   contactNo?: string;
 }
 
@@ -31,6 +33,19 @@ interface LocationState {
   booking?: {
     _id: string;
     ref_number: string;
+    reference_no?: string;
+    appointment_number?: string;
+    appointment_no?: string;
+    hospital?: string;
+    hospital_name?: string;
+    date_and_time?: string;
+    appointment_date?: string;
+    contact_number?: string;
+    phone_no?: string;
+    email?: string;
+    payment_date_time?: string;
+    paid_at?: string;
+    updated_at?: string;
     payment_status: 'pending' | 'completed' | 'failed';
   };
   total?: number | null;
@@ -48,7 +63,9 @@ const CardPaymentPage: React.FC = () => {
   const doctor: Doctor = state?.doctor || {};
   const form: BookingForm = state?.form || {};
   const booking = state?.booking;
-  const total: number | null = state?.total || null;
+  const total: number | null = state?.total ?? (
+    doctor.charges ? doctor.charges.booking + doctor.charges.doctor + doctor.charges.hospital : null
+  );
 
   const [cardType, setCardType] = useState<CardType>('');
   const [cardNumber, setCardNumber] = useState<string>('');
@@ -59,7 +76,7 @@ const CardPaymentPage: React.FC = () => {
 
   const handleCardNumber = (e: React.ChangeEvent<HTMLInputElement>): void => {
     let val = e.target.value.replace(/\D/g, '').slice(0, 16);
-    val = val.replace(/(.{4})/g, '$1  ').trim();
+    val = val.replace(/(.{4})/g, '$1 ').trim();
     setCardNumber(val);
   };
 
@@ -94,6 +111,7 @@ const CardPaymentPage: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          doctor_id: doctor.id,
           payment_status: 'completed',
         }),
       });
@@ -153,7 +171,7 @@ const CardPaymentPage: React.FC = () => {
             <label className="field-label">Card Number <span className="req">*</span></label>
             <div className="card-num-wrap">
               <i className="fas fa-lock card-num-icon"></i>
-              <input type="text" className="card-num-input" maxLength={19} placeholder="XXXX  XXXX  XXXX  XXXX" value={cardNumber} onChange={handleCardNumber} />
+              <input type="text" className="card-num-input" maxLength={19} placeholder="XXXX XXXX XXXX XXXX" value={cardNumber} onChange={handleCardNumber} />
             </div>
           </div>
 
