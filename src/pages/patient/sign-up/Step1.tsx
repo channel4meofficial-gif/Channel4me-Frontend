@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePatientRegistration } from '../../../context/patientRegistrationContext';
 import PublicLayout from '../../../components/layout/PublicLayout/publiclayout';
@@ -8,7 +8,13 @@ import StepIndicator from '../../../components/ui/common/StepIndicator';
 
 const PatientStep1: React.FC = () => {
     const navigate = useNavigate();
-    const { data, updatePersonal, nextStep } = usePatientRegistration();
+    const { data, updatePersonal, nextStep, resetRegistration } = usePatientRegistration();
+
+    // Clear any stale registration data when the user lands on Step 1
+    useEffect(() => {
+        resetRegistration();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     const personal = data.personal;
 
     const [formData, setFormData] = useState({
