@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import PublicLayout from '../../components/layout/PublicLayout/publiclayout';
+import { useAuth } from '../../context/AuthContext';
 import '../../styles/doctor-booking/DoctorSessionsPage.css';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -17,6 +18,11 @@ interface Doctor {
   name: string;
   specialty: string;
   image?: string;
+  charges?: {
+    booking: number;
+    doctor: number;
+    hospital: number;
+  };
 }
 
 interface LocationState {
@@ -208,6 +214,7 @@ const specialNotes: SpecialNotes = {
 const DoctorSessionsPage: React.FC = () => {
   const { state } = useLocation() as { state: LocationState | null };
   const navigate  = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   const doctor: Doctor      = state?.doctor   || { id: 0, name: '', specialty: '' };
   const hospital: string    = state?.hospital || '';
@@ -226,104 +233,118 @@ const DoctorSessionsPage: React.FC = () => {
   };
 
   const handleBook = (s: Session): void => {
+    const bookingState = {
+      doctor,
+      selectedHospital: hospital,
+      date: toInputDate(s.date),
+      time: toInputTime(s.time),
+    };
+
+    if (!isAuthenticated) {
+      navigate('/login', {
+        state: {
+          from: {
+            pathname: '/doctor-booking/book',
+            state: bookingState,
+          },
+        },
+      });
+      return;
+    }
+
     navigate('/doctor-booking/book', {
-      state: {
-        doctor,
-        selectedHospital: hospital,
-        date: toInputDate(s.date),
-        time: toInputTime(s.time),
-      },
+      state: bookingState,
     });
   };
 
   return (
-    <PublicLayout>
-      <div className="sp-page">
-        <main className="sp-main">
-          <div className="sp-container">
-          <button type="button" className="page-back-button" onClick={handleBack} aria-label="Go back">
-            <i className="fas fa-arrow-left"></i>
-            <span>Back</span>
-          </button>
+      <PublicLayout>
+        <div className="sp-page">
+          <main className="sp-main">
+            <div className="sp-container">
+              <button type="button" className="page-back-button" onClick={handleBack} aria-label="Go back">
+                <i className="fas fa-arrow-left"></i>
+                <span>Back</span>
+              </button>
 
-          <div className="sp-doc-card">
-            <div className="sp-doc-hosp-bar">{hospital.toUpperCase()}</div>
-            <div className="sp-doc-body">
-              <div className="sp-doc-avatar">
-                {doctor.image
-                  ? <img src={doctor.image} alt={doctor.name} />
-                  : <i className="fas fa-user-md"></i>}
-              </div>
-              <div className="sp-doc-details">
-                <p className="sp-doc-name">{doctor.name}</p>
-                <p className="sp-doc-spec">{doctor.specialty}</p>
-                {note && (
-                  <p className="sp-doc-note">
-                    <span className="sp-note-lbl">Special Notes: </span>
-                    <span className="sp-note-val">
+              <div className="sp-doc-card">
+                <div className="sp-doc-hosp-bar">{hospital.toUpperCase()}</div>
+                <div className="sp-doc-body">
+                  <div className="sp-doc-avatar">
+                    {doctor.image
+                        ? <img src={doctor.image} alt={doctor.name} />
+                        : <i className="fas fa-user-md"></i>}
+                  </div>
+                  <div className="sp-doc-details">
+                    <p className="sp-doc-name">{doctor.name}</p>
+                    <p className="sp-doc-spec">{doctor.specialty}</p>
+                    {note && (
+                        <p className="sp-doc-note">
+                          <span className="sp-note-lbl">Special Notes: </span>
+                          <span className="sp-note-val">
                       {hospital.split(',')[0].trim()} – {note}
                     </span>
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="sp-sess-bar">
-            <i className="far fa-clock"></i>
-            <span>{hospital.toUpperCase()} SESSIONS</span>
-          </div>
-
-          <div className="sp-group">
-            <div className="sp-group-title" onClick={() => setExpanded((v: boolean) => !v)}>
-              <div className="sp-group-title-left">
-                <span className="sp-group-redbar"></span>
-                <i className="fas fa-stethoscope sp-group-ico"></i>
-                <div>
-                  <span className="sp-group-spec">{doctor.specialty?.toUpperCase()}</span>
-                  <span className="sp-group-cnt">{sessions.length} SESSIONS</span>
+                        </p>
+                    )}
+                  </div>
                 </div>
               </div>
-              <i className={`fas fa-chevron-${expanded ? 'up' : 'down'} sp-group-chev`}></i>
-            </div>
 
-            {expanded && sessions.map((s: Session, i: number) => {
-              const canceled: boolean = s.status === 'CANCELED';
-              return (
-                <div className={`sp-row ${canceled ? 'sp-row-canceled' : ''}`} key={i}>
-                  <div className={`sp-row-accent ${canceled ? 'sp-accent-gray' : 'sp-accent-red'}`}></div>
-                  <div className="sp-col-date">
-                    <span className="sp-date-sm">{s.date}</span>
-                    <span className={`sp-daytime ${canceled ? 'sp-daytime-gray' : 'sp-daytime-red'}`}>
+              <div className="sp-sess-bar">
+                <i className="far fa-clock"></i>
+                <span>{hospital.toUpperCase()} SESSIONS</span>
+              </div>
+
+              <div className="sp-group">
+                <div className="sp-group-title" onClick={() => setExpanded((v: boolean) => !v)}>
+                  <div className="sp-group-title-left">
+                    <span className="sp-group-redbar"></span>
+                    <i className="fas fa-stethoscope sp-group-ico"></i>
+                    <div>
+                      <span className="sp-group-spec">{doctor.specialty?.toUpperCase()}</span>
+                      <span className="sp-group-cnt">{sessions.length} SESSIONS</span>
+                    </div>
+                  </div>
+                  <i className={`fas fa-chevron-${expanded ? 'up' : 'down'} sp-group-chev`}></i>
+                </div>
+
+                {expanded && sessions.map((s: Session, i: number) => {
+                  const canceled: boolean = s.status === 'CANCELED';
+                  return (
+                      <div className={`sp-row ${canceled ? 'sp-row-canceled' : ''}`} key={i}>
+                        <div className={`sp-row-accent ${canceled ? 'sp-accent-gray' : 'sp-accent-red'}`}></div>
+                        <div className="sp-col-date">
+                          <span className="sp-date-sm">{s.date}</span>
+                          <span className={`sp-daytime ${canceled ? 'sp-daytime-gray' : 'sp-daytime-red'}`}>
                       {s.day} {s.time}
                     </span>
-                  </div>
-                  <div className="sp-col-appt">
-                    <span className="sp-appt-lbl">ACTIVE APPOINTMENTS</span>
-                    <span className={`sp-appt-num ${canceled ? 'sp-num-gray' : 'sp-num-red'}`}>
+                        </div>
+                        <div className="sp-col-appt">
+                          <span className="sp-appt-lbl">ACTIVE APPOINTMENTS</span>
+                          <span className={`sp-appt-num ${canceled ? 'sp-num-gray' : 'sp-num-red'}`}>
                       {String(s.appointments).padStart(2, '0')}
                     </span>
-                  </div>
-                  <button
-                    className={`sp-book-btn ${canceled ? 'sp-book-disabled' : 'sp-book-active'}`}
-                    onClick={() => !canceled && handleBook(s)}
-                    disabled={canceled}
-                    type="button"
-                  >
-                    <i className="fas fa-bookmark"></i> Book
-                  </button>
-                  <span className={`sp-status-txt ${canceled ? 'sp-txt-gray' : 'sp-txt-green'}`}>
+                        </div>
+                        <button
+                            className={`sp-book-btn ${canceled ? 'sp-book-disabled' : 'sp-book-active'}`}
+                            onClick={() => !canceled && handleBook(s)}
+                            disabled={canceled}
+                            type="button"
+                        >
+                          <i className="fas fa-bookmark"></i> Book
+                        </button>
+                        <span className={`sp-status-txt ${canceled ? 'sp-txt-gray' : 'sp-txt-green'}`}>
                     {s.status}
                   </span>
-                </div>
-              );
-            })}
-          </div>
+                      </div>
+                  );
+                })}
+              </div>
 
-          </div>
-        </main>
-      </div>
-    </PublicLayout>
+            </div>
+          </main>
+        </div>
+      </PublicLayout>
   );
 };
 

@@ -290,158 +290,158 @@ const DoctorProfilePage: React.FC = () => {
   };
 
   return (
-    <PublicLayout>
-      <main className="profile-wrapper">
-        <div className="container">
-          <button type="button" className="page-back-button" onClick={handleBack} aria-label="Go back">
-            <i className="fas fa-arrow-left"></i>
-            <span>Back</span>
-          </button>
+      <PublicLayout>
+        <main className="profile-wrapper">
+          <div className="container">
+            <button type="button" className="page-back-button" onClick={handleBack} aria-label="Go back">
+              <i className="fas fa-arrow-left"></i>
+              <span>Back</span>
+            </button>
 
-          <div className="profile-grid">
+            <div className="profile-grid">
 
-            <div className="left-col">
-              <div className="photo-card">
-                <img src={doctor.image} alt={doctor.name} className="doctor-photo" />
+              <div className="left-col">
+                <div className="photo-card">
+                  <img src={doctor.image} alt={doctor.name} className="doctor-photo" />
+                </div>
+
+                <div className="reviews-card">
+                  <h3 className="reviews-title">
+                    <i className="fas fa-comment-alt"></i> Reviews
+                  </h3>
+                  <div className="reviews-grid">
+                    {doctor.reviews.map((review: Review, i: number) => (
+                        <div className="review-item" key={i}>
+                          <div className="review-stars">
+                            {[1, 2, 3, 4].map((s: number) => (
+                                <i key={s} className="fas fa-star"></i>
+                            ))}
+                            {review.stars === 5
+                                ? <i className="fas fa-star"></i>
+                                : <i className="fas fa-star-half-alt"></i>
+                            }
+                          </div>
+                          <p>{review.text}</p>
+                        </div>
+                    ))}
+                  </div>
+                </div>
               </div>
 
-              <div className="reviews-card">
-                <h3 className="reviews-title">
-                  <i className="fas fa-comment-alt"></i> Reviews
-                </h3>
-                <div className="reviews-grid">
-                  {doctor.reviews.map((review: Review, i: number) => (
-                    <div className="review-item" key={i}>
-                      <div className="review-stars">
-                        {[1, 2, 3, 4].map((s: number) => (
-                          <i key={s} className="fas fa-star"></i>
-                        ))}
-                        {review.stars === 5
-                          ? <i className="fas fa-star"></i>
-                          : <i className="fas fa-star-half-alt"></i>
-                        }
-                      </div>
-                      <p>{review.text}</p>
+              <div className="right-col">
+                <div className="info-card">
+                  <div className="info-row">
+                    <i className="fas fa-user-md"></i>
+                    <div>
+                      <span className="info-label">Name</span>
+                      <span className="info-value">{doctor.firstName}</span>
                     </div>
-                  ))}
+                  </div>
+                  <div className="info-row">
+                    <i className="fas fa-stethoscope"></i>
+                    <div>
+                      <span className="info-label">Specialized In</span>
+                      <span className="info-value">{doctor.specializedIn}</span>
+                    </div>
+                  </div>
+                  <div className="info-row">
+                    <i className="fas fa-graduation-cap"></i>
+                    <div>
+                      <span className="info-label">Education</span>
+                      <span className="info-value">{doctor.education}</span>
+                    </div>
+                  </div>
+                  <div className="info-row">
+                    <i className="fas fa-briefcase-medical"></i>
+                    <div>
+                      <span className="info-label">Experience</span>
+                      <span className="info-value">{doctor.experience}</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            <div className="right-col">
-              <div className="info-card">
-                <div className="info-row">
-                  <i className="fas fa-user-md"></i>
-                  <div>
-                    <span className="info-label">Name</span>
-                    <span className="info-value">{doctor.firstName}</span>
-                  </div>
-                </div>
-                <div className="info-row">
-                  <i className="fas fa-stethoscope"></i>
-                  <div>
-                    <span className="info-label">Specialized In</span>
-                    <span className="info-value">{doctor.specializedIn}</span>
-                  </div>
-                </div>
-                <div className="info-row">
-                  <i className="fas fa-graduation-cap"></i>
-                  <div>
-                    <span className="info-label">Education</span>
-                    <span className="info-value">{doctor.education}</span>
-                  </div>
-                </div>
-                <div className="info-row">
-                  <i className="fas fa-briefcase-medical"></i>
-                  <div>
-                    <span className="info-label">Experience</span>
-                    <span className="info-value">{doctor.experience}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="section-card charges-card">
-                <h3 className="section-card-title">
-                  <i className="fas fa-receipt"></i> Charges Summary
-                </h3>
-                <div className="charge-row">
+                <div className="section-card charges-card">
+                  <h3 className="section-card-title">
+                    <i className="fas fa-receipt"></i> Charges Summary
+                  </h3>
+                  <div className="charge-row">
                   <span className="charge-label">
                     <span className="charge-icon no-show"><i className="fas fa-ban"></i></span>
                     No Show / Refund Fee
                   </span>
-                  <span className="charge-value">Rs. {doctor.charges.noShow.toLocaleString()}.00</span>
-                </div>
-                <div className="charge-row">
+                    <span className="charge-value">Rs. {doctor.charges.noShow.toLocaleString()}.00</span>
+                  </div>
+                  <div className="charge-row">
                   <span className="charge-label">
                     <span className="charge-icon booking"><i className="fas fa-calendar-check"></i></span>
                     Booking Charge
                   </span>
-                  <span className="charge-value">Rs. {doctor.charges.booking.toLocaleString()}.00</span>
-                </div>
-                <div className="charge-row">
+                    <span className="charge-value">Rs. {doctor.charges.booking.toLocaleString()}.00</span>
+                  </div>
+                  <div className="charge-row">
                   <span className="charge-label">
                     <span className="charge-icon doctor-fee"><i className="fas fa-user-md"></i></span>
                     Doctor Charge
                   </span>
-                  <span className="charge-value">Rs. {doctor.charges.doctor.toLocaleString()}.00</span>
-                </div>
-                <div className="charge-row">
+                    <span className="charge-value">Rs. {doctor.charges.doctor.toLocaleString()}.00</span>
+                  </div>
+                  <div className="charge-row">
                   <span className="charge-label">
                     <span className="charge-icon hospital-fee"><i className="fas fa-hospital"></i></span>
                     Hospital Charge
                   </span>
-                  <span className="charge-value">Rs. {doctor.charges.hospital.toLocaleString()}.00</span>
-                </div>
-                <div className="charge-divider"></div>
-                <div className="charge-row total-row">
+                    <span className="charge-value">Rs. {doctor.charges.hospital.toLocaleString()}.00</span>
+                  </div>
+                  <div className="charge-divider"></div>
+                  <div className="charge-row total-row">
                   <span className="charge-label total-label">
                     <span className="charge-icon total-fee"><i className="fas fa-coins"></i></span>
                     Total Amount
                   </span>
-                  <span className="charge-value total-value">
+                    <span className="charge-value total-value">
                     Rs. {total.toLocaleString()}.00
                   </span>
+                  </div>
                 </div>
-              </div>
 
-              <div className="section-card hosp-section-card">
-                <h3 className="section-card-title">
-                  <i className="fas fa-hospital"></i> Available Hospitals
-                </h3>
-                <div className="hosp-channel-list">
-                  {doctor.hospitals.map((hosp: string, i: number) => (
-                    <div className="hosp-channel-group" key={i}>
-                      <div className="hosp-channel-header">{hosp.toUpperCase()}</div>
-                      <div className="hosp-channel-row">
-                        <div className="hosp-channel-avatar">
-                          <i className="fas fa-user-md"></i>
+                <div className="section-card hosp-section-card">
+                  <h3 className="section-card-title">
+                    <i className="fas fa-hospital"></i> Available Hospitals
+                  </h3>
+                  <div className="hosp-channel-list">
+                    {doctor.hospitals.map((hosp: string, i: number) => (
+                        <div className="hosp-channel-group" key={i}>
+                          <div className="hosp-channel-header">{hosp.toUpperCase()}</div>
+                          <div className="hosp-channel-row">
+                            <div className="hosp-channel-avatar">
+                              <i className="fas fa-user-md"></i>
+                            </div>
+                            <div className="hosp-channel-info">
+                              <span className="hosp-channel-name">{doctor.name}</span>
+                              <span className="hosp-channel-specialty">{doctor.specialty}</span>
+                            </div>
+                            <button
+                                className={'hosp-channel-btn' + (selectedHospital === hosp ? ' selected' : '')}
+                                onClick={() => {
+                                  setSelectedHospital(hosp);
+                                  // ✅ FIXED: matches route in App.tsx
+                                  navigate(`/doctor-booking/doctor/${doctorId}/sessions`, {
+                                    state: { doctor: { ...doctor, id: doctorId }, hospital: hosp },
+                                  });
+                                }}
+                            >
+                              <i className="fas fa-stethoscope"></i> Channel
+                            </button>
+                          </div>
                         </div>
-                        <div className="hosp-channel-info">
-                          <span className="hosp-channel-name">{doctor.name}</span>
-                          <span className="hosp-channel-specialty">{doctor.specialty}</span>
-                        </div>
-                        <button
-                          className={'hosp-channel-btn' + (selectedHospital === hosp ? ' selected' : '')}
-                          onClick={() => {
-                            setSelectedHospital(hosp);
-                            // ✅ FIXED: matches route in App.tsx
-                            navigate(`/doctor-booking/doctor/${doctorId}/sessions`, {
-                              state: { doctor: { ...doctor, id: doctorId }, hospital: hosp },
-                            });
-                          }}
-                        >
-                          <i className="fas fa-stethoscope"></i> Channel
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </main>
-    </PublicLayout>
+        </main>
+      </PublicLayout>
   );
 };
 

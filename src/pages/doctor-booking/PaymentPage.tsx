@@ -25,6 +25,7 @@ interface BookingForm {
   date?: string;
   time?: string;
   nic?: string;
+  email?: string;
   contactNo?: string;
 }
 
@@ -108,87 +109,87 @@ const PaymentPage: React.FC = () => {
   };
 
   return (
-    <PublicLayout>
-      <div className="payment-page-wrapper">
-        <button type="button" className="page-back-button" onClick={handleBack} aria-label="Go back">
-          <i className="fas fa-arrow-left"></i>
-          <span>Back</span>
-        </button>
+      <PublicLayout>
+        <div className="payment-page-wrapper">
+          <button type="button" className="page-back-button" onClick={handleBack} aria-label="Go back">
+            <i className="fas fa-arrow-left"></i>
+            <span>Back</span>
+          </button>
 
-        <div className="page-card">
-          <div className="card-band"></div>
-          <div className="card-body">
-            <div className="illus-panel">
-              <div className="illus-ring lg"></div>
-              <div className="illus-ring md"></div>
-              <img
-                src={require('../../assets/doctor-booking images/Paymentimage.jpeg')}
-                alt="Payment Illustration"
-                className="illus-img"
-              />
-            </div>
-
-            <div className="form-panel">
-              <div className="form-row two-col">
-                <div className="field-group">
-                  <label className="field-label">Patient Id</label>
-                  <input type="text" placeholder="e.g. 012283" defaultValue={form.patientId || ''} />
-                </div>
-                <div className="field-group">
-                  <label className="field-label">Ref No</label>
-                  <input type="text" placeholder="e.g. 11289234" defaultValue={form.refNo || ''} />
-                </div>
-              </div>
-
-              <div className="field-group">
-                <label className="field-label">Doctor's Name</label>
-                <input type="text" defaultValue={doctor.name} readOnly />
-              </div>
-
-              <div className="field-group">
-                <label className="field-label">Total Amount</label>
-                <input
-                  type="text"
-                  readOnly
-                  value={total ? `Rs. ${total.toLocaleString()}.00` : ''}
-                  placeholder="Rs. 0.00"
-                  className="amount-input"
+          <div className="page-card">
+            <div className="card-band"></div>
+            <div className="card-body">
+              <div className="illus-panel">
+                <div className="illus-ring lg"></div>
+                <div className="illus-ring md"></div>
+                <img
+                    src={require('../../assets/doctor-booking images/Paymentimage.jpeg')}
+                    alt="Payment Illustration"
+                    className="illus-img"
                 />
               </div>
 
-              <div className="field-group">
-                <label className="field-label">Payment Method</label>
-                <div className="pay-method-group">
-                  <label className="pay-method-option">
-                    <input type="radio" name="payMethod" value="card" checked={payMethod === 'card'} onChange={() => setPayMethod('card')} />
-                    <span className="pm-radio"></span>
-                    <span className="pm-label">
+              <div className="form-panel">
+                <div className="form-row two-col">
+                  <div className="field-group">
+                    <label className="field-label">Patient Id</label>
+                    <input type="text" placeholder="e.g. 012283" defaultValue={form.patientId || ''} />
+                  </div>
+                  <div className="field-group">
+                    <label className="field-label">Ref No</label>
+                    <input type="text" placeholder="e.g. 11289234" defaultValue={form.refNo || ''} />
+                  </div>
+                </div>
+
+                <div className="field-group">
+                  <label className="field-label">Doctor's Name</label>
+                  <input type="text" defaultValue={doctor.name} readOnly />
+                </div>
+
+                <div className="field-group">
+                  <label className="field-label">Total Amount</label>
+                  <input
+                      type="text"
+                      readOnly
+                      value={total ? `Rs. ${total.toLocaleString()}.00` : ''}
+                      placeholder="Rs. 0.00"
+                      className="amount-input"
+                  />
+                </div>
+
+                <div className="field-group">
+                  <label className="field-label">Payment Method</label>
+                  <div className="pay-method-group">
+                    <label className="pay-method-option">
+                      <input type="radio" name="payMethod" value="card" checked={payMethod === 'card'} onChange={() => setPayMethod('card')} />
+                      <span className="pm-radio"></span>
+                      <span className="pm-label">
                       <i className="fas fa-credit-card" style={{ color: '#667eea', marginRight: '6px' }}></i>
                       Credit / Debit Card
                     </span>
-                  </label>
+                    </label>
 
-                  <label className="pay-method-option">
-                    <input type="radio" name="payMethod" value="cash" checked={payMethod === 'cash'} onChange={() => setPayMethod('cash')} />
-                    <span className="pm-radio"></span>
-                    <span className="pm-label">
+                    <label className="pay-method-option">
+                      <input type="radio" name="payMethod" value="cash" checked={payMethod === 'cash'} onChange={() => setPayMethod('cash')} />
+                      <span className="pm-radio"></span>
+                      <span className="pm-label">
                       <i className="fas fa-hospital" style={{ color: '#10b981', marginRight: '6px' }}></i>
                       Cash Payment (Pay during visit)
                     </span>
-                  </label>
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="btn-row">
-          <button className="btn btn-primary btn-lg" onClick={handlePay}>
-            <i className="fas fa-arrow-right"></i> PAY
-          </button>
+          <div className="btn-row">
+            <button className="btn btn-primary btn-lg" onClick={handlePay}>
+              <i className="fas fa-arrow-right"></i> PAY
+            </button>
+          </div>
         </div>
-      </div>
-    </PublicLayout>
+      </PublicLayout>
   );
 };
 

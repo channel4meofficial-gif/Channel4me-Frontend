@@ -50,7 +50,6 @@ import DoctorPage from './pages/doctor-booking/DoctorPage';
 import DoctorProfilePage from './pages/doctor-booking/DoctorProfilePage';
 import DoctorSessionsPage from './pages/doctor-booking/DoctorSessionsPage';
 import DoctorBookingPage from './pages/doctor-booking/DoctorBookingPage';
-import PaymentPage from './pages/doctor-booking/PaymentPage';
 import CardPaymentPage from './pages/doctor-booking/CardPaymentPage';
 import PaymentReceiptPage from './pages/doctor-booking/PaymentReceiptPage';
 
@@ -182,7 +181,6 @@ function App() {
                             <Route path="/doctor-booking/doctor/:id/profile" element={<DoctorProfilePage />} />
                             <Route path="/doctor-booking/doctor/:id/sessions" element={<DoctorSessionsPage />} />
                             <Route path="/doctor-booking/book" element={<DoctorBookingPage />} />
-                            <Route path="/doctor-booking/payment" element={<PaymentPage />} />
                             <Route path="/doctor-booking/card-payment" element={<CardPaymentPage />} />
                             <Route path="/doctor-booking/payment-receipt" element={<PaymentReceiptPage />} />
 
