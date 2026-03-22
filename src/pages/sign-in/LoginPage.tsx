@@ -4,6 +4,7 @@ import PublicLayout from '../../components/layout/PublicLayout/publiclayout';
 import '../../styles/register/RegistrationType.css';
 import { useAuth } from '../../context/AuthContext';
 import { User, UserRole } from '../../types/auth';
+import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
 
 const LoginPage: React.FC = () => {
     const navigate = useNavigate();
@@ -19,54 +20,70 @@ const LoginPage: React.FC = () => {
         e.preventDefault();
         setIsLoading(true);
 
-        // Simulated API Response
         try {
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            
-            // Mock user creation based on selection
-            const mockUser: User = {
-                id: Math.random().toString(36).substr(2, 9),
-                name: loginRole === 'doctor' ? 'Dr. Emma Wilson' : loginRole === 'admin' ? 'System Admin' : 'Cristiano Ronaldo',
-                email: email,
-                role: loginRole,
-                age: loginRole === 'patient' ? 38 : undefined,
-                location: loginRole === 'patient' ? 'Riyadh, Saudi Arabia' : 'Colombo, Sri Lanka',
-                guardianName: loginRole === 'patient' ? 'Dolores Aveiro' : undefined,
-                contactNumber: '0778518614',
-                appointments: loginRole === 'patient' ? [
-                    {
-                        id: 'apt-1',
-                        doctorName: 'Dr. Sudarshan',
-                        specialization: 'Cardiologist',
-                        date: '2026-03-25',
-                        time: '5:00 PM',
-                        status: 'upcoming'
-                    },
-                    {
-                        id: 'apt-2',
-                        doctorName: 'Dr. Sarah Chen',
-                        specialization: 'Neurologist',
-                        date: '2026-03-10',
-                        time: '10:30 AM',
-                        status: 'completed',
-                        prescriptionUrl: '/mock/prescription.pdf',
-                        rating: 5
-                    }
-                ] : []
-            };
-            const mockToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
+            const res = await fetch(`http://localhost:5000/api/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password, role: loginRole })
+            });
+            const data = await res.json();
 
-            login(mockUser, mockToken);
+            if (data.success) {
+                const userObj: User = {
+                    id: data.data.userId,
+                    name: data.data.fullName || `${data.data.firstName || ''} ${data.data.lastName || ''}`.trim() || data.data.email,
+                    email: data.data.email,
+                    role: data.data.role,
+                };
+                login(userObj, data.token);
 
-            // Redirect to intended page or dashboard
-            const from = (location.state as any)?.from?.pathname || `/${loginRole}/dashboard`;
-            navigate(from, { replace: true });
+                // Redirect to intended page or dashboard
+                const from = (location.state as any)?.from?.pathname || `/${loginRole}/dashboard`;
+                navigate(from, { replace: true });
+            } else {
+                alert(data.message || 'Login failed.');
+            }
         } catch (error) {
-            alert('Login failed. Please check your credentials.');
+            console.error('Login API Error:', error);
+            alert('Login failed. Cannot reach the server.');
         } finally {
             setIsLoading(false);
         }
     };
+
+    const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
+        setIsLoading(true);
+        try {
+            const res = await fetch(`http://localhost:5000/api/v1/auth/verify`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: credentialResponse.credential })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                const userObj: User = {
+                    id: data.data.userId,
+                    name: data.data.fullName || `${data.data.firstName || ''} ${data.data.lastName || ''}`.trim() || data.data.email,
+                    email: data.data.email,
+                    role: data.data.role || 'patient',
+                };
+                login(userObj, data.token);
+
+                // Redirect to intended page or patient dashboard by default
+                const from = (location.state as any)?.from?.pathname || `/patient/dashboard`;
+                navigate(from, { replace: true });
+            } else {
+                alert(data.message || 'Google Login failed.');
+            }
+        } catch (error) {
+            console.error('Google Login API Error:', error);
+            alert('Google Login failed. Cannot reach the server.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
 
     return (
         <PublicLayout>
@@ -182,10 +199,20 @@ const LoginPage: React.FC = () => {
 
                             <div style={{ textAlign: 'center', marginTop: '30px' }}>
                                 <p style={{ color: '#64748b', fontSize: '14px', marginBottom: '20px' }}>Or continue with</p>
-                                <div style={{ display: 'flex', gap: '12px' }}>
-                                    <button className="btn btn-outline" style={{ flex: 1, padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                                        <i className="fab fa-google" style={{ color: '#ea4335' }}></i> Google
-                                    </button>
+                                <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+                                    <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+                                        <GoogleLogin
+                                            onSuccess={handleGoogleSuccess}
+                                            onError={() => {
+                                                console.error('Login Failed');
+                                                alert('Google Login failed.');
+                                            }}
+                                            useOneTap
+                                            shape="rectangular"
+                                            theme="outline"
+                                            text="signin_with"
+                                        />
+                                    </div>
                                     <button className="btn btn-outline" style={{ flex: 1, padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                                         <i className="fab fa-apple"></i> Apple
                                     </button>
