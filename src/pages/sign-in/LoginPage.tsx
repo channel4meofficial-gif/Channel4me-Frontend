@@ -4,6 +4,7 @@ import PublicLayout from '../../components/layout/PublicLayout/publiclayout';
 import '../../styles/register/RegistrationType.css';
 import { useAuth } from '../../context/AuthContext';
 import { User, UserRole } from '../../types/auth';
+import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
 
 const LoginPage: React.FC = () => {
     const navigate = useNavigate();
@@ -20,58 +21,85 @@ const LoginPage: React.FC = () => {
         setIsLoading(true);
 
         try {
-            const response = await fetch('http://localhost:5000/api/auth/login', {
+            const res = await fetch(`http://localhost:5000/api/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password, role: loginRole }),
+                body: JSON.stringify({ email, password, role: loginRole })
             });
+            const data = await res.json();
 
-            const result = await response.json();
+            if (data.success) {
+                const userObj: User = {
+                    id: data.data.userId,
+                    name: data.data.fullName || `${data.data.firstName || ''} ${data.data.lastName || ''}`.trim() || data.data.email,
+                    email: data.data.email,
+                    role: data.data.role,
+                };
+                login(userObj, data.token);
 
-            if (!response.ok || !result.success) {
-                throw new Error(result.message || 'Login failed. Please check your credentials.');
+                // Redirect to intended page or dashboard
+                const from = (location.state as any)?.from?.pathname || `/${loginRole}/dashboard`;
+                navigate(from, { replace: true });
+            } else {
+                alert(data.message || 'Login failed.');
             }
-
-            const { data, token } = result;
-
-            const user: User = {
-                id: data.userId,
-                _id: data.userId,
-                name: data.fullName || data.firstName || email,
-                email: data.email,
-                role: data.role as UserRole,
-                memberId: data.memberId || undefined,
-            };
-
-            login(user, token);
-
-            // Redirect to intended page or dashboard
-            const from = (location.state as any)?.from;
-            const destination = from?.pathname || `/${loginRole}/dashboard`;
-            navigate(destination, { replace: true, state: from?.state });
         } catch (error) {
-            const message = error instanceof Error ? error.message : 'Login failed. Please check your credentials.';
-            alert(message);
+            console.error('Login API Error:', error);
+            alert('Login failed. Cannot reach the server.');
         } finally {
             setIsLoading(false);
         }
     };
+
+    const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
+        setIsLoading(true);
+        try {
+            const res = await fetch(`http://localhost:5000/api/v1/auth/verify`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: credentialResponse.credential })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                const userObj: User = {
+                    id: data.data.userId,
+                    name: data.data.fullName || `${data.data.firstName || ''} ${data.data.lastName || ''}`.trim() || data.data.email,
+                    email: data.data.email,
+                    role: data.data.role || 'patient',
+                };
+                login(userObj, data.token);
+
+                // Redirect to intended page or patient dashboard by default
+                const from = (location.state as any)?.from?.pathname || `/patient/dashboard`;
+                navigate(from, { replace: true });
+            } else {
+                alert(data.message || 'Google Login failed.');
+            }
+        } catch (error) {
+            console.error('Google Login API Error:', error);
+            alert('Google Login failed. Cannot reach the server.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
 
     return (
         <PublicLayout>
             <main className="main-content-register" style={{ minHeight: 'calc(100vh - 80px)', display: 'flex', alignItems: 'center', paddingTop: '60px', paddingBottom: '60px' }}>
                 <div className="container">
                     <div className="registration-wrapper-steps" style={{ maxWidth: '500px', margin: '0 auto' }}>
-
+                        
                         <div className="registration-form-container">
                             <div className="form-header" style={{ textAlign: 'center' }}>
-                                <div className="login-badge" style={{
-                                    display: 'inline-flex',
-                                    padding: '8px 16px',
-                                    background: '#eff6ff',
-                                    color: '#2563eb',
-                                    borderRadius: '20px',
-                                    fontSize: '13px',
+                                <div className="login-badge" style={{ 
+                                    display: 'inline-flex', 
+                                    padding: '8px 16px', 
+                                    background: '#eff6ff', 
+                                    color: '#2563eb', 
+                                    borderRadius: '20px', 
+                                    fontSize: '13px', 
                                     fontWeight: '600',
                                     marginBottom: '16px'
                                 }}>
@@ -82,11 +110,11 @@ const LoginPage: React.FC = () => {
                             </div>
 
                             {/* Role Switcher */}
-                            <div className="role-switcher" style={{
-                                display: 'flex',
-                                background: '#f8fafc',
-                                padding: '4px',
-                                borderRadius: '12px',
+                            <div className="role-switcher" style={{ 
+                                display: 'flex', 
+                                background: '#f8fafc', 
+                                padding: '4px', 
+                                borderRadius: '12px', 
                                 marginBottom: '24px',
                                 border: '1px solid #e2e8f0'
                             }}>
@@ -120,10 +148,10 @@ const LoginPage: React.FC = () => {
                                     <label className="form-label" htmlFor="email">Email Address</label>
                                     <div style={{ position: 'relative' }}>
                                         <i className="fas fa-envelope" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }}></i>
-                                        <input
+                                        <input 
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
-                                            required
+                                            required 
                                         />
                                     </div>
                                 </div>
@@ -135,13 +163,13 @@ const LoginPage: React.FC = () => {
                                     </div>
                                     <div style={{ position: 'relative' }}>
                                         <i className="fas fa-unlock-alt" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }}></i>
-                                        <input
+                                        <input 
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
-                                            required
+                                            required 
                                         />
-                                        <button
-                                            type="button"
+                                        <button 
+                                            type="button" 
                                             onClick={() => setShowPassword(!showPassword)}
                                             style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', border: 'none', background: 'none', color: '#94a3b8', cursor: 'pointer' }}
                                         >
@@ -155,9 +183,9 @@ const LoginPage: React.FC = () => {
                                     <label htmlFor="remember" style={{ fontSize: '14px', color: '#64748b', cursor: 'pointer' }}>Remember me for 30 days</label>
                                 </div>
 
-                                <button
-                                    type="submit"
-                                    className="btn btn-primary"
+                                <button 
+                                    type="submit" 
+                                    className="btn btn-primary" 
                                     style={{ width: '100%', padding: '14px', fontSize: '16px' }}
                                     disabled={isLoading}
                                 >
@@ -171,10 +199,20 @@ const LoginPage: React.FC = () => {
 
                             <div style={{ textAlign: 'center', marginTop: '30px' }}>
                                 <p style={{ color: '#64748b', fontSize: '14px', marginBottom: '20px' }}>Or continue with</p>
-                                <div style={{ display: 'flex', gap: '12px' }}>
-                                    <button className="btn btn-outline" style={{ flex: 1, padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                                        <i className="fab fa-google" style={{ color: '#ea4335' }}></i> Google
-                                    </button>
+                                <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+                                    <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+                                        <GoogleLogin
+                                            onSuccess={handleGoogleSuccess}
+                                            onError={() => {
+                                                console.error('Login Failed');
+                                                alert('Google Login failed.');
+                                            }}
+                                            useOneTap
+                                            shape="rectangular"
+                                            theme="outline"
+                                            text="signin_with"
+                                        />
+                                    </div>
                                     <button className="btn btn-outline" style={{ flex: 1, padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                                         <i className="fab fa-apple"></i> Apple
                                     </button>
@@ -183,8 +221,8 @@ const LoginPage: React.FC = () => {
 
                             <div style={{ textAlign: 'center', marginTop: '30px', paddingTop: '24px', borderTop: '1px solid #f1f5f9' }}>
                                 <p style={{ fontSize: '14px', color: '#64748b' }}>
-                                    Don't have an account?
-                                    <button
+                                    Don't have an account? 
+                                    <button 
                                         onClick={() => navigate('/register')}
                                         style={{ background: 'none', border: 'none', color: '#667eea', fontWeight: '600', cursor: 'pointer', padding: '0 5px' }}
                                     >
@@ -193,10 +231,10 @@ const LoginPage: React.FC = () => {
                                 </p>
                             </div>
                         </div>
-
+                        
                         <div style={{ textAlign: 'center', marginTop: '24px' }}>
                             <p style={{ fontSize: '12px', color: '#94a3b8' }}>
-                                ©️ 2026 Channel4Me Healthcare. All rights reserved. Secure 256-bit SSL encrypted connection.
+                                © 2026 Channel4Me Healthcare. All rights reserved. Secure 256-bit SSL encrypted connection.
                             </p>
                         </div>
                     </div>
