@@ -43,6 +43,15 @@ const DoctorPage: React.FC = () => {
   const [filterName, setFilterName] = useState<string>('');
   const [filterSpecialty, setFilterSpecialty] = useState<string>('All');
 
+  const handleBack = (): void => {
+    if (window.history.length > 1) {
+      navigate(-1);
+      return;
+    }
+
+    navigate('/');
+  };
+
   const specialties: string[] = ['All', ...new Set(fallbackDoctors.map((d) => d.specialty))];
   const filteredDoctors = fallbackDoctors.filter((doc) => {
     const matchesName = doc.name.toLowerCase().includes(filterName.toLowerCase());
@@ -54,6 +63,11 @@ const DoctorPage: React.FC = () => {
     <PublicLayout>
       <main className="doctors-wrapper">
         <div className="container">
+          <button type="button" className="page-back-button" onClick={handleBack} aria-label="Go back">
+            <i className="fas fa-arrow-left"></i>
+            <span>Back</span>
+          </button>
+
           <div className="page-heading">
             <h2 className="page-title">
               Featured <span className="gradient-text">Doctors</span>
