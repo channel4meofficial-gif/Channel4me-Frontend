@@ -25,6 +25,7 @@ interface BookingForm {
   date?: string;
   time?: string;
   nic?: string;
+  email?: string;
   contactNo?: string;
 }
 
