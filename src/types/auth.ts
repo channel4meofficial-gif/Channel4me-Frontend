@@ -17,6 +17,9 @@ export interface User {
   name: string;
   email: string;
   role: UserRole;
+  _id?: string;
+  patientId?: string;
+  patient_id?: string;
   age?: number;
   location?: string;
   guardianName?: string;
