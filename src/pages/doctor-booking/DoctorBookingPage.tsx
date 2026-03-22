@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import PublicLayout from '../../components/layout/PublicLayout/publiclayout';
+import { useAuth } from '../../context/AuthContext';
 import '../../styles/doctor-booking/DoctorBookingPage.css';
 
 const API_BASE_URL = 'http://localhost:5000';
@@ -10,16 +11,21 @@ interface Doctor {
   name: string;
   specialty: string;
   image: string;
+  charges?: {
+    booking: number;
+    doctor: number;
+    hospital: number;
+  };
 }
 
 interface BookingForm {
   patientId: string;
   refNo: string;
   hospital: string;
-  appointmentNo: string;
   date: string;
   time: string;
   nic: string;
+  email: string;
   contactNo: string;
 }
 
@@ -33,6 +39,19 @@ interface LocationState {
 interface BookingResponse {
   _id: string;
   ref_number: string;
+  reference_no?: string;
+  appointment_number?: string;
+  appointment_no?: string;
+  hospital?: string;
+  hospital_name?: string;
+  date_and_time?: string;
+  appointment_date?: string;
+  contact_number?: string;
+  phone_no?: string;
+  email?: string;
+  payment_date_time?: string;
+  paid_at?: string;
+  updated_at?: string;
   payment_status: 'pending' | 'completed' | 'failed';
 }
 
@@ -91,33 +110,46 @@ const normalizeTimeForInput = (value?: string): string => {
   return `${String(hours).padStart(2, '0')}:${minutes}`;
 };
 
+const getPatientIdFromUser = (user: ReturnType<typeof useAuth>['user']): string => {
+  if (!user) {
+    return '';
+  }
+
+  return user.patient_id || user.patientId || user._id || user.id || '';
+};
+
 const DoctorBookingPage: React.FC = () => {
   const { state } = useLocation() as { state: LocationState | null };
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const patientId = getPatientIdFromUser(user);
 
   const doctor: Doctor = state?.doctor || defaultDoctor;
+  const total = doctor.charges ? doctor.charges.booking + doctor.charges.doctor + doctor.charges.hospital : null;
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const [form, setForm] = useState<BookingForm>({
-    patientId: '',
+    patientId,
     refNo: '',
     hospital: state?.selectedHospital || '',
-    appointmentNo: '',
     date: normalizeDateForInput(state?.date),
     time: normalizeTimeForInput(state?.time),
     nic: '',
+    email: user?.email || '',
     contactNo: '',
   });
 
   useEffect(() => {
     setForm((currentForm) => ({
       ...currentForm,
+      patientId: patientId || currentForm.patientId,
+      email: user?.email || currentForm.email,
       hospital: state?.selectedHospital || currentForm.hospital,
       date: normalizeDateForInput(state?.date) || currentForm.date,
       time: normalizeTimeForInput(state?.time) || currentForm.time,
     }));
-  }, [state?.selectedHospital, state?.date, state?.time]);
+  }, [patientId, user?.email, state?.selectedHospital, state?.date, state?.time]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -138,7 +170,17 @@ const DoctorBookingPage: React.FC = () => {
   };
 
   const handleMakePayment = async (): Promise<void> => {
-    if (!form.patientId || !form.hospital || !form.date || !form.time || !form.nic || !form.contactNo) {
+    if (!doctor.id) {
+      setErrorMessage('Doctor selection is missing. Please choose a doctor and session again.');
+      return;
+    }
+
+    if (!patientId) {
+      setErrorMessage('Patient session is missing. Please sign in again.');
+      return;
+    }
+
+    if (!form.patientId || !form.hospital || !form.date || !form.time || !form.nic || !form.email || !form.contactNo) {
       setErrorMessage('Please fill in all required booking details before continuing.');
       return;
     }
@@ -153,11 +195,13 @@ const DoctorBookingPage: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          doctor_id: doctor.id,
           patient_id: form.patientId,
           ref_number: form.refNo || undefined,
           hospital: form.hospital,
           date_and_time: `${form.date}T${form.time}`,
           nic_number: form.nic,
+          email: form.email,
           contact_number: form.contactNo,
         }),
       });
@@ -169,7 +213,7 @@ const DoctorBookingPage: React.FC = () => {
 
       const booking: BookingResponse = result.data;
 
-      navigate('/doctor-booking/payment', {
+      navigate('/doctor-booking/card-payment', {
         state: {
           doctor,
           form: {
@@ -177,6 +221,7 @@ const DoctorBookingPage: React.FC = () => {
             refNo: booking.ref_number,
           },
           booking,
+          total,
         },
       });
     } catch (error) {
@@ -218,14 +263,14 @@ const DoctorBookingPage: React.FC = () => {
             </div>
 
             <div className="form-panel">
-              <div className="form-row two-col">
+              <div className="form-row patient-email-row">
                 <div className="field-group">
                   <label className="field-label">Patient Id</label>
-                  <input type="text" name="patientId" placeholder="e.g. 0001" value={form.patientId} onChange={handleChange} />
+                  <input type="text" name="patientId" value={form.patientId} readOnly />
                 </div>
                 <div className="field-group">
-                  <label className="field-label">Ref No</label>
-                  <input type="text" name="refNo" placeholder="e.g. 11289234" value={form.refNo} onChange={handleChange} />
+                  <label className="field-label">Email</label>
+                  <input type="email" name="email" placeholder="e.g. name@example.com" value={form.email} onChange={handleChange} />
                 </div>
               </div>
 
@@ -233,13 +278,6 @@ const DoctorBookingPage: React.FC = () => {
                 <div className="field-group">
                   <label className="field-label">Hospital</label>
                   <input type="text" name="hospital" placeholder="e.g. Asiri Hospital, Colombo" value={form.hospital} onChange={handleChange} readOnly />
-                </div>
-              </div>
-
-              <div className="form-row half-col">
-                <div className="field-group">
-                  <label className="field-label">Appointment No</label>
-                  <input type="text" name="appointmentNo" placeholder="e.g. 001" value={form.appointmentNo} onChange={handleChange} />
                 </div>
               </div>
 
@@ -259,6 +297,9 @@ const DoctorBookingPage: React.FC = () => {
                   <label className="field-label">NIC</label>
                   <input type="text" name="nic" placeholder="e.g. 789245672V" value={form.nic} onChange={handleChange} />
                 </div>
+              </div>
+
+              <div className="form-row one-col">
                 <div className="field-group">
                   <label className="field-label">Contact No</label>
                   <input type="tel" name="contactNo" placeholder="e.g. 0743328921" value={form.contactNo} onChange={handleChange} />
