@@ -3,16 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import PublicLayout from '../../../components/layout/PublicLayout/publiclayout';
 import '../../../styles/patient/PatientEditProfile.css';
 
+const API_BASE = 'http://localhost:5000';
+
 const DEFAULT_AVATAR = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 
-const DEFAULT_PROFILE_DATA = {
-    firstName: 'Nimal',
-    lastName: 'Perera',
-    age: '45',
+const DEFAULT_FORM = {
+    firstName: '',
+    lastName: '',
+    age: '',
     location: '',
-    guardianFirstName: 'Sunitha',
+    guardianFirstName: '',
     guardianLastName: '',
-    contactNumber1: '0771234567',
+    contactNumber1: '',
     contactNumber2: '',
 };
 
@@ -57,40 +59,90 @@ function PhoneIcon() {
 /* ── Component ── */
 const PatientEditProfile: React.FC = () => {
     const navigate = useNavigate();
-    const [form, setForm] = useState(DEFAULT_PROFILE_DATA);
+    const [form, setForm] = useState(DEFAULT_FORM);
     const [profileImage, setProfileImage] = useState(DEFAULT_AVATAR);
+    const [isSaving, setIsSaving] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
+    const [error, setError] = useState('');
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    const getToken = () => localStorage.getItem('token') || '';
+
     useEffect(() => {
-        const storedProfileData = localStorage.getItem('patientProfileData');
-        if (storedProfileData) {
+        const fetchProfile = async () => {
             try {
-                setForm(JSON.parse(storedProfileData));
+                const res = await fetch(`${API_BASE}/api/v1/profiles`, {
+                    headers: { Authorization: `Bearer ${getToken()}` }
+                });
+                const data = await res.json();
+                if (data.success && data.data) {
+                    const p = data.data;
+                    setForm({
+                        firstName: p.firstName || '',
+                        lastName: p.lastName || '',
+                        age: p.age ? String(p.age) : '',
+                        location: p.location || '',
+                        guardianFirstName: p.guardianFirstName || '',
+                        guardianLastName: p.guardianLastName || '',
+                        contactNumber1: p.contactNumber1 || '',
+                        contactNumber2: p.contactNumber2 || '',
+                    });
+                    if (p.profilePicture) {
+                        setProfileImage(`${API_BASE}/${p.profilePicture}`);
+                    }
+                }
             } catch (e) {
-                console.error("Failed to parse patientProfileData from local storage", e);
+                console.error('Failed to load profile', e);
             }
-        }
-        
-        const storedImage = localStorage.getItem('patientProfileImage');
-        if (storedImage) {
-            setProfileImage(storedImage);
-        }
+        };
+        fetchProfile();
     }, []);
 
     const handleChange = (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm(prev => ({ ...prev, [field]: e.target.value }));
     };
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                if (typeof reader.result === 'string') {
-                    setProfileImage(reader.result);
-                }
-            };
-            reader.readAsDataURL(file);
+        if (!file) return;
+
+        // Preview immediately
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            if (typeof reader.result === 'string') {
+                setProfileImage(reader.result);
+            }
+        };
+        reader.readAsDataURL(file);
+
+        // Upload to backend
+        setIsUploading(true);
+        setError('');
+        try {
+            const formData = new FormData();
+            formData.append('profilePicture', file);
+            const res = await fetch(`${API_BASE}/api/v1/profiles/upload-picture`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${getToken()}` },
+                body: formData
+            });
+            const data = await res.json();
+            if (data.success && data.data?.accessUrl) {
+                setProfileImage(data.data.accessUrl);
+                // Persist so the navbar header updates immediately
+                localStorage.setItem('profilePicture', data.data.accessUrl);
+                // Dispatch storage event so other components (header) pick it up in the same tab
+                window.dispatchEvent(new StorageEvent('storage', {
+                    key: 'profilePicture',
+                    newValue: data.data.accessUrl,
+                }));
+            } else {
+                setError(data.message || 'Failed to upload picture.');
+            }
+        } catch (err) {
+            setError('Failed to upload profile picture.');
+        } finally {
+            setIsUploading(false);
         }
     };
 
@@ -98,10 +150,39 @@ const PatientEditProfile: React.FC = () => {
         fileInputRef.current?.click();
     };
 
-    const handleSave = () => {
-        localStorage.setItem('patientProfileData', JSON.stringify(form));
-        localStorage.setItem('patientProfileImage', profileImage);
-        navigate('/patient/dashboard');
+    const handleSave = async () => {
+        setIsSaving(true);
+        setError('');
+        try {
+            const res = await fetch(`${API_BASE}/api/v1/profiles`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${getToken()}`
+                },
+                body: JSON.stringify({
+                    role: 'patient',
+                    firstName: form.firstName,
+                    lastName: form.lastName,
+                    age: form.age ? Number(form.age) : undefined,
+                    location: form.location,
+                    contactNumber1: form.contactNumber1,
+                    contactNumber2: form.contactNumber2,
+                    guardianFirstName: form.guardianFirstName,
+                    guardianLastName: form.guardianLastName,
+                })
+            });
+            const data = await res.json();
+            if (data.success) {
+                navigate('/patient/dashboard');
+            } else {
+                setError(data.message || 'Failed to save profile.');
+            }
+        } catch (err) {
+            setError('Network error. Please check your connection.');
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     return (
@@ -112,10 +193,21 @@ const PatientEditProfile: React.FC = () => {
                         <h1 className="pep-title">User Profile Settings</h1>
                         <p className="pep-subtitle">Manage your personal information and preference.</p>
 
+                        {error && (
+                            <div style={{ color: '#dc2626', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '8px', padding: '10px 14px', marginBottom: '16px', fontSize: '14px' }}>
+                                {error}
+                            </div>
+                        )}
+
                         {/* Avatar */}
                         <div className="pep-avatar-section">
-                            <div className="pep-avatar-wrap" onClick={triggerFileInput} style={{ cursor: 'pointer' }}>
+                            <div className="pep-avatar-wrap" onClick={triggerFileInput} style={{ cursor: 'pointer', position: 'relative' }}>
                                 <img src={profileImage} alt="Profile" />
+                                {isUploading && (
+                                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.4)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '12px' }}>
+                                        Uploading…
+                                    </div>
+                                )}
                             </div>
                             <input
                                 type="file"
@@ -233,8 +325,8 @@ const PatientEditProfile: React.FC = () => {
                         </div>
 
                         {/* Save Button */}
-                        <button className="pep-save-btn" onClick={handleSave}>
-                            Save And Exit
+                        <button className="pep-save-btn" onClick={handleSave} disabled={isSaving || isUploading}>
+                            {isSaving ? 'Saving…' : 'Save And Exit'}
                         </button>
                     </div>
                 </main>

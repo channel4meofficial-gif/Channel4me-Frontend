@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 // Core Pages
 import HomePage from './pages/HomePage';
@@ -50,7 +51,6 @@ import DoctorPage from './pages/doctor-booking/DoctorPage';
 import DoctorProfilePage from './pages/doctor-booking/DoctorProfilePage';
 import DoctorSessionsPage from './pages/doctor-booking/DoctorSessionsPage';
 import DoctorBookingPage from './pages/doctor-booking/DoctorBookingPage';
-import PaymentPage from './pages/doctor-booking/PaymentPage';
 import CardPaymentPage from './pages/doctor-booking/CardPaymentPage';
 import PaymentReceiptPage from './pages/doctor-booking/PaymentReceiptPage';
 
@@ -93,119 +93,120 @@ function App() {
     return (
         <BrowserRouter>
             <ScrollToHash />
-            <AuthProvider>
-                <PatientRegistrationProvider>
-                    <DoctorRegistrationProvider>
-                        <Routes>
-                            <Route path="/" element={<HomePage />} />
+            <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ""}>
+                <AuthProvider>
+                    <PatientRegistrationProvider>
+                        <DoctorRegistrationProvider>
+                            <Routes>
+                                <Route path="/" element={<HomePage />} />
 
-                            {/* Auth */}
-                            <Route path="/login" element={<LoginPage />} />
-                            <Route path="/register" element={<RegistrationType />} />
+                                {/* Auth */}
+                                <Route path="/login" element={<LoginPage />} />
+                                <Route path="/register" element={<RegistrationType />} />
 
-                            {/* Patient Registration */}
-                            <Route path="/patient/register/step1" element={<PatientStep1 />} />
-                            <Route path="/patient/register/step2" element={<PatientStep2 />} />
-                            <Route path="/patient/register/step3" element={<PatientStep3 />} />
+                                {/* Patient Registration */}
+                                <Route path="/patient/register/step1" element={<PatientStep1 />} />
+                                <Route path="/patient/register/step2" element={<PatientStep2 />} />
+                                <Route path="/patient/register/step3" element={<PatientStep3 />} />
 
-                            {/* Doctor Registration */}
-                            <Route path="/doctor/register/step1" element={<DoctorStep1 />} />
-                            <Route path="/doctor/register/step2" element={<DoctorStep2 />} />
-                            <Route path="/doctor/register/step3" element={<DoctorStep3 />} />
+                                {/* Doctor Registration */}
+                                <Route path="/doctor/register/step1" element={<DoctorStep1 />} />
+                                <Route path="/doctor/register/step2" element={<DoctorStep2 />} />
+                                <Route path="/doctor/register/step3" element={<DoctorStep3 />} />
 
-                            {/* Patient Routes */}
-                            <Route path="/patient/dashboard" element={
-                                <PrivateRoute allowedRoles={['patient']}>
-                                    <PatientDashboard />
-                                </PrivateRoute>
-                            } />
-                            <Route path="/patient/dashboard/edit-profile" element={
-                                <PrivateRoute allowedRoles={['patient']}>
-                                    <PatientEditProfile />
-                                </PrivateRoute>
-                            } />
-                            <Route path="/patient/dashboard/new-blood-report" element={
-                                <PrivateRoute allowedRoles={['patient']}>
-                                    <NewBloodReport />
-                                </PrivateRoute>
-                            } />
-                            <Route path="/patient/dashboard/edit-emergency-contact" element={
-                                <PrivateRoute allowedRoles={['patient']}>
-                                    <EmergencyContactEdit />
-                                </PrivateRoute>
-                            } />
+                                {/* Patient Routes */}
+                                <Route path="/patient/dashboard" element={
+                                    <PrivateRoute allowedRoles={['patient']}>
+                                        <PatientDashboard />
+                                    </PrivateRoute>
+                                } />
+                                <Route path="/patient/dashboard/edit-profile" element={
+                                    <PrivateRoute allowedRoles={['patient']}>
+                                        <PatientEditProfile />
+                                    </PrivateRoute>
+                                } />
+                                <Route path="/patient/dashboard/new-blood-report" element={
+                                    <PrivateRoute allowedRoles={['patient']}>
+                                        <NewBloodReport />
+                                    </PrivateRoute>
+                                } />
+                                <Route path="/patient/dashboard/edit-emergency-contact" element={
+                                    <PrivateRoute allowedRoles={['patient']}>
+                                        <EmergencyContactEdit />
+                                    </PrivateRoute>
+                                } />
 
-                            {/* Doctor Dashboard Flow */}
-                            <Route path="/doctor/dashboard" element={
-                                <PrivateRoute allowedRoles={['doctor']}>
-                                    <DoctorInformation />
-                                </PrivateRoute>
-                            } />
-                            <Route path="/doctor/dashboard/appointments" element={
-                                <PrivateRoute allowedRoles={['doctor']}>
-                                    <Appointment />
-                                </PrivateRoute>
-                            } />
-                            <Route path="/doctor/dashboard/patients" element={
-                                <PrivateRoute allowedRoles={['doctor']}>
-                                    <PatientList />
-                                </PrivateRoute>
-                            } />
-                            <Route path="/doctor/dashboard/patients/:id" element={
-                                <PrivateRoute allowedRoles={['doctor']}>
-                                    <PatientDetails />
-                                </PrivateRoute>
-                            } />
-                            <Route path="/doctor/dashboard/e-prescription" element={
-                                <PrivateRoute allowedRoles={['doctor']}>
-                                    <EPrescription />
-                                </PrivateRoute>
-                            } />
+                                {/* Doctor Dashboard Flow */}
+                                <Route path="/doctor/dashboard" element={
+                                    <PrivateRoute allowedRoles={['doctor']}>
+                                        <DoctorInformation />
+                                    </PrivateRoute>
+                                } />
+                                <Route path="/doctor/dashboard/appointments" element={
+                                    <PrivateRoute allowedRoles={['doctor']}>
+                                        <Appointment />
+                                    </PrivateRoute>
+                                } />
+                                <Route path="/doctor/dashboard/patients" element={
+                                    <PrivateRoute allowedRoles={['doctor']}>
+                                        <PatientList />
+                                    </PrivateRoute>
+                                } />
+                                <Route path="/doctor/dashboard/patients/:id" element={
+                                    <PrivateRoute allowedRoles={['doctor']}>
+                                        <PatientDetails />
+                                    </PrivateRoute>
+                                } />
+                                <Route path="/doctor/dashboard/e-prescription" element={
+                                    <PrivateRoute allowedRoles={['doctor']}>
+                                        <EPrescription />
+                                    </PrivateRoute>
+                                } />
 
-                            {/* Admin */}
-                            <Route path="/admin/dashboard" element={
-                                <PrivateRoute allowedRoles={['admin']}>
-                                    <AdminDashboard />
-                                </PrivateRoute>
-                            } />
+                                {/* Admin */}
+                                <Route path="/admin/dashboard" element={
+                                    <PrivateRoute allowedRoles={['admin']}>
+                                        <AdminDashboard />
+                                    </PrivateRoute>
+                                } />
 
-                            {/* Special */}
-                            <Route path="/doctor/pending" element={<PendingApproval />} />
-                            <Route path="/unauthorized" element={<Unauthorized />} />
+                                {/* Special */}
+                                <Route path="/doctor/pending" element={<PendingApproval />} />
+                                <Route path="/unauthorized" element={<Unauthorized />} />
 
-                            {/* Platform */}
-                            <Route path="/features" element={<FeaturesPage />} />
-                            <Route path="/doctors" element={<DoctorsPage />} />
+                                {/* Platform */}
+                                <Route path="/features" element={<FeaturesPage />} />
+                                <Route path="/doctors" element={<DoctorsPage />} />
 
                             {/* Doctor Booking */}
                             <Route path="/doctor-booking/doctors" element={<DoctorPage />} />
                             <Route path="/doctor-booking/doctor/:id/profile" element={<DoctorProfilePage />} />
                             <Route path="/doctor-booking/doctor/:id/sessions" element={<DoctorSessionsPage />} />
                             <Route path="/doctor-booking/book" element={<DoctorBookingPage />} />
-                            <Route path="/doctor-booking/payment" element={<PaymentPage />} />
                             <Route path="/doctor-booking/card-payment" element={<CardPaymentPage />} />
                             <Route path="/doctor-booking/payment-receipt" element={<PaymentReceiptPage />} />
 
-                            {/* Company */}
-                            <Route path="/about" element={<AboutPage />} />
-                            <Route path="/careers" element={<CareersPage />} />
-                            <Route path="/press" element={<PressPage />} />
-                            <Route path="/blog" element={<BlogPage />} />
-                            <Route path="/contact" element={<ContactPage />} />
+                                {/* Company */}
+                                <Route path="/about" element={<AboutPage />} />
+                                <Route path="/careers" element={<CareersPage />} />
+                                <Route path="/press" element={<PressPage />} />
+                                <Route path="/blog" element={<BlogPage />} />
+                                <Route path="/contact" element={<ContactPage />} />
 
-                            {/* Support */}
-                            <Route path="/help" element={<HelpCenterPage />} />
-                            <Route path="/faq" element={<FaqPage />} />
-                            <Route path="/privacy" element={<PrivacyPolicyPage />} />
-                            <Route path="/terms" element={<TermsPage />} />
-                            <Route path="/cookies" element={<CookiePolicyPage />} />
+                                {/* Support */}
+                                <Route path="/help" element={<HelpCenterPage />} />
+                                <Route path="/faq" element={<FaqPage />} />
+                                <Route path="/privacy" element={<PrivacyPolicyPage />} />
+                                <Route path="/terms" element={<TermsPage />} />
+                                <Route path="/cookies" element={<CookiePolicyPage />} />
 
-                            {/* Chatbot */}
-                            <Route path="/chatbot" element={<Chatbot />} />
-                        </Routes>
-                    </DoctorRegistrationProvider>
-                </PatientRegistrationProvider>
-            </AuthProvider>
+                                {/* Chatbot */}
+                                <Route path="/chatbot" element={<Chatbot />} />
+                            </Routes>
+                        </DoctorRegistrationProvider>
+                    </PatientRegistrationProvider>
+                </AuthProvider>
+            </GoogleOAuthProvider>
         </BrowserRouter>
     );
 }

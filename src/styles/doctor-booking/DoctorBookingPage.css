@@ -238,6 +238,7 @@ body {
 .two-col  { grid-template-columns: 1fr 1fr; }
 .one-col  { grid-template-columns: 1fr; }
 .half-col { grid-template-columns: 1fr 1fr; }
+.patient-email-row { grid-template-columns: minmax(160px, .8fr) minmax(260px, 1.2fr); }
 
 .field-group {
   display: flex;
@@ -255,6 +256,7 @@ body {
 
 /* ===== INPUTS ===== */
 input[type="text"],
+input[type="email"],
 input[type="tel"],
 input[type="date"],
 input[type="time"],
@@ -299,7 +301,8 @@ select:hover:not(:focus) {
     border-bottom: 1px solid #f1f5f9;
   }
   .form-row.two-col,
-  .two-col { grid-template-columns: 1fr; }
+  .two-col,
+  .patient-email-row { grid-template-columns: 1fr; }
   .half-col { grid-template-columns: 1fr; }
   .navbar { flex-wrap: wrap; gap: 12px; }
   .nav-menu { gap: 16px; flex-wrap: wrap; }

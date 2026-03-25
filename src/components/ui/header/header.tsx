@@ -1,18 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import '../../../styles/header.css';
 import logo from '../../../assets/logo.png';
 import { useAuth } from '../../../context/AuthContext';
+
+const API_BASE = 'http://localhost:5000';
 
 const Header: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const [profilePicUrl, setProfilePicUrl] = useState<string | null>(null);
+
+  // ── Load profile picture ──────────────────────────────────────────────────
+  // 1. Read from localStorage immediately (fast, no flicker)
+  // 2. Also fetch from the API once so it's always fresh after a login
+  useEffect(() => {
+    const cached = localStorage.getItem('profilePicture');
+    if (cached) setProfilePicUrl(cached);
+
+    if (isAuthenticated) {
+      const token = localStorage.getItem('token') || '';
+      fetch(`${API_BASE}/api/v1/profiles`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+        .then(r => r.json())
+        .then(data => {
+          if (data.success && data.data?.profilePicture) {
+            const url = `${API_BASE}/${data.data.profilePicture}`;
+            setProfilePicUrl(url);
+            localStorage.setItem('profilePicture', url);
+          }
+        })
+        .catch(() => { /* ignore silently */ });
+    } else {
+      // Logged out — clear cached picture
+      setProfilePicUrl(null);
+    }
+  }, [isAuthenticated]);
+
+  // ── Listen for picture changes from PatientEditProfile (same tab) ─────────
+  useEffect(() => {
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === 'profilePicture') {
+        setProfilePicUrl(e.newValue);
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
-    // Prevent body scroll when menu is open
     document.body.style.overflow = !isMobileMenuOpen ? 'hidden' : 'auto';
   };
 
@@ -21,15 +61,35 @@ const Header: React.FC = () => {
     document.body.style.overflow = 'auto';
   };
 
-  // Navigation links – adjust paths as needed (hash links for homepage sections)
   const navLinks: { label: string; path: string }[] = [];
 
-  // Check if a link is active (for highlighting)
   const isActive = (path: string) => {
     if (path === '/#home' && location.pathname === '/' && !location.hash) return true;
     if (location.hash === path.replace('/', '')) return true;
     return false;
   };
+
+  // ── Profile icon: real picture if available, generic icon otherwise ───────
+  const ProfileIcon = () =>
+    profilePicUrl ? (
+      <img
+        src={profilePicUrl}
+        alt="Profile"
+        style={{
+          width: 36,
+          height: 36,
+          borderRadius: '50%',
+          objectFit: 'cover',
+          border: '2px solid #4f86f7',
+          display: 'block',
+        }}
+        onError={() => setProfilePicUrl(null)}
+      />
+    ) : (
+      <div className="profile-icon-container">
+        <i className="fas fa-user-circle"></i>
+      </div>
+    );
 
   return (
     <header className="header">
@@ -59,16 +119,18 @@ const Header: React.FC = () => {
           <div className="nav-buttons">
             {isAuthenticated ? (
               <>
-                <button 
-                  onClick={() => { logout(); navigate('/'); }} 
+                <button
+                  onClick={() => {
+                    logout();
+                    localStorage.removeItem('profilePicture');
+                    navigate('/');
+                  }}
                   className="btn btn-logout"
                 >
                   Log Out
                 </button>
                 <Link to={`/${user?.role}/dashboard`} className="nav-profile-link" title="Profile">
-                   <div className="profile-icon-container">
-                      <i className="fas fa-user-circle"></i>
-                   </div>
+                  <ProfileIcon />
                 </Link>
               </>
             ) : (
@@ -103,11 +165,32 @@ const Header: React.FC = () => {
             {isAuthenticated ? (
               <>
                 <Link to={`/${user?.role}/dashboard`} className="nav-link profile-mobile-link" onClick={closeMobileMenu}>
-                  <i className="fas fa-user-circle"></i> Profile
+                  {profilePicUrl ? (
+                    <img
+                      src={profilePicUrl}
+                      alt="Profile"
+                      style={{
+                        width: 28,
+                        height: 28,
+                        borderRadius: '50%',
+                        objectFit: 'cover',
+                        verticalAlign: 'middle',
+                        marginRight: 6,
+                      }}
+                    />
+                  ) : (
+                    <i className="fas fa-user-circle"></i>
+                  )}
+                  {' '}Profile
                 </Link>
-                <button 
-                  className="btn btn-logout" 
-                  onClick={() => { logout(); closeMobileMenu(); navigate('/'); }}
+                <button
+                  className="btn btn-logout"
+                  onClick={() => {
+                    logout();
+                    localStorage.removeItem('profilePicture');
+                    closeMobileMenu();
+                    navigate('/');
+                  }}
                 >
                   Log Out
                 </button>

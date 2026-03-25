@@ -3,34 +3,76 @@ import { useNavigate } from 'react-router-dom';
 import PublicLayout from '../../../components/layout/PublicLayout/publiclayout';
 import '../../../styles/patient/NewBloodReport.css';
 
+const API_BASE = 'http://localhost:5000';
+
 const NewBloodReport: React.FC = () => {
     const navigate = useNavigate();
     const [form, setForm] = useState({
         bloodSugar: '',
         cholesterol: '',
         kidneyHealth: '',
-        thyroidDisorders: '',
+        thyroidDisorders: '',  // frontend uses plural; maps to backend 'thyroidDisorder'
     });
+    const [isSaving, setIsSaving] = useState(false);
+    const [error, setError] = useState('');
+
+    const getToken = () => localStorage.getItem('token') || '';
 
     useEffect(() => {
-        const stored = localStorage.getItem('patientBloodReport');
-        if (stored) {
+        const fetchRecord = async () => {
             try {
-                setForm(JSON.parse(stored));
+                const res = await fetch(`${API_BASE}/api/v1/health-records`, {
+                    headers: { Authorization: `Bearer ${getToken()}` }
+                });
+                const data = await res.json();
+                if (data.success && data.data) {
+                    const r = data.data;
+                    setForm({
+                        bloodSugar: r.bloodSugar || '',
+                        cholesterol: r.cholesterol || '',
+                        kidneyHealth: r.kidneyHealth || '',
+                        thyroidDisorders: r.thyroidDisorder || '',  // map from singular
+                    });
+                }
             } catch (e) {
-                console.error("Failed to parse patientBloodReport", e);
+                console.error('Failed to load health record', e);
             }
-        }
+        };
+        fetchRecord();
     }, []);
 
     const handleChange = (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm(prev => ({ ...prev, [field]: e.target.value }));
     };
 
-    const handleSave = () => {
-        // Save form to local storage
-        localStorage.setItem('patientBloodReport', JSON.stringify(form));
-        navigate('/patient/dashboard');
+    const handleSave = async () => {
+        setIsSaving(true);
+        setError('');
+        try {
+            const res = await fetch(`${API_BASE}/api/v1/health-records`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${getToken()}`
+                },
+                body: JSON.stringify({
+                    bloodSugar: form.bloodSugar,
+                    cholesterol: form.cholesterol,
+                    kidneyHealth: form.kidneyHealth,
+                    thyroidDisorder: form.thyroidDisorders,  // map to singular for backend
+                })
+            });
+            const data = await res.json();
+            if (data.success) {
+                navigate('/patient/dashboard');
+            } else {
+                setError(data.message || 'Failed to save health record.');
+            }
+        } catch (err) {
+            setError('Network error. Please check your connection.');
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     return (
@@ -40,6 +82,12 @@ const NewBloodReport: React.FC = () => {
                     <div className="nbr-container">
                         <h1 className="nbr-title">New Blood Report Detail</h1>
                         <p className="nbr-subtitle">Help to the Doctor to Identify Your Health Conditions.</p>
+
+                        {error && (
+                            <div style={{ color: '#dc2626', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '8px', padding: '10px 14px', marginBottom: '16px', fontSize: '14px' }}>
+                                {error}
+                            </div>
+                        )}
 
                         <div className="nbr-card">
                             {/* Blood Sugar Level */}
@@ -99,8 +147,8 @@ const NewBloodReport: React.FC = () => {
                             </div>
                         </div>
 
-                        <button className="nbr-save-btn" onClick={handleSave}>
-                            Save And Exit
+                        <button className="nbr-save-btn" onClick={handleSave} disabled={isSaving}>
+                            {isSaving ? 'Saving…' : 'Save And Exit'}
                         </button>
                     </div>
                 </main>

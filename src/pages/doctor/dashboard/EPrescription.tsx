@@ -13,6 +13,9 @@ const EPrescription: React.FC = () => {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [medications, setMedications] = useState([{ name: '', dosage: '', frequency: '', duration: '' }]);
   const [notes, setNotes] = useState('');
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleAddMedication = () => {
     setMedications([...medications, { name: '', dosage: '', frequency: '', duration: '' }]);
@@ -29,10 +32,62 @@ const EPrescription: React.FC = () => {
     setMedications(updatedMeds);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setImageFile(e.target.files[0]);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert('E-Prescription saved and sent to patient successfully!');
-    // Real implementation would save to DB here
+    if (!patientName || !age || !patientID) {
+      setErrorMessage('Please fill in required patient details.');
+      return;
+    }
+    
+    setIsSubmitting(true);
+    setErrorMessage('');
+    
+    try {
+      const formData = new FormData();
+      formData.append('patientId', patientID);
+      formData.append('patientName', patientName);
+      formData.append('patientAge', age);
+      formData.append('date', date);
+      formData.append('additionalFeedback', notes);
+      const formattedMedicines = medications.map(med => ({
+        drugName: med.name,
+        dosageMg: parseInt(med.dosage.replace(/\D/g, '')) || 0,
+        frequency: med.frequency,
+        duration: med.duration
+      }));
+
+      formData.append('medicines', JSON.stringify(formattedMedicines));
+      if (imageFile) {
+        formData.append('medicationPicture', imageFile);
+      }
+
+      const response = await fetch('http://localhost:5000/api/v1/prescriptions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: formData,
+      });
+
+      const result = await response.json();
+      
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Failed to successfully issue prescription.');
+      }
+      
+      alert('E-Prescription saved and sent to patient successfully!');
+      navigate('/doctor/dashboard');
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'An error occurred.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -49,6 +104,7 @@ const EPrescription: React.FC = () => {
           </header>
 
           <section className="prescription-form-container">
+            {errorMessage && <p style={{ color: '#dc2626', marginBottom: '16px' }}>{errorMessage}</p>}
             <form className="prescription-form" onSubmit={handleSubmit}>
 
               <div className="section-title">Patient Details</div>
@@ -166,9 +222,22 @@ const EPrescription: React.FC = () => {
                 />
               </div>
 
+              <div className="section-title">Medication Picture (Optional)</div>
+              <div className="form-group full-width">
+                <input
+                  type="file"
+                  accept="image/jpeg, image/png, image/jpg"
+                  onChange={handleImageChange}
+                  style={{ padding: '8px 0' }}
+                />
+                {imageFile && <p style={{ fontSize: '0.85rem', color: '#666' }}>Selected file: {imageFile.name}</p>}
+              </div>
+
               <div className="form-actions">
-                <button type="button" className="action-btn cancel" onClick={() => navigate('/doctor/dashboard')}>Cancel</button>
-                <button type="submit" className="action-btn submit">Generate Prescription</button>
+                <button type="button" className="action-btn cancel" onClick={() => navigate('/doctor/dashboard')} disabled={isSubmitting}>Cancel</button>
+                <button type="submit" className="action-btn submit" disabled={isSubmitting}>
+                  {isSubmitting ? 'Sending...' : 'Generate Prescription'}
+                </button>
               </div>
             </form>
           </section>
