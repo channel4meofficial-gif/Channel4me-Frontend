@@ -1,13 +1,33 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext";
 
 const DoctorSidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
 
   const isActive = (path: string) => {
     return location.pathname === path;
   };
+
+  // Extract initials dynamically
+  const getInitials = (name: string) => {
+    if (!name) return "DR";
+    const cleanName = name.replace(/^Dr\.\s*|^Dr\s*/i, "").trim();
+    if (!cleanName) return "DR";
+    const words = cleanName.split(/\s+/);
+    if (words.length >= 2) {
+      return (words[0][0] + words[1][0]).toUpperCase();
+    }
+    return cleanName[0].toUpperCase();
+  };
+
+  const doctorName = user?.name || "Doctor";
+  const doctorInitials = getInitials(doctorName);
+  
+  // Use specialty if available in user object, otherwise fallback
+  const doctorSpecialty = (user as any)?.specialization || "Neurologist";
 
   return (
     <aside className="sidebar">
@@ -32,7 +52,6 @@ const DoctorSidebar: React.FC = () => {
         }}
       >
         <span className="nav-icon">📅</span> Appointments
-        <span className="nav-badge">5</span>
       </a>
       <a
         className={`nav-item ${isActive("/doctor/dashboard/patients") || location.pathname.startsWith("/doctor/dashboard/patients/") ? "active" : ""
@@ -59,10 +78,10 @@ const DoctorSidebar: React.FC = () => {
 
       <div className="sidebar-bottom">
         <div className="doctor-card">
-          <div className="doctor-avatar">EW</div>
+          <div className="doctor-avatar">{doctorInitials}</div>
           <div className="doctor-info">
-            <div className="name">Dr. Emma Wilson</div>
-            <div className="role">Neurologist</div>
+            <div className="name">{doctorName.startsWith("Dr.") ? doctorName : `Dr. ${doctorName}`}</div>
+            <div className="role">{doctorSpecialty}</div>
           </div>
         </div>
       </div>

@@ -5,40 +5,6 @@ import '../../../styles/patient/PatientProfile.css';
 
 const DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a0aec0'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
 
-const DEFAULT_PROFILE_DATA = {
-    firstName: 'Nimal',
-    lastName: 'Perera',
-    age: '45',
-    location: 'Colombo, Sri Lanka',
-    guardianFirstName: 'Kumari',
-    guardianLastName: 'Perera',
-    contactNumber1: '0778518614',
-    contactNumber2: '0742107576',
-};
-
-const DEFAULT_BLOOD_REPORT = {
-    bloodSugar: '85mg/dL',
-    cholesterol: '200 mg/dL',
-    kidneyHealth: '200 mg/dL',
-    thyroidDisorders: '4.0 mIU/L',
-};
-
-const DEFAULT_UPCOMING_APPOINTMENTS = [
-    { id: '1', time: '5.00 pm', location: 'Roseth Hospital', doctor: 'Dr Sudarshan' },
-];
-
-const DEFAULT_DOCTOR_FEEDBACK = [
-    {
-        id: '1',
-        text: "I've reviewed your case and prescribed the needed medicine. Please follow the instructions in the app. Your consultation is complete, and your medication has been updated. Follow the steps shown in the app.",
-    },
-];
-
-const DEFAULT_RECENT_CONSULTATIONS = [
-    { id: '1', date: 'March 15, 2026', doctor: 'Dr. Sudarshan', rating: 0, comment: '' },
-    { id: '2', date: 'March 10, 2026', doctor: 'Dr. Perera', rating: 4, comment: 'Great service' },
-];
-
 function EditIcon() {
     return (
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -80,49 +46,65 @@ function StarIcon({ filled, onClick }: { filled: boolean; onClick?: () => void }
 
 const PatientDashboard: React.FC = () => {
     const navigate = useNavigate();
-    const [profileData, setProfileData] = useState(DEFAULT_PROFILE_DATA);
+    const [profileData, setProfileData] = useState<any>({});
     const [profileImage, setProfileImage] = useState(DEFAULT_AVATAR);
-    const [bloodReport, setBloodReport] = useState<{ [key: string]: string }>(DEFAULT_BLOOD_REPORT);
-    const [upcomingAppointments, setUpcomingAppointments] = useState(DEFAULT_UPCOMING_APPOINTMENTS);
-    const [doctorFeedback, setDoctorFeedback] = useState(DEFAULT_DOCTOR_FEEDBACK);
-    const [recentConsultations, setRecentConsultations] = useState(DEFAULT_RECENT_CONSULTATIONS);
+    const [bloodReport, setBloodReport] = useState<{ [key: string]: string } | null>(null);
+    const [upcomingAppointments, setUpcomingAppointments] = useState<any[]>([]);
+    const [doctorFeedback, setDoctorFeedback] = useState<any[]>([]);
+    const [recentConsultations, setRecentConsultations] = useState<any[]>([]);
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
-    const [selectedAppt, setSelectedAppt] = useState<typeof DEFAULT_RECENT_CONSULTATIONS[0] | null>(null);
+    const [selectedAppt, setSelectedAppt] = useState<any | null>(null);
     const [tempRating, setTempRating] = useState(0);
     const [tempComment, setTempComment] = useState('');
 
+    const API_BASE = 'http://localhost:5000';
+    const getToken = () => localStorage.getItem('token') || '';
+
     useEffect(() => {
-        const storedProfileData = localStorage.getItem('patientProfileData');
-        if (storedProfileData) {
+        const fetchDashboardData = async () => {
             try {
-                setProfileData(JSON.parse(storedProfileData));
-            } catch (e) {
-                console.error("Failed to parse patientProfileData", e);
-            }
-        }
+                // Fetch profile
+                const profileRes = await fetch(`${API_BASE}/api/v1/profiles`, {
+                    headers: { Authorization: `Bearer ${getToken()}` }
+                });
+                const profileJson = await profileRes.json();
+                if (profileJson.success && profileJson.data) {
+                    setProfileData(profileJson.data);
+                    if (profileJson.data.profilePicture) {
+                        setProfileImage(`${API_BASE}/${profileJson.data.profilePicture}`);
+                    }
+                }
 
-        const storedImage = localStorage.getItem('patientProfileImage');
-        if (storedImage) {
-            setProfileImage(storedImage);
-        }
+                // Fetch health records
+                const healthRes = await fetch(`${API_BASE}/api/v1/health-records`, {
+                    headers: { Authorization: `Bearer ${getToken()}` }
+                });
+                const healthJson = await healthRes.json();
+                if (healthJson.success && healthJson.data) {
+                    setBloodReport({
+                        bloodSugar: healthJson.data.bloodSugar,
+                        cholesterol: healthJson.data.cholesterol,
+                        kidneyHealth: healthJson.data.kidneyHealth,
+                        thyroidDisorders: healthJson.data.thyroidDisorder,
+                    });
+                }
 
-        const storedBloodReport = localStorage.getItem('patientBloodReport');
-        if (storedBloodReport) {
-            try {
-                setBloodReport(JSON.parse(storedBloodReport));
-            } catch (e) {
-                console.error("Failed to parse patientBloodReport", e);
+                // Fetch upcoming appointments from API
+                const apptRes = await fetch(`${API_BASE}/api/v1/bookings/my-upcoming`, {
+                    headers: { Authorization: `Bearer ${getToken()}` }
+                });
+                const apptJson = await apptRes.json();
+                if (apptJson.success && Array.isArray(apptJson.data)) {
+                    setUpcomingAppointments(apptJson.data);
+                } else {
+                    setUpcomingAppointments([]);
+                }
+            } catch (err) {
+                console.error("Failed to fetch dashboard data", err);
             }
-        }
+        };
 
-        const storedAppointments = localStorage.getItem('patientUpcomingAppointments');
-        if (storedAppointments) {
-            try {
-                setUpcomingAppointments(JSON.parse(storedAppointments));
-            } catch (e) {
-                console.error("Failed to parse patientUpcomingAppointments", e);
-            }
-        }
+        fetchDashboardData();
 
         const storedFeedback = localStorage.getItem('patientDoctorFeedback');
         if (storedFeedback) {
@@ -143,7 +125,7 @@ const PatientDashboard: React.FC = () => {
         }
     }, []);
 
-    const handleOpenReview = (appt: typeof DEFAULT_RECENT_CONSULTATIONS[0]) => {
+    const handleOpenReview = (appt: any) => {
         setSelectedAppt(appt);
         setTempRating(appt.rating || 0);
         setTempComment(appt.comment || '');
@@ -179,7 +161,7 @@ const PatientDashboard: React.FC = () => {
                                     <div className="pps-profile-img-wrap">
                                         <img src={profileImage} alt="Profile" className="pps-profile-img" />
                                     </div>
-                                    <h2 className="pps-profile-name">{`${firstName} ${lastName}`}</h2>
+                                    <h2 className="pps-profile-name">{firstName || lastName ? `${firstName || ''} ${lastName || ''}`.trim() : 'Complete your profile'}</h2>
                                     <p className="pps-profile-age">Age {age || '-'}</p>
                                     {location && <p className="pps-profile-location"><PinIcon /> {location}</p>}
                                     <button className="pps-btn-edit" onClick={() => navigate('/patient/dashboard/edit-profile')}>
@@ -200,7 +182,7 @@ const PatientDashboard: React.FC = () => {
                                     </div>
                                     <ul className="pps-list">
                                         <li className="pps-list-item">
-                                            <span className="label">Guardian Name</span> <span>: {`${guardianFirstName} ${guardianLastName}`.trim()}</span>
+                                            <span className="label">Guardian Name</span> <span>: {guardianFirstName || guardianLastName ? `${guardianFirstName || ''} ${guardianLastName || ''}`.trim() : '-'}</span>
                                         </li>
                                         <li className="pps-list-item">
                                             <span className="label">Contact Number1</span> <span>: {contactNumber1 || '-'}</span>
@@ -221,13 +203,29 @@ const PatientDashboard: React.FC = () => {
                                     <ul className="pps-list">
                                         {upcomingAppointments.length === 0 ? (
                                             <li className="pps-list-item" style={{ color: '#888' }}>
+                                                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#93c5fd', display: 'inline-block', marginRight: '8px' }}></span>
                                                 No upcoming appointments.
                                             </li>
                                         ) : (
                                             upcomingAppointments.map(apt => (
-                                                <li key={apt.id} className="pps-list-item">
-                                                    <span className="label">{apt.time} at {apt.location}</span>
-                                                    <span>: {apt.doctor}</span>
+                                                <li key={apt.id} className="pps-list-item" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '4px', padding: '10px 0', borderBottom: '1px solid #f1f5f9' }}>
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                                                        <span style={{ fontWeight: 600, color: '#1e40af' }}>{apt.doctor}</span>
+                                                        <span style={{
+                                                            fontSize: '11px',
+                                                            padding: '2px 8px',
+                                                            borderRadius: '12px',
+                                                            background: (apt.paymentStatus === 'paid' || apt.paymentStatus === 'completed') ? '#dcfce7' : '#fef9c3',
+                                                            color: (apt.paymentStatus === 'paid' || apt.paymentStatus === 'completed') ? '#166534' : '#713f12',
+                                                            fontWeight: 500,
+                                                        }}>{apt.paymentStatus === 'paid' || apt.paymentStatus === 'completed' ? 'Confirmed' : 'Pending Payment'}</span>
+                                                    </div>
+                                                    <div style={{ fontSize: '13px', color: '#64748b' }}>
+                                                        📅 {apt.date} &nbsp;⏰ {apt.time}
+                                                    </div>
+                                                    <div style={{ fontSize: '13px', color: '#64748b' }}>
+                                                        🏥 {apt.location}
+                                                    </div>
                                                 </li>
                                             ))
                                         )}

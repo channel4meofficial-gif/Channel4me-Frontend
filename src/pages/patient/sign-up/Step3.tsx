@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import PublicLayout from '../../../components/layout/PublicLayout/publiclayout';
-import { usePatientRegistration } from '../../../context/patientRegistrationContext';
+
 import { useAuth } from '../../../context/AuthContext';
 import { User } from '../../../types/auth';
 import '../../../styles/register/RegistrationType.css';
@@ -10,43 +10,37 @@ import StepIndicator from '../../../components/ui/common/StepIndicator';
 
 const PatientStep3: React.FC = () => {
     const navigate = useNavigate();
-    const { data } = usePatientRegistration();
+    const location = useLocation();
     const { login, isAuthenticated } = useAuth();
     const [memberId, setMemberId] = useState('');
     const [createdDate, setCreatedDate] = useState('');
+
+    // Read data passed from Step2 after successful signup
+    const { token, email, fullName } = (location.state as { token?: string; email?: string; fullName?: string }) || {};
 
     useEffect(() => {
         setMemberId('CH4M-' + Math.floor(1000 + Math.random() * 9000));
         const now = new Date();
         setCreatedDate(now.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }));
-        
-        // Auto-login on mount for Patient Step 3 if not already authenticated
-        if (!isAuthenticated) {
-            const mockUser: User = {
-                id: 'PAT-' + Math.random().toString(36).substr(2, 9),
-                name: data.personal?.fullName || 'Patient User',
-                email: data.personal?.email || '',
+
+        // Log in the user with the real token received from the signup API
+        if (!isAuthenticated && token) {
+            const user: User = {
+                id: '',
+                name: fullName || 'Patient User',
+                email: email || '',
                 role: 'patient',
-                age: data.personal?.dob?.year ? (new Date().getFullYear() - parseInt(data.personal.dob.year)) : 25,
-                location: 'Colombo, Sri Lanka',
-                guardianName: data.health?.emergencyName || 'Emergency Contact Person',
-                contactNumber: data.health?.emergencyPhone || data.personal?.mobile || '0771234567',
-                memberId: 'CH4M-' + Math.floor(1000 + Math.random() * 9000), // temp fallback
+                age: 0,
+                location: '',
+                guardianName: '',
+                contactNumber: '',
+                memberId: '',
                 createdDate: now.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
-                appointments: [
-                    {
-                        id: 'new-apt-1',
-                        doctorName: 'Dr. Kamal',
-                        specialization: 'General Physician',
-                        date: '2026-04-05',
-                        time: '11:00 AM',
-                        status: 'upcoming'
-                    }
-                ]
+                appointments: [],
             };
-            login(mockUser, 'mock-jwt-token-patient');
+            login(user, token);
         }
-    }, [data.personal, login, isAuthenticated]);
+    }, [token, email, fullName, login, isAuthenticated]);
 
     const handleGoToDashboard = () => {
         console.log('Navigating to dashboard, authenticated:', isAuthenticated);
@@ -110,11 +104,11 @@ const PatientStep3: React.FC = () => {
                                 </div>
                                 <div className="info-item" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
                                     <span className="info-label" style={{ color: '#64748b', fontWeight: '500' }}>Patient Name:</span>
-                                    <span className="info-value" style={{ color: '#1e293b', fontWeight: '600' }}>{data.personal?.fullName || 'Loading...'}</span>
+                                    <span className="info-value" style={{ color: '#1e293b', fontWeight: '600' }}>{fullName || 'Loading...'}</span>
                                 </div>
                                 <div className="info-item" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
                                     <span className="info-label" style={{ color: '#64748b', fontWeight: '500' }}>Email:</span>
-                                    <span className="info-value" style={{ color: '#1e293b', fontWeight: '600' }}>{data.personal?.email || 'Loading...'}</span>
+                                    <span className="info-value" style={{ color: '#1e293b', fontWeight: '600' }}>{email || 'Loading...'}</span>
                                 </div>
                                 <div className="info-item" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
                                     <span className="info-label" style={{ color: '#64748b', fontWeight: '500' }}>Account Created:</span>

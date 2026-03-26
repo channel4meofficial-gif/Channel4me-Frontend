@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PublicLayout from '../../../components/layout/PublicLayout/publiclayout';
 import '../../../styles/patient/EmergencyContactEdit.css';
+
+const API_BASE = 'http://localhost:5000';
 
 function UserIcon() {
     return (
@@ -23,18 +25,81 @@ function PhoneIcon() {
 const EmergencyContactEdit: React.FC = () => {
     const navigate = useNavigate();
     const [form, setForm] = useState({
-        guardianFirstName: 'Dolores',
-        guardianLastName: 'Aveiro',
-        contactNumber1: '0778518614',
-        contactNumber2: '0742107576',
+        guardianFirstName: '',
+        guardianLastName: '',
+        contactNumber1: '',
+        contactNumber2: '',
     });
+    // We also need to preserve other profile fields during save
+    const [fullProfile, setFullProfile] = useState<Record<string, any>>({});
+    const [isSaving, setIsSaving] = useState(false);
+    const [error, setError] = useState('');
+
+    const getToken = () => localStorage.getItem('token') || '';
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const res = await fetch(`${API_BASE}/api/v1/profiles`, {
+                    headers: { Authorization: `Bearer ${getToken()}` }
+                });
+                const data = await res.json();
+                if (data.success && data.data) {
+                    const p = data.data;
+                    setFullProfile(p);
+                    setForm({
+                        guardianFirstName: p.guardianFirstName || '',
+                        guardianLastName: p.guardianLastName || '',
+                        contactNumber1: p.contactNumber1 || '',
+                        contactNumber2: p.contactNumber2 || '',
+                    });
+                }
+            } catch (e) {
+                console.error('Failed to load profile', e);
+            }
+        };
+        fetchProfile();
+    }, []);
 
     const handleChange = (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm(prev => ({ ...prev, [field]: e.target.value }));
     };
 
-    const handleSave = () => {
-        navigate('/patient/dashboard');
+    const handleSave = async () => {
+        setIsSaving(true);
+        setError('');
+        try {
+            const res = await fetch(`${API_BASE}/api/v1/profiles`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${getToken()}`
+                },
+                body: JSON.stringify({
+                    role: 'patient',
+                    // Preserve existing profile fields
+                    firstName: fullProfile.firstName || '',
+                    lastName: fullProfile.lastName || '',
+                    age: fullProfile.age,
+                    location: fullProfile.location || '',
+                    // Update emergency contact fields
+                    guardianFirstName: form.guardianFirstName,
+                    guardianLastName: form.guardianLastName,
+                    contactNumber1: form.contactNumber1,
+                    contactNumber2: form.contactNumber2,
+                })
+            });
+            const data = await res.json();
+            if (data.success) {
+                navigate('/patient/dashboard');
+            } else {
+                setError(data.message || 'Failed to save emergency contact.');
+            }
+        } catch (err) {
+            setError('Network error. Please check your connection.');
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     return (
@@ -44,6 +109,12 @@ const EmergencyContactEdit: React.FC = () => {
                     <div className="ece-container">
                         <h1 className="ece-title">Emergency Contact Settings</h1>
                         <p className="ece-subtitle">Update your emergency contact information.</p>
+
+                        {error && (
+                            <div style={{ color: '#dc2626', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '8px', padding: '10px 14px', marginBottom: '16px', fontSize: '14px' }}>
+                                {error}
+                            </div>
+                        )}
 
                         <div className="ece-section">
                             <span className="ece-section-label">Emergency Detail</span>
@@ -95,8 +166,8 @@ const EmergencyContactEdit: React.FC = () => {
                             </div>
                         </div>
 
-                        <button className="ece-save-btn" onClick={handleSave}>
-                            Save And Exit
+                        <button className="ece-save-btn" onClick={handleSave} disabled={isSaving}>
+                            {isSaving ? 'Saving…' : 'Save And Exit'}
                         </button>
                     </div>
                 </main>

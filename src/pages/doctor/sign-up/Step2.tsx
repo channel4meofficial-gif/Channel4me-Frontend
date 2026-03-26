@@ -26,8 +26,9 @@ interface FormData {
 
 const DoctorRegisterStep2: React.FC = () => {
     const navigate = useNavigate();
-    const { updateProfessionalData } = useDoctorRegistration();
+    const { registrationData, updateProfessionalData } = useDoctorRegistration();
     const [isLoading, setIsLoading] = useState(false);
+    const [submitError, setSubmitError] = useState('');
     
     const [formData, setFormData] = useState<FormData>({
         license: '',
@@ -186,14 +187,13 @@ const DoctorRegisterStep2: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         
-        if (!validateForm()) {
-            return;
-        }
+        if (!validateForm()) return;
 
         setIsLoading(true);
+        setSubmitError('');
 
         try {
-            // Prepare professional data
+            // ── Prepare professional data for context ─────────────────────────
             const professionalData = {
                 license: formData.license,
                 specialization: formData.specialization,
@@ -205,31 +205,69 @@ const DoctorRegisterStep2: React.FC = () => {
                 documents: uploadedFiles.map(f => f.file),
                 documentsCount: uploadedFiles.length
             };
-
-            // Save to localStorage (metadata only)
-            const storageData = {
-                ...professionalData,
-                documents: uploadedFiles.map(f => ({
-                    name: f.name,
-                    size: f.size,
-                    type: f.type
-                }))
-            };
-            
-            localStorage.setItem('doctorProfessionalData', JSON.stringify(storageData));
-            
-            // Update context
             updateProfessionalData(professionalData);
 
-            // Simulate API call delay
-            await new Promise(resolve => setTimeout(resolve, 800));
+            // ── Convert experience range string to first integer ───────────────
+            // e.g. '4-7' → 4,  '20+' → 20
+            const expStr = formData.experience.replace('+', '').split('-')[0];
+            const yearsOfExperience = parseInt(expStr, 10) || 0;
 
-            // Navigate to step 3
+            // ── Build multipart/form-data payload ─────────────────────────────
+            const fd = new FormData();
+            // Personal fields from context
+            fd.append('fullName',        registrationData?.personal?.fullName        || '');
+            fd.append('email',           registrationData?.personal?.email           || '');
+            fd.append('mobile',          registrationData?.personal?.mobile          || '');
+            fd.append('dateOfBirth',     registrationData?.personal?.dob             || '');
+            fd.append('gender',          registrationData?.personal?.gender          || '');
+            fd.append('password',        registrationData?.personal?.password        || '');
+            fd.append('confirmPassword', registrationData?.personal?.confirmPassword || '');
+            // Professional fields
+            fd.append('licenseNumber',    formData.license);
+            fd.append('specialization',   formData.specialization);
+            fd.append('yearsOfExperience', String(yearsOfExperience));
+            // Qualifications: send as comma-separated string (backend accepts string or array)
+            fd.append('qualifications',  formData.qualifications);
+            fd.append('hospital',        formData.hospital);
+            // consultationFee must be digits-only string
+            fd.append('consultationFee', formData.fee.replace(/[^0-9]/g, ''));
+            if (formData.bio) fd.append('biography', formData.bio);
+            // Uploaded files
+            uploadedFiles.forEach(f => fd.append('documents', f.file));
+
+            // ── POST to backend ───────────────────────────────────────────────
+            const res = await fetch('http://localhost:5000/api/doctor/register', {
+                method: 'POST',
+                body: fd,
+                // No Content-Type header — browser sets it with boundary for multipart
+            });
+            const result = await res.json();
+
+            if (!res.ok || !result.success) {
+                const errMsg = result.errors
+                    ? result.errors.join(' • ')
+                    : (result.message || 'Registration failed. Please try again.');
+                setSubmitError(errMsg);
+                return;
+            }
+
+            // Success — clear form and localStorage, navigate to Step 3
+            setFormData({
+                license: '',
+                specialization: '',
+                experience: '',
+                qualifications: '',
+                hospital: '',
+                fee: '',
+                bio: ''
+            });
+            setUploadedFiles([]);
+            localStorage.removeItem('doctorProfessionalData');
             navigate('/doctor/register/step3');
 
         } catch (error) {
-            console.error('Error saving professional data:', error);
-            alert('An error occurred while saving your information. Please try again.');
+            console.error('Doctor registration error:', error);
+            setSubmitError('Cannot connect to the server. Please check your connection and try again.');
         } finally {
             setIsLoading(false);
         }
@@ -281,6 +319,20 @@ const DoctorRegisterStep2: React.FC = () => {
                             </div>
                             
                             <form id="professionalForm" onSubmit={handleSubmit}>
+                                {/* API Error Banner */}
+                                {submitError && (
+                                    <div style={{
+                                        background: '#fef2f2',
+                                        border: '1px solid #fecaca',
+                                        color: '#dc2626',
+                                        padding: '12px 16px',
+                                        borderRadius: '8px',
+                                        marginBottom: '20px',
+                                        fontSize: '14px'
+                                    }}>
+                                        ⚠️ {submitError}
+                                    </div>
+                                )}
                                 {/* Medical License Number */}
                                 <div className="form-group">
                                     <label htmlFor="license" className="form-label">Medical License Number</label>
