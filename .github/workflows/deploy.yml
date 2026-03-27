@@ -3,15 +3,14 @@ name: Deploy to Cloudflare Pages
 on:
   push:
     branches: ["main"]
-  workflow_dispatch: # Allows manual trigger from GitHub UI
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      deployments: write # Required for GitHub deployments API
-    
+      deployments: write 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -23,7 +22,6 @@ jobs:
           cache: 'npm'
 
       - name: Install Dependencies
-        # Using npm ci for clean, deterministic installations in CI environments
         run: npm ci
 
       - name: Build Application
@@ -32,8 +30,8 @@ jobs:
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: channel4me # Replace if your Cloudflare project has a different name
-          directory: build # Default build output folder for Create React App
+          apiToken: ${{ secrets.cfat_9hNiKVFfEWUCpvVyl1WTK5fhDiW6F2xmLWxLlImlfd5058fd  }}
+          accountId: ${{ secrets.c7488f7bedaeea6c36693a940e5a1431 }}
+          projectName: channel4me-frontend
+          directory: dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
