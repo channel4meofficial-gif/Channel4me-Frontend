@@ -95,3 +95,23 @@ img {
     padding: 0 15px;
   }
 }
+
+/* Global Login Page Inputs */
+.registration-form-container input:not([type="checkbox"]) {
+  width: 100% !important;
+  display: block;
+  box-sizing: border-box;
+  padding: 12px 48px 12px 48px; /* 48px padding on both sides for icons */
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.2s;
+  background: white;
+  outline: none;
+  font-family: inherit;
+}
+
+.registration-form-container input:not([type="checkbox"]):focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
