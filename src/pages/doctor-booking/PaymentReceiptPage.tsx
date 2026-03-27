@@ -20,15 +20,35 @@ interface LocationState {
   booking?: {
     _id: string;
     ref_number: string;
+    reference_no?: string;
+    appointment_number?: string;
+    appointment_no?: string;
     hospital: string;
+    hospital_name?: string;
     date_and_time: string;
+    appointment_date?: string;
     contact_number: string;
+    phone_no?: string;
+    email?: string;
+    payment_date_time?: string;
+    paid_at?: string;
+    updated_at?: string;
     payment_status: 'completed' | 'pending' | 'failed';
   };
   form?: {
     appointmentNo?: string;
   };
 }
+
+const resolveAppointmentDate = (booking: NonNullable<LocationState['booking']>): string => {
+  const value = booking.appointment_date || booking.date_and_time || '';
+  return value ? new Date(value).toLocaleString() : '';
+};
+
+const resolvePaymentDateTime = (booking: NonNullable<LocationState['booking']>): string => {
+  const value = booking.payment_date_time || booking.paid_at || booking.updated_at || '';
+  return value ? new Date(value).toLocaleString() : '';
+};
 
 export default function PaymentReceiptPage(): React.ReactElement {
   const { state } = useLocation() as { state: LocationState | null };
@@ -55,13 +75,13 @@ export default function PaymentReceiptPage(): React.ReactElement {
   }
 
   const receipt: ReceiptData = {
-    referenceNo: state?.receipt?.referenceNo ?? booking?.ref_number ?? '',
-    appointmentDate: state?.receipt?.appointmentDate ?? (booking?.date_and_time ? new Date(booking.date_and_time).toLocaleString() : ''),
-    appointmentNo: state?.receipt?.appointmentNo ?? form?.appointmentNo ?? '',
-    hospital: state?.receipt?.hospital ?? booking?.hospital ?? '',
-    phoneNo: state?.receipt?.phoneNo ?? booking?.contact_number ?? '',
-    email: state?.receipt?.email ?? '',
-    paymentDateTime: state?.receipt?.paymentDateTime ?? '',
+    referenceNo: state?.receipt?.referenceNo ?? booking?.ref_number ?? booking?.reference_no ?? '',
+    appointmentDate: state?.receipt?.appointmentDate ?? resolveAppointmentDate(booking),
+    appointmentNo: state?.receipt?.appointmentNo ?? booking?.appointment_number ?? booking?.appointment_no ?? form?.appointmentNo ?? '',
+    hospital: state?.receipt?.hospital ?? booking?.hospital_name ?? booking?.hospital ?? '',
+    phoneNo: state?.receipt?.phoneNo ?? booking?.phone_no ?? booking?.contact_number ?? '',
+    email: state?.receipt?.email ?? booking?.email ?? '',
+    paymentDateTime: state?.receipt?.paymentDateTime ?? resolvePaymentDateTime(booking),
     paymentStatus:
       state?.receipt?.paymentStatus ??
       (booking?.payment_status ? (booking.payment_status.charAt(0).toUpperCase() + booking.payment_status.slice(1)) as ReceiptData['paymentStatus'] : 'Completed'),

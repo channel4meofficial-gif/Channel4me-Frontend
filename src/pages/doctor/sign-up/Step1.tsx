@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DoctorPersonalData, Gender } from '../../../types/doctor';
 import { useDoctorRegistration } from '../../../context/doctorRegistrationContext';
@@ -9,7 +9,14 @@ import StepIndicator from '../../../components/ui/common/StepIndicator';
 
 const DoctorStep1: React.FC = () => {
   const navigate = useNavigate();
-  const { registrationData, updatePersonalData } = useDoctorRegistration();
+  const { registrationData, updatePersonalData, resetRegistration } = useDoctorRegistration();
+
+  // Clear stale registration data when user arrives at Step 1
+  useEffect(() => {
+    resetRegistration();
+    localStorage.removeItem('doctorProfessionalData');
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [formData, setFormData] = useState({
     fullName: registrationData?.personal?.fullName || '',

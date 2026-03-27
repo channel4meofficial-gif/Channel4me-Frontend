@@ -81,7 +81,7 @@ const doctorsData: DoctorsDataMap = {
     education: 'MBBS – University of Delhi',
     experience: '6 Years of experience in child healthcare and development.',
     image: require('../../assets/doctor-booking images/Doctorimage3.jpeg'),
-    hospitals: ['Nawaloka Hospital, Colombo', 'Durdans Hospital, Colombo'],
+    hospitals: ['Nawaloka Hospital, Colombo', 'Ruhuna Hospital, Galle'],
     reviews: [
       { stars: 5,   text: 'Dr. Isuri is wonderful with children. My son loves visiting her!' },
       { stars: 5,   text: 'Very gentle and caring pediatrician. Made my daughter feel at ease.' },
@@ -100,7 +100,7 @@ const doctorsData: DoctorsDataMap = {
     education: 'MBBS – University of Oxford',
     experience: '12 Years of experience in general medicine and patient care.',
     image: require('../../assets/doctor-booking images/Doctorimage4.jpeg'),
-    hospitals: ['Asiri Hospital, Colombo', 'Durdans Hospital, Colombo'],
+    hospitals: ['Asiri Hospital, Colombo', 'Ruhuna Hospital, Galle'],
     reviews: [
       { stars: 5,   text: 'Dr. Kasun is an exceptional physician. Very thorough in his examination.' },
       { stars: 4.5, text: 'Great doctor with a calm approach. Highly recommend for general care.' },
@@ -157,7 +157,7 @@ const doctorsData: DoctorsDataMap = {
     education: 'MBBS – University of Melbourne',
     experience: '9 Years of experience in neurology and brain disorders.',
     image: require('../../assets/doctor-booking images/Doctorimage7.jpeg'),
-    hospitals: ['Nawaloka Hospital, Colombo', 'Durdans Hospital, Colombo'],
+    hospitals: ['Nawaloka Hospital, Colombo', 'Ruhuna Hospital, Galle'],
     reviews: [
       { stars: 4.5, text: 'Dr. Chinthaka is very knowledgeable and precise in his diagnosis.' },
       { stars: 5,   text: 'Excellent neurologist. He helped me manage my condition very well.' },
@@ -195,7 +195,7 @@ const doctorsData: DoctorsDataMap = {
     education: 'MBBS – University of Mumbai',
     experience: '6 Years of experience in mental health and psychiatric care.',
     image: require('../../assets/doctor-booking images/Doctorimage9.jpeg'),
-    hospitals: ['Durdans Hospital, Colombo', 'Nawaloka Hospital, Colombo'],
+    hospitals: ['Ruhuna Hospital, Galle', 'Nawaloka Hospital, Colombo'],
     reviews: [
       { stars: 5,   text: 'Dr. Monali is incredibly empathetic and supportive. Life changing!' },
       { stars: 5,   text: 'She creates a safe environment to talk. Highly recommend her care.' },
@@ -214,7 +214,7 @@ const doctorsData: DoctorsDataMap = {
     education: 'MBBS – University of Madrid',
     experience: '3 Years of experience in skin care and dermatology.',
     image: require('../../assets/doctor-booking images/Doctorimage10.jpeg'),
-    hospitals: ['Asiri Hospital, Colombo', 'Durdans Hospital, Colombo'],
+    hospitals: ['Asiri Hospital, Colombo', 'Ruhuna Hospital, Galle'],
     reviews: [
       { stars: 4.5, text: 'Dr. Sehansa treated my skin condition very effectively. Great results!' },
       { stars: 5,   text: 'Very thorough and knowledgeable about skin issues. Highly recommend.' },
@@ -252,7 +252,7 @@ const doctorsData: DoctorsDataMap = {
     education: 'MBBS – University of Toronto',
     experience: '15 Years of experience in dental care and oral health.',
     image: require('../../assets/doctor-booking images/Doctorimage12.jpeg'),
-    hospitals: ['Asiri Hospital, Colombo', 'Durdans Hospital, Colombo'],
+    hospitals: ['Asiri Hospital, Colombo', 'Ruhuna Hospital, Galle'],
     reviews: [
       { stars: 5,   text: 'Dr. Vinu is the best dentist I have visited. Pain-free experience!' },
       { stars: 5,   text: 'Very gentle and professional. My teeth have never felt so clean.' },
@@ -280,154 +280,168 @@ const DoctorProfilePage: React.FC = () => {
 
   const total: number = doctor.charges.booking + doctor.charges.doctor + doctor.charges.hospital;
 
+  const handleBack = (): void => {
+    if (window.history.length > 1) {
+      navigate(-1);
+      return;
+    }
+
+    navigate('/doctor-booking/doctors');
+  };
+
   return (
-    <PublicLayout>
-      <main className="profile-wrapper">
-        <div className="container">
-          <div className="profile-grid">
+      <PublicLayout>
+        <main className="profile-wrapper">
+          <div className="container">
+            <button type="button" className="page-back-button" onClick={handleBack} aria-label="Go back">
+              <i className="fas fa-arrow-left"></i>
+              <span>Back</span>
+            </button>
 
-            <div className="left-col">
-              <div className="photo-card">
-                <img src={doctor.image} alt={doctor.name} className="doctor-photo" />
+            <div className="profile-grid">
+
+              <div className="left-col">
+                <div className="photo-card">
+                  <img src={doctor.image} alt={doctor.name} className="doctor-photo" />
+                </div>
+
+                <div className="reviews-card">
+                  <h3 className="reviews-title">
+                    <i className="fas fa-comment-alt"></i> Reviews
+                  </h3>
+                  <div className="reviews-grid">
+                    {doctor.reviews.map((review: Review, i: number) => (
+                        <div className="review-item" key={i}>
+                          <div className="review-stars">
+                            {[1, 2, 3, 4].map((s: number) => (
+                                <i key={s} className="fas fa-star"></i>
+                            ))}
+                            {review.stars === 5
+                                ? <i className="fas fa-star"></i>
+                                : <i className="fas fa-star-half-alt"></i>
+                            }
+                          </div>
+                          <p>{review.text}</p>
+                        </div>
+                    ))}
+                  </div>
+                </div>
               </div>
 
-              <div className="reviews-card">
-                <h3 className="reviews-title">
-                  <i className="fas fa-comment-alt"></i> Reviews
-                </h3>
-                <div className="reviews-grid">
-                  {doctor.reviews.map((review: Review, i: number) => (
-                    <div className="review-item" key={i}>
-                      <div className="review-stars">
-                        {[1, 2, 3, 4].map((s: number) => (
-                          <i key={s} className="fas fa-star"></i>
-                        ))}
-                        {review.stars === 5
-                          ? <i className="fas fa-star"></i>
-                          : <i className="fas fa-star-half-alt"></i>
-                        }
-                      </div>
-                      <p>{review.text}</p>
+              <div className="right-col">
+                <div className="info-card">
+                  <div className="info-row">
+                    <i className="fas fa-user-md"></i>
+                    <div>
+                      <span className="info-label">Name</span>
+                      <span className="info-value">{doctor.firstName}</span>
                     </div>
-                  ))}
+                  </div>
+                  <div className="info-row">
+                    <i className="fas fa-stethoscope"></i>
+                    <div>
+                      <span className="info-label">Specialized In</span>
+                      <span className="info-value">{doctor.specializedIn}</span>
+                    </div>
+                  </div>
+                  <div className="info-row">
+                    <i className="fas fa-graduation-cap"></i>
+                    <div>
+                      <span className="info-label">Education</span>
+                      <span className="info-value">{doctor.education}</span>
+                    </div>
+                  </div>
+                  <div className="info-row">
+                    <i className="fas fa-briefcase-medical"></i>
+                    <div>
+                      <span className="info-label">Experience</span>
+                      <span className="info-value">{doctor.experience}</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            <div className="right-col">
-              <div className="info-card">
-                <div className="info-row">
-                  <i className="fas fa-user-md"></i>
-                  <div>
-                    <span className="info-label">Name</span>
-                    <span className="info-value">{doctor.firstName}</span>
-                  </div>
-                </div>
-                <div className="info-row">
-                  <i className="fas fa-stethoscope"></i>
-                  <div>
-                    <span className="info-label">Specialized In</span>
-                    <span className="info-value">{doctor.specializedIn}</span>
-                  </div>
-                </div>
-                <div className="info-row">
-                  <i className="fas fa-graduation-cap"></i>
-                  <div>
-                    <span className="info-label">Education</span>
-                    <span className="info-value">{doctor.education}</span>
-                  </div>
-                </div>
-                <div className="info-row">
-                  <i className="fas fa-briefcase-medical"></i>
-                  <div>
-                    <span className="info-label">Experience</span>
-                    <span className="info-value">{doctor.experience}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="section-card charges-card">
-                <h3 className="section-card-title">
-                  <i className="fas fa-receipt"></i> Charges Summary
-                </h3>
-                <div className="charge-row">
+                <div className="section-card charges-card">
+                  <h3 className="section-card-title">
+                    <i className="fas fa-receipt"></i> Charges Summary
+                  </h3>
+                  <div className="charge-row">
                   <span className="charge-label">
                     <span className="charge-icon no-show"><i className="fas fa-ban"></i></span>
                     No Show / Refund Fee
                   </span>
-                  <span className="charge-value">Rs. {doctor.charges.noShow.toLocaleString()}.00</span>
-                </div>
-                <div className="charge-row">
+                    <span className="charge-value">Rs. {doctor.charges.noShow.toLocaleString()}.00</span>
+                  </div>
+                  <div className="charge-row">
                   <span className="charge-label">
                     <span className="charge-icon booking"><i className="fas fa-calendar-check"></i></span>
                     Booking Charge
                   </span>
-                  <span className="charge-value">Rs. {doctor.charges.booking.toLocaleString()}.00</span>
-                </div>
-                <div className="charge-row">
+                    <span className="charge-value">Rs. {doctor.charges.booking.toLocaleString()}.00</span>
+                  </div>
+                  <div className="charge-row">
                   <span className="charge-label">
                     <span className="charge-icon doctor-fee"><i className="fas fa-user-md"></i></span>
                     Doctor Charge
                   </span>
-                  <span className="charge-value">Rs. {doctor.charges.doctor.toLocaleString()}.00</span>
-                </div>
-                <div className="charge-row">
+                    <span className="charge-value">Rs. {doctor.charges.doctor.toLocaleString()}.00</span>
+                  </div>
+                  <div className="charge-row">
                   <span className="charge-label">
                     <span className="charge-icon hospital-fee"><i className="fas fa-hospital"></i></span>
                     Hospital Charge
                   </span>
-                  <span className="charge-value">Rs. {doctor.charges.hospital.toLocaleString()}.00</span>
-                </div>
-                <div className="charge-divider"></div>
-                <div className="charge-row total-row">
+                    <span className="charge-value">Rs. {doctor.charges.hospital.toLocaleString()}.00</span>
+                  </div>
+                  <div className="charge-divider"></div>
+                  <div className="charge-row total-row">
                   <span className="charge-label total-label">
                     <span className="charge-icon total-fee"><i className="fas fa-coins"></i></span>
                     Total Amount
                   </span>
-                  <span className="charge-value total-value">
+                    <span className="charge-value total-value">
                     Rs. {total.toLocaleString()}.00
                   </span>
+                  </div>
                 </div>
-              </div>
 
-              <div className="section-card hosp-section-card">
-                <h3 className="section-card-title">
-                  <i className="fas fa-hospital"></i> Available Hospitals
-                </h3>
-                <div className="hosp-channel-list">
-                  {doctor.hospitals.map((hosp: string, i: number) => (
-                    <div className="hosp-channel-group" key={i}>
-                      <div className="hosp-channel-header">{hosp.toUpperCase()}</div>
-                      <div className="hosp-channel-row">
-                        <div className="hosp-channel-avatar">
-                          <i className="fas fa-user-md"></i>
+                <div className="section-card hosp-section-card">
+                  <h3 className="section-card-title">
+                    <i className="fas fa-hospital"></i> Available Hospitals
+                  </h3>
+                  <div className="hosp-channel-list">
+                    {doctor.hospitals.map((hosp: string, i: number) => (
+                        <div className="hosp-channel-group" key={i}>
+                          <div className="hosp-channel-header">{hosp.toUpperCase()}</div>
+                          <div className="hosp-channel-row">
+                            <div className="hosp-channel-avatar">
+                              <i className="fas fa-user-md"></i>
+                            </div>
+                            <div className="hosp-channel-info">
+                              <span className="hosp-channel-name">{doctor.name}</span>
+                              <span className="hosp-channel-specialty">{doctor.specialty}</span>
+                            </div>
+                            <button
+                                className={'hosp-channel-btn' + (selectedHospital === hosp ? ' selected' : '')}
+                                onClick={() => {
+                                  setSelectedHospital(hosp);
+                                  // ✅ FIXED: matches route in App.tsx
+                                  navigate(`/doctor-booking/doctor/${doctorId}/sessions`, {
+                                    state: { doctor: { ...doctor, id: doctorId }, hospital: hosp },
+                                  });
+                                }}
+                            >
+                              <i className="fas fa-stethoscope"></i> Channel
+                            </button>
+                          </div>
                         </div>
-                        <div className="hosp-channel-info">
-                          <span className="hosp-channel-name">{doctor.name}</span>
-                          <span className="hosp-channel-specialty">{doctor.specialty}</span>
-                        </div>
-                        <button
-                          className={'hosp-channel-btn' + (selectedHospital === hosp ? ' selected' : '')}
-                          onClick={() => {
-                            setSelectedHospital(hosp);
-                            // ✅ FIXED: matches route in App.tsx
-                            navigate(`/doctor-booking/doctor/${doctorId}/sessions`, {
-                              state: { doctor: { ...doctor, id: doctorId }, hospital: hosp },
-                            });
-                          }}
-                        >
-                          <i className="fas fa-stethoscope"></i> Channel
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </main>
-    </PublicLayout>
+        </main>
+      </PublicLayout>
   );
 };
 

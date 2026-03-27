@@ -136,9 +136,17 @@
 }
 
 /* Status */
-.status-completed { color: #16a34a; }
-.status-pending   { color: #d97706; }
-.status-failed    { color: #dc2626; }
+.status-completed {
+  color: #16a34a;
+}
+
+.status-pending {
+  color: #d97706;
+}
+
+.status-failed {
+  color: #dc2626;
+}
 
 /* Status Check Icon */
 .status-check {
@@ -163,17 +171,23 @@
     background: none;
     padding: 0;
   }
+
   .receipt-card {
     box-shadow: none;
     border: 1px solid #d1d5db;
     max-width: 100%;
   }
-  .download-btn { display: none; }
+
+  .download-btn {
+    display: none;
+  }
+
   .receipt-header {
     background-color: #0070f3 !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
+
   .watermark-logo {
     opacity: 0.06 !important;
     -webkit-print-color-adjust: exact;
@@ -185,8 +199,20 @@
    Responsive
    ============================================= */
 @media (max-width: 480px) {
-  .receipt-wrapper  { padding: 1rem; }
-  .receipt-label    { min-width: 130px; font-size: 0.78rem; }
-  .receipt-value    { font-size: 0.82rem; }
-  .watermark-logo   { width: 85%; }
+  .receipt-wrapper {
+    padding: 1rem;
+  }
+
+  .receipt-label {
+    min-width: 130px;
+    font-size: 0.78rem;
+  }
+
+  .receipt-value {
+    font-size: 0.82rem;
+  }
+
+  .watermark-logo {
+    width: 85%;
+  }
 }
