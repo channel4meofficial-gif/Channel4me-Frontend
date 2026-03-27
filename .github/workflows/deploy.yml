@@ -30,8 +30,8 @@ jobs:
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
         with:
-          apiToken: ${{ secrets.cfat_9hNiKVFfEWUCpvVyl1WTK5fhDiW6F2xmLWxLlImlfd5058fd  }}
-          accountId: ${{ secrets.c7488f7bedaeea6c36693a940e5a1431 }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN  }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: channel4me-frontend
           directory: dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
