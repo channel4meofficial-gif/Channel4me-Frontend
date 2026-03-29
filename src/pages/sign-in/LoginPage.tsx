@@ -21,7 +21,7 @@ const LoginPage: React.FC = () => {
         setIsLoading(true);
 
         try {
-            const res = await fetch(`http://localhost:5000/api/auth/login`, {
+            const res = await fetch(`https://api.channel4me.com/api/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password, role: loginRole })
@@ -54,7 +54,7 @@ const LoginPage: React.FC = () => {
     const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
         setIsLoading(true);
         try {
-            const res = await fetch(`http://localhost:5000/api/v1/auth/verify`, {
+            const res = await fetch(`https://api.channel4me.com/api/v1/auth/verify`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: credentialResponse.credential })
@@ -204,8 +204,8 @@ const LoginPage: React.FC = () => {
                                         <GoogleLogin
                                             onSuccess={handleGoogleSuccess}
                                             onError={() => {
-                                                console.error('Login Failed');
-                                                alert('Google Login failed.');
+                                                console.error('Google Login Initialization Failed');
+                                                alert(`Google Login failed.\n\nIMPORTANT: If you saw an "Error 400: origin_mismatch", it means Google blocked this URL for security.\n\nYou MUST go to Google Cloud Console -> Credentials -> Web Client and add EXACTLY this URL to "Authorized JavaScript origins":\n\n${window.location.origin}`);
                                             }}
                                             useOneTap
                                             shape="rectangular"
