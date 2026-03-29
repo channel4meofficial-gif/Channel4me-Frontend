@@ -326,8 +326,8 @@ const DoctorApprovalsTab = ({ pendingDoctors, onAction }: { pendingDoctors: any[
                         {pendingDoctors.length > 0 ? (
                             pendingDoctors.map(doc => {
                                 const docName = doc.fullName || doc.name || 'Unknown';
-                                const certUrl = doc.documents && doc.documents.length > 0 && doc.documents[0].filePath
-                                    ? `http://localhost:5000/${doc.documents[0].filePath.replace(/\\/g, '/')}`
+                                const certUrl = doc.documents && doc.documents.length > 0
+                                    ? (doc.documents[0].fileUrl || `http://localhost:5000/uploads/doctors/${doc.documents[0].storedName}`)
                                     : null;
                                 const certName = doc.documents && doc.documents.length > 0 && doc.documents[0].originalName
                                     ? doc.documents[0].originalName
