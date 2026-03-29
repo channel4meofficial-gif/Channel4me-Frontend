@@ -73,6 +73,9 @@ const PatientDashboard: React.FC = () => {
                     if (profileJson.data.profilePicture) {
                         setProfileImage(`${API_BASE}/${profileJson.data.profilePicture}`);
                     }
+                    if (profileJson.data.doctorFeedback) {
+                        setDoctorFeedback(profileJson.data.doctorFeedback);
+                    }
                 }
 
                 // Fetch health records
@@ -106,14 +109,7 @@ const PatientDashboard: React.FC = () => {
 
         fetchDashboardData();
 
-        const storedFeedback = localStorage.getItem('patientDoctorFeedback');
-        if (storedFeedback) {
-            try {
-                setDoctorFeedback(JSON.parse(storedFeedback));
-            } catch (e) {
-                console.error("Failed to parse patientDoctorFeedback", e);
-            }
-        }
+
 
         const storedRecent = localStorage.getItem('patientRecentConsultations');
         if (storedRecent) {
@@ -256,33 +252,8 @@ const PatientDashboard: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Recent Consultations & Doctor Feedback Row */}
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '24px' }}>
-                            {/* Recent Consultations */}
-                            <div className="pps-card">
-                                <div className="pps-card-header">
-                                    <h3 className="pps-card-title blue">Recent Consultations</h3>
-                                </div>
-                                <ul className="pps-list">
-                                    {recentConsultations.map(appt => (
-                                        <li key={appt.id} className="pps-list-item" style={{ justifyContent: 'space-between' }}>
-                                            <div>
-                                                <div style={{ fontWeight: 600 }}>{appt.doctor}</div>
-                                                <div style={{ fontSize: '12px', color: '#64748b' }}>{appt.date}</div>
-                                            </div>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                {appt.rating > 0 ? (
-                                                    <div style={{ display: 'flex', gap: '2px' }}>
-                                                        {[1, 2, 3, 4, 5].map(s => <StarIcon key={s} filled={s <= appt.rating} />)}
-                                                    </div>
-                                                ) : (
-                                                    <button className="pps-btn-review" onClick={() => handleOpenReview(appt)}>Review</button>
-                                                )}
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
+                    {/* Doctor Feedback Row */}
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '24px', marginBottom: '24px' }}>
 
                             {/* Doctor Feedback */}
                             <div className="pps-card">
@@ -295,9 +266,19 @@ const PatientDashboard: React.FC = () => {
                                             No doctor feedback available yet.
                                         </div>
                                     ) : (
-                                        doctorFeedback.map((feedback) => (
-                                            <div key={feedback.id} className="pps-feedback-item">
-                                                {feedback.text}
+                                        doctorFeedback.slice().reverse().map((feedback: any, index: number) => (
+                                            <div key={feedback._id || index} className="pps-feedback-item" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'}}>
+                                                <div>
+                                                    <div style={{fontWeight: 600, color: '#1e40af'}}>{feedback.doctorName || 'Doctor'}</div>
+                                                    <div style={{marginTop: '4px', color: '#475569'}}>{feedback.feedback || feedback.text}</div>
+                                                </div>
+                                                <button 
+                                                    className="pps-btn-view" 
+                                                    onClick={() => navigate('/patient/dashboard/prescriptions')} 
+                                                    style={{background: '#3b82f6', color: 'white', padding: '6px 12px', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 600, whiteSpace: 'nowrap', marginLeft: '12px'}}
+                                                >
+                                                    History
+                                                </button>
                                             </div>
                                         ))
                                     )}

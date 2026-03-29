@@ -6,7 +6,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/sign-in/LoginPage';
 import RegistrationType from './pages/RegistrationType';
-//import PlaceholderPage from './pages/PlaceholderPage';
+import PlaceholderPage from './pages/PlaceholderPage';
 
 // Platform Pages (your footer branch)
 import FeaturesPage from './pages/FeaturesPage';
@@ -68,6 +68,7 @@ import PatientDashboard from './pages/patient/Dashboard';
 import PatientEditProfile from './pages/patient/Dashboard/PatientEditProfile';
 import NewBloodReport from './pages/patient/Dashboard/NewBloodReport';
 import EmergencyContactEdit from './pages/patient/Dashboard/EmergencyContactEdit';
+import PatientPrescriptionHistory from './pages/patient/Dashboard/PatientPrescriptionHistory';
 import PendingApproval from './pages/doctor/PendingApproval';
 import AdminDashboard from './pages/admin/admindashboard';
 
@@ -133,6 +134,11 @@ function App() {
                                 <Route path="/patient/dashboard/edit-emergency-contact" element={
                                     <PrivateRoute allowedRoles={['patient']}>
                                         <EmergencyContactEdit />
+                                    </PrivateRoute>
+                                } />
+                                <Route path="/patient/dashboard/prescriptions" element={
+                                    <PrivateRoute allowedRoles={['patient']}>
+                                        <PatientPrescriptionHistory />
                                     </PrivateRoute>
                                 } />
 
