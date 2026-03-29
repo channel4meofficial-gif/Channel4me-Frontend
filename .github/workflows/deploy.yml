@@ -37,3 +37,5 @@ jobs:
           projectName: channel4me-frontend
           directory: build
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+# This is a full-line comment
