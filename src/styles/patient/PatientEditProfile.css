@@ -1,0 +1,165 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+.pep-page {
+    font-family: 'Roboto', sans-serif;
+    background: #f0f0f0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Main ── */
+.pep-main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 32px 24px 48px;
+}
+
+.pep-container {
+    width: 100%;
+    max-width: 520px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ── Title ── */
+.pep-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 2px;
+}
+
+.pep-subtitle {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 4px;
+}
+
+/* ── Avatar ── */
+.pep-avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.pep-avatar-wrap {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    border: 3px solid #e2e8f0;
+    transition: opacity 0.2s;
+}
+
+.pep-avatar-wrap:hover {
+    opacity: 0.85;
+}
+
+.pep-avatar-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pep-avatar-hint {
+    font-size: 12.5px;
+    color: #64748b;
+}
+
+/* ── Section Cards ── */
+.pep-section {
+    background: #fff;
+    border-radius: 20px;
+    padding: 20px 20px 28px;
+    position: relative;
+}
+
+.pep-section-label {
+    position: absolute;
+    top: 14px;
+    right: 20px;
+    font-size: 12px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.pep-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 20px;
+    margin-top: 8px;
+}
+
+/* ── Field ── */
+.pep-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.pep-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.pep-input-wrap {
+    display: flex;
+    align-items: center;
+    background: #f1f5f9;
+    border-radius: 10px;
+    padding: 10px 12px;
+    gap: 8px;
+}
+
+.pep-input-wrap svg {
+    color: #94a3b8;
+    flex-shrink: 0;
+}
+
+.pep-input-wrap input {
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    color: #475569;
+    flex: 1;
+    outline: none;
+    font-family: 'Roboto', sans-serif;
+}
+
+.pep-input-wrap input::placeholder {
+    color: #94a3b8;
+}
+
+/* ── Save Button ── */
+.pep-save-btn {
+    display: block;
+    margin: 8px auto 0;
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    color: #fff;
+    border: none;
+    border-radius: 24px;
+    padding: 12px 48px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    transition: opacity 0.2s;
+}
+
+.pep-save-btn:hover {
+    opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+    .pep-grid {
+        grid-template-columns: 1fr;
+    }
+}

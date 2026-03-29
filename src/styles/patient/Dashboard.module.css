@@ -1,0 +1,269 @@
+.dashboard {
+  background-color: #f8fafc;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 32px;
+  margin-top: 32px;
+}
+
+@media (max-width: 992px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mainColumn, .sideColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* Card Common Styles */
+.card {
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  border: 1px solid #f1f5f9;
+}
+
+.cardTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cardTitle.blue {
+  color: #3b82f6;
+}
+
+/* Welcome Header */
+.welcomeHeader {
+  margin-bottom: 8px;
+}
+
+.greeting {
+  font-size: 28px;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0;
+}
+
+.date {
+  color: #64748b;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.healthTip {
+  background: #eff6ff;
+  border-left: 4px solid #3b82f6;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 16px;
+  font-size: 14px;
+  color: #1e40af;
+}
+
+/* Appointments */
+.appointmentList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.appointmentItem {
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  transition: transform 0.2s;
+}
+
+.appointmentItem:hover {
+  transform: translateY(-2px);
+}
+
+.appointmentItem.upcoming {
+  background: #f0f9ff;
+  border-color: #bae6fd;
+}
+
+.aptHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 12px;
+}
+
+.doctorName {
+  font-weight: 700;
+  font-size: 16px;
+  color: #1e293b;
+  display: block;
+}
+
+.specialty {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.status {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  color: white;
+}
+
+.status.confirmed { background: #10b981; }
+.status.pending { background: #f59e0b; }
+
+.aptDetails {
+  font-size: 14px;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btnAction {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+
+.btnReschedule {
+  background: white;
+  border-color: #e2e8f0;
+  color: #475569;
+}
+
+.btnReschedule:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.btnCancel {
+  background: white;
+  border-color: #fee2e2;
+  color: #ef4444;
+}
+
+.btnCancel:hover {
+  background: #fef2f2;
+}
+
+/* Quick Actions */
+.actionGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.actionBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.2s;
+  gap: 12px;
+}
+
+.actionBtn:hover {
+  border-color: #3b82f6;
+  background: #f0f9ff;
+  transform: translateY(-2px);
+}
+
+.actionIcon {
+  font-size: 24px;
+  color: #3b82f6;
+}
+
+.actionLabel {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1e293b;
+}
+
+/* Health Summary */
+.summaryGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.summaryItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  background: #f8fafc;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.summaryLabel {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.summaryValue {
+  color: #1e293b;
+  font-weight: 600;
+}
+
+/* Notifications */
+.notifList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.notifItem {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #fff8f1;
+  border: 1px solid #ffedd5;
+}
+
+.notifIcon {
+  color: #f59e0b;
+}
+
+.notifContent {
+  font-size: 13px;
+  color: #9a3412;
+}

@@ -1,0 +1,218 @@
+/* =============================================
+   PaymentReceiptPage.css
+   ============================================= */
+
+/* Wrapper */
+.receipt-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: #f4f6f9;
+}
+
+/* Card */
+.receipt-card {
+  position: relative;
+  width: 100%;
+  max-width: 540px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* ─── Watermark ─────────────────────────────── */
+.watermark {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.watermark-logo {
+  width: 75%;
+  max-width: 380px;
+  opacity: 0.07;
+  transform: rotate(-30deg);
+  object-fit: contain;
+  user-select: none;
+  filter: grayscale(100%);
+}
+
+/* ─── Receipt Header ────────────────────────── */
+.receipt-header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background-color: #0070f3;
+  color: #ffffff;
+}
+
+.receipt-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Download Button */
+.download-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+  font-size: 0.85rem;
+}
+
+.download-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+.download-btn:active {
+  transform: translateY(0);
+}
+
+/* ─── Receipt Body ──────────────────────────── */
+.receipt-body {
+  position: relative;
+  z-index: 1;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+/* Receipt Row */
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px dashed #e8eaed;
+}
+
+.receipt-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* Label */
+.receipt-label {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #6b7280;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 160px;
+}
+
+/* Value */
+.receipt-value {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #111827;
+  text-align: right;
+  word-break: break-word;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Status */
+.status-completed {
+  color: #16a34a;
+}
+
+.status-pending {
+  color: #d97706;
+}
+
+.status-failed {
+  color: #dc2626;
+}
+
+/* Status Check Icon */
+.status-check {
+  font-size: 0.75rem;
+  background-color: #16a34a;
+  color: #ffffff;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* =============================================
+   Print Styles
+   ============================================= */
+@media print {
+  .receipt-wrapper {
+    min-height: unset;
+    background: none;
+    padding: 0;
+  }
+
+  .receipt-card {
+    box-shadow: none;
+    border: 1px solid #d1d5db;
+    max-width: 100%;
+  }
+
+  .download-btn {
+    display: none;
+  }
+
+  .receipt-header {
+    background-color: #0070f3 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .watermark-logo {
+    opacity: 0.06 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* =============================================
+   Responsive
+   ============================================= */
+@media (max-width: 480px) {
+  .receipt-wrapper {
+    padding: 1rem;
+  }
+
+  .receipt-label {
+    min-width: 130px;
+    font-size: 0.78rem;
+  }
+
+  .receipt-value {
+    font-size: 0.82rem;
+  }
+
+  .watermark-logo {
+    width: 85%;
+  }
+}

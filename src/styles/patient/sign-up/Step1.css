@@ -1,0 +1,24 @@
+/* src/styles/patient/sign-up/Step1.css */
+/* Minimal specific overrides for Patient Step 1 if needed */
+/* Shared styles in RegistrationType.css handle the container and forms */
+
+.dob-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.dob-select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    background: white;
+    cursor: pointer;
+}
+
+.dob-select:focus {
+    border-color: #667eea;
+    outline: none;
+}

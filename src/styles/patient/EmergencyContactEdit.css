@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+.ece-page {
+    font-family: 'Roboto', sans-serif;
+    background: #f0f0f0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.ece-main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 32px 24px 48px;
+}
+
+.ece-container {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.ece-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.ece-subtitle {
+    font-size: 16px;
+    color: #64748b;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.ece-section {
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px;
+    position: relative;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.ece-section-label {
+    position: absolute;
+    top: 14px;
+    right: 20px;
+    font-size: 12px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.ece-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 32px;
+    margin-top: 20px;
+}
+
+.ece-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ece-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.ece-input-wrap {
+    display: flex;
+    align-items: center;
+    background: #f1f5f9;
+    border-radius: 12px;
+    padding: 14px 18px;
+    gap: 12px;
+}
+
+.ece-input-wrap svg {
+    color: #94a3b8;
+    flex-shrink: 0;
+}
+
+.ece-input-wrap input {
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    color: #475569;
+    flex: 1;
+    outline: none;
+    font-family: 'Roboto', sans-serif;
+}
+
+.ece-input-wrap input::placeholder {
+    color: #94a3b8;
+}
+
+.ece-save-btn {
+    display: block;
+    margin: 8px auto 0;
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    color: #fff;
+    border: none;
+    border-radius: 24px;
+    padding: 12px 48px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    transition: opacity 0.2s;
+}
+
+.ece-save-btn:hover {
+    opacity: 0.9;
+}
+
+@media (max-width: 500px) {
+    .ece-grid {
+        grid-template-columns: 1fr;
+    }
+}
