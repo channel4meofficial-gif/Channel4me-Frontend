@@ -4,7 +4,7 @@ import PublicLayout from '../../components/layout/PublicLayout/publiclayout';
 import { useAuth } from '../../context/AuthContext';
 import '../../styles/doctor-booking/DoctorBookingPage.css';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'https://api.channel4me.com';
 
 interface Doctor {
   id?: number;

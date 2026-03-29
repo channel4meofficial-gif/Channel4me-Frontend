@@ -41,10 +41,10 @@ function DoctorInformation() {
       try {
         setIsLoading(true);
         const [statsRes, apptsRes] = await Promise.all([
-          fetch("http://localhost:5000/api/doctor/dashboard-stats", {
+          fetch("https://api.channel4me.com/api/doctor/dashboard-stats", {
             headers: { Authorization: `Bearer ${token}` }
           }),
-          fetch("http://localhost:5000/api/doctor/appointments", {
+          fetch("https://api.channel4me.com/api/doctor/appointments", {
             headers: { Authorization: `Bearer ${token}` }
           })
         ]);

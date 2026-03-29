@@ -4,7 +4,7 @@ import '../../../styles/header.css';
 import logo from '../../../assets/logo.png';
 import { useAuth } from '../../../context/AuthContext';
 
-const API_BASE = 'http://localhost:5000';
+const API_BASE = 'https://api.channel4me.com';
 
 const Header: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuth();

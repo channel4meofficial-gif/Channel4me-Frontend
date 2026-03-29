@@ -4,7 +4,7 @@ import Header from '../../components/ui/header/header';
 import Footer from '../../components/ui/footer/footer';
 import { useAuth } from '../../context/AuthContext';
 
-const API_BASE = "http://localhost:5000/api/admin";
+const API_BASE = "https://api.channel4me.com/api/admin";
 
 // Helper: get stored JWT token
 const getToken = () => localStorage.getItem('token') || '';
@@ -327,7 +327,7 @@ const DoctorApprovalsTab = ({ pendingDoctors, onAction }: { pendingDoctors: any[
                             pendingDoctors.map(doc => {
                                 const docName = doc.fullName || doc.name || 'Unknown';
                                 const certUrl = doc.documents && doc.documents.length > 0
-                                    ? (doc.documents[0].fileUrl || `http://localhost:5000/uploads/doctors/${doc.documents[0].storedName}`)
+                                    ? (doc.documents[0].fileUrl || `https://api.channel4me.com/uploads/doctors/${doc.documents[0].storedName}`)
                                     : null;
                                 const certName = doc.documents && doc.documents.length > 0 && doc.documents[0].originalName
                                     ? doc.documents[0].originalName

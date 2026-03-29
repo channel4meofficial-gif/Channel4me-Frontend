@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import PublicLayout from '../../../components/layout/PublicLayout/publiclayout';
 import '../../../styles/patient/PatientPrescriptionHistory.css';
 
-const API_BASE = 'http://localhost:5000';
+const API_BASE = 'https://api.channel4me.com';
 
 const PatientPrescriptionHistory: React.FC = () => {
     const navigate = useNavigate();

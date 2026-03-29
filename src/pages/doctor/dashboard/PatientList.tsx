@@ -106,7 +106,7 @@ export default function PatientList() {
     const fetchPatients = async () => {
       setIsLoading(true);
       try {
-        const res = await fetch('http://localhost:5000/api/doctor/my-patients', {
+        const res = await fetch('https://api.channel4me.com/api/doctor/my-patients', {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = await res.json();

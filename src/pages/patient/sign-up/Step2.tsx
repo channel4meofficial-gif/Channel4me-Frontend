@@ -115,7 +115,7 @@ const PatientStep2: React.FC = () => {
         }
 
         try {
-            const res = await fetch('http://localhost:5000/api/auth/signup', {
+            const res = await fetch('https://api.channel4me.com/api/auth/signup', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),

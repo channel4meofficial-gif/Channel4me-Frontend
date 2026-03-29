@@ -1,5 +1,5 @@
 const config = {
-    apiBaseUrl: 'http://localhost:5000'
+    apiBaseUrl: 'https://api.channel4me.com'
 };
 
 export default config;

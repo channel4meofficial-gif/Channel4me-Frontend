@@ -67,7 +67,7 @@ const EPrescription: React.FC = () => {
         formData.append('medicationPicture', imageFile);
       }
 
-      const response = await fetch('http://localhost:5000/api/v1/prescriptions', {
+      const response = await fetch('https://api.channel4me.com/api/v1/prescriptions', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`

@@ -236,7 +236,7 @@ const DoctorRegisterStep2: React.FC = () => {
             uploadedFiles.forEach(f => fd.append('documents', f.file));
 
             // ── POST to backend ───────────────────────────────────────────────
-            const res = await fetch('http://localhost:5000/api/doctor/register', {
+            const res = await fetch('https://api.channel4me.com/api/doctor/register', {
                 method: 'POST',
                 body: fd,
                 // No Content-Type header — browser sets it with boundary for multipart

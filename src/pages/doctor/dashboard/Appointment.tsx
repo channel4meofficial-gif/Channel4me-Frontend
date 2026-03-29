@@ -78,7 +78,7 @@ export default function Appointment() {
             const localDate = new Date(selectedDate.getTime() - (offset*60*1000));
             const dateString = localDate.toISOString().split('T')[0];
 
-            const res = await fetch(`http://localhost:5000/api/doctor/appointments?date=${dateString}`, {
+            const res = await fetch(`https://api.channel4me.com/api/doctor/appointments?date=${dateString}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const data = await res.json();

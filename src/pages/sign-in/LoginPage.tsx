@@ -21,7 +21,7 @@ const LoginPage: React.FC = () => {
         setIsLoading(true);
 
         try {
-            const res = await fetch(`http://localhost:5000/api/auth/login`, {
+            const res = await fetch(`https://api.channel4me.com/api/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password, role: loginRole })
@@ -54,7 +54,7 @@ const LoginPage: React.FC = () => {
     const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
         setIsLoading(true);
         try {
-            const res = await fetch(`http://localhost:5000/api/v1/auth/verify`, {
+            const res = await fetch(`https://api.channel4me.com/api/v1/auth/verify`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: credentialResponse.credential })

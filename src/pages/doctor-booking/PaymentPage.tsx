@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import PublicLayout from '../../components/layout/PublicLayout/publiclayout';
 import '../../styles/doctor-booking/PaymentPage.css';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'https://api.channel4me.com';
 
 interface Charges {
   booking: number;

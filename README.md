@@ -184,8 +184,8 @@ npm start
 
 #### 4. Access the application
 - Frontend: http://localhost:3000
-- Backend API: http://localhost:5000
-- API Documentation: http://localhost:5000/api-docs
+- Backend API: https://api.channel4me.com
+- API Documentation: https://api.channel4me.com/api-docs
 
 ---
 

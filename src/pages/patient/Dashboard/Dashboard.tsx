@@ -57,7 +57,7 @@ const PatientDashboard: React.FC = () => {
     const [tempRating, setTempRating] = useState(0);
     const [tempComment, setTempComment] = useState('');
 
-    const API_BASE = 'http://localhost:5000';
+    const API_BASE = 'https://api.channel4me.com';
     const getToken = () => localStorage.getItem('token') || '';
 
     useEffect(() => {

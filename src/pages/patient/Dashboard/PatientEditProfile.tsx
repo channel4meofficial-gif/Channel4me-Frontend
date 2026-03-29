@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import PublicLayout from '../../../components/layout/PublicLayout/publiclayout';
 import '../../../styles/patient/PatientEditProfile.css';
 
-const API_BASE = 'http://localhost:5000';
+const API_BASE = 'https://api.channel4me.com';
 
 const DEFAULT_AVATAR = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 
