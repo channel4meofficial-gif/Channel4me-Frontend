@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: .
+    container_name: channel4me-frontend
+    restart: always
+    ports:
+      # Expose the internal Nginx port (80) to the host machine on port 3000
+      - "127.0.0.1:3000:80"
+    environment:
+      - NODE_ENV=production
+      # Add any necessary frontend environment variables here 
+      # (e.g. your Vite or CRA API URLs)
+      # - REACT_APP_API_URL=https://api.channel4m.com
+      # - VITE_API_BASE_URL=https://api.channel4m.com
+    # If your frontend needs an .env file during runtime, you can mount it:
+    # env_file:
+    #   - .env
