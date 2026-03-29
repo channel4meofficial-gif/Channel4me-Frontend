@@ -6,7 +6,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/sign-in/LoginPage';
 import RegistrationType from './pages/RegistrationType';
-import PlaceholderPage from './pages/PlaceholderPage';
+//import PlaceholderPage from './pages/PlaceholderPage';
 
 // Platform Pages (your footer branch)
 import FeaturesPage from './pages/FeaturesPage';
